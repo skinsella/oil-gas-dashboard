@@ -65,6 +65,13 @@ NATGAS_SERIES = {
     },
 }
 
+WTI_FUTURES_SERIES = {
+    "RCLC1": {"contract": 1, "label": "Front Month"},
+    "RCLC2": {"contract": 2, "label": "2nd Month"},
+    "RCLC3": {"contract": 3, "label": "3rd Month"},
+    "RCLC4": {"contract": 4, "label": "4th Month"},
+}
+
 # ── Fetch helpers ─────────────────────────────────────────────────────────────
 
 def fetch_petroleum_spots() -> dict:
@@ -84,6 +91,66 @@ def fetch_petroleum_spots() -> dict:
     resp = requests.get(url, params=params, timeout=30)
     resp.raise_for_status()
     return resp.json()
+
+
+def fetch_wti_futures() -> dict:
+    """Fetch WTI crude oil futures contracts 1-4 from EIA API v2."""
+    url = "https://api.eia.gov/v2/petroleum/pri/fut/data/"
+    params = [
+        ("api_key", EIA_API_KEY),
+        ("frequency", "daily"),
+        ("data[0]", "value"),
+        ("sort[0][column]", "period"),
+        ("sort[0][direction]", "desc"),
+        ("length", "10"),
+    ] + [("facets[series][]", s) for s in WTI_FUTURES_SERIES.keys()]
+
+    resp = requests.get(url, params=params, timeout=30)
+    resp.raise_for_status()
+    return resp.json()
+
+
+def parse_futures(raw: dict) -> dict:
+    """Parse EIA futures response into a forward curve dict."""
+    latest: dict[str, dict] = {}
+
+    for record in raw.get("response", {}).get("data", []):
+        sid = record.get("series")
+        period = record.get("period")
+        value = record.get("value")
+
+        if sid not in WTI_FUTURES_SERIES or value is None or value == "":
+            continue
+        try:
+            value = float(value)
+        except (ValueError, TypeError):
+            continue
+
+        if sid not in latest:
+            latest[sid] = {"period": period, "value": round(value, 4)}
+
+    curve = []
+    for sid, meta in WTI_FUTURES_SERIES.items():
+        if sid in latest:
+            curve.append({
+                "contract": meta["contract"],
+                "label": meta["label"],
+                "series": sid,
+                "period": latest[sid]["period"],
+                "value": latest[sid]["value"],
+            })
+
+    curve.sort(key=lambda x: x["contract"])
+    as_of = curve[0]["period"] if curve else None
+
+    return {
+        "WTI": {
+            "name": "WTI Crude Oil Futures (NYMEX)",
+            "unit": "$/bbl",
+            "as_of": as_of,
+            "curve": curve,
+        }
+    }
 
 
 def fetch_natgas_spots() -> dict:
@@ -139,15 +206,19 @@ def main() -> None:
     print(f"[{now_utc.isoformat()}] Fetching EIA spot prices...")
 
     # Load existing data so we can preserve anything that fails to refresh
-    existing_commodities: dict = {}
+    existing: dict = {}
     if os.path.exists(OUTPUT_PATH):
         try:
             with open(OUTPUT_PATH) as f:
-                existing_commodities = json.load(f).get("commodities", {})
+                existing = json.load(f)
         except Exception as e:
             print(f"  Warning: could not read existing prices.json: {e}")
 
+    existing_commodities: dict = existing.get("commodities", {})
+    existing_futures: dict = existing.get("futures", {})
+
     commodities = dict(existing_commodities)
+    futures = dict(existing_futures)
     errors: list[str] = []
 
     # -- Petroleum ----
@@ -192,6 +263,18 @@ def main() -> None:
         print(f"  WARNING: {msg}", file=sys.stderr)
         errors.append(msg)
 
+    # -- WTI Futures ----
+    try:
+        raw = fetch_wti_futures()
+        futures = parse_futures(raw)
+        wti_curve = futures.get("WTI", {}).get("curve", [])
+        for c in wti_curve:
+            print(f"  WTI CL{c['contract']}       value={c['value']:8.4f} $/bbl  ({c['period']})")
+    except Exception as e:
+        msg = f"WTI futures fetch failed: {e}"
+        print(f"  WARNING: {msg}", file=sys.stderr)
+        errors.append(msg)
+
     # -- Write output ----
     os.makedirs(os.path.dirname(OUTPUT_PATH), exist_ok=True)
 
@@ -200,6 +283,7 @@ def main() -> None:
         "source": "EIA Open Data API v2 — https://www.eia.gov/opendata/",
         "errors": errors if errors else None,
         "commodities": commodities,
+        "futures": futures,
     }
 
     with open(OUTPUT_PATH, "w") as f:

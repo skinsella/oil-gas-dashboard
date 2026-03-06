@@ -273,15 +273,59 @@
     .adv-hd strong { color: var(--text); margin-right: 0.5rem; }
     .adv-inner { height: 520px; }
 
-    /* ── FUTURES BOX ─────────────────────────────────────────────── */
+    /* ── FUTURES TABLE ───────────────────────────────────────────── */
     .futures-box {
       background: var(--card);
       border: 1px solid var(--border);
       border-radius: 0.75rem;
       overflow: hidden;
       margin-bottom: 2rem;
-      height: 500px;
     }
+    .futures-table-wrap { overflow-x: auto; }
+    .futures-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+    }
+    .futures-table th {
+      background: var(--card2);
+      color: var(--muted);
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      padding: 0.65rem 1.25rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+    .futures-table td {
+      padding: 0.75rem 1.25rem;
+      border-bottom: 1px solid #1c2128;
+      vertical-align: middle;
+    }
+    .futures-table tr:last-child td { border-bottom: none; }
+    .futures-table tr:hover td { background: rgba(255,255,255,.025); }
+    .futures-contract-badge {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 34px; height: 34px;
+      border-radius: 50%;
+      background: rgba(240,136,62,0.12);
+      border: 1px solid rgba(240,136,62,0.3);
+      font-size: 0.78rem; font-weight: 700; color: var(--orange);
+    }
+    .futures-price { font-size: 1.15rem; font-weight: 700; color: var(--orange); }
+    .futures-as-of {
+      padding: 0.55rem 1.25rem;
+      font-size: 0.72rem;
+      color: var(--faint);
+      border-top: 1px solid var(--border);
+      background: var(--card2);
+    }
+    .futures-bar-wrap {
+      background: var(--card2); border-radius: 9999px; height: 6px; width: 120px; overflow: hidden;
+    }
+    .futures-bar { height: 100%; border-radius: 9999px; background: var(--orange); opacity: 0.7; }
 
     /* ── IRELAND SECTION ──────────────────────────────────────────── */
     .irl-banner {
@@ -570,50 +614,30 @@
   </div>
 
 
-  <!-- ── GLOBAL OIL FUTURES ──────────────────────────────────────────────────── -->
+  <!-- ── WTI FUTURES FORWARD CURVE ──────────────────────────────────────────── -->
   <div class="section-hd" id="futures">
-    <h2>🌍 Global Oil Futures</h2>
-    <span>Forward curve — WTI, Brent &amp; Natural Gas term structure (live)</span>
+    <h2>🌍 WTI Crude Futures</h2>
+    <span>Forward curve — term structure · official EIA data · updated nightly by GitHub Actions</span>
   </div>
   <div class="futures-box">
-    <div class="tradingview-widget-container" style="height:100%;width:100%">
-      <div class="tradingview-widget-container__widget" style="height:100%;width:100%"></div>
-      <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-market-quotes.js" async>
-      {
-        "title": "Energy Futures",
-        "width": "100%",
-        "height": 490,
-        "locale": "en",
-        "showSymbolLogo": false,
-        "colorTheme": "dark",
-        "isTransparent": false,
-        "symbolsGroups": [
-          {
-            "name": "WTI Crude Oil Futures (NYMEX)",
-            "symbols": [
-              {"name": "NYMEX:CL1!", "displayName": "WTI Front Month"},
-              {"name": "NYMEX:CL2!", "displayName": "WTI 2nd Month"},
-              {"name": "NYMEX:CL3!", "displayName": "WTI 3rd Month"},
-              {"name": "NYMEX:CL4!", "displayName": "WTI 4th Month"},
-              {"name": "NYMEX:CL5!", "displayName": "WTI 5th Month"},
-              {"name": "NYMEX:CL6!", "displayName": "WTI 6th Month"}
-            ]
-          },
-          {
-            "name": "Brent Crude Oil Futures (ICE)",
-            "symbols": [
-              {"name": "ICEUSA:BRN1!", "displayName": "Brent Front Month"},
-              {"name": "ICEUSA:BRN2!", "displayName": "Brent 2nd Month"},
-              {"name": "ICEUSA:BRN3!", "displayName": "Brent 3rd Month"},
-              {"name": "ICEUSA:BRN4!", "displayName": "Brent 4th Month"},
-              {"name": "ICEUSA:BRN5!", "displayName": "Brent 5th Month"},
-              {"name": "ICEUSA:BRN6!", "displayName": "Brent 6th Month"}
-            ]
-          }
-        ]
-      }
-      </script>
+    <div class="futures-table-wrap">
+      <table class="futures-table">
+        <thead>
+          <tr>
+            <th>Contract</th>
+            <th>Description</th>
+            <th>Price ($/bbl)</th>
+            <th>vs Front Month</th>
+            <th>Structure</th>
+            <th>EIA Period</th>
+          </tr>
+        </thead>
+        <tbody id="futures-tbody">
+          <tr><td colspan="6" style="text-align:center;color:var(--faint);padding:2rem">Loading futures data…</td></tr>
+        </tbody>
+      </table>
     </div>
+    <div class="futures-as-of" id="futures-as-of">Source: US EIA Open Data API — updated by GitHub Actions (weekdays 21:00 &amp; 00:00 UTC)</div>
   </div>
 
   <!-- ── IRISH HOME HEATING OIL ──────────────────────────────────────────────── -->
@@ -712,6 +736,7 @@
       priceData = await r.json();
       renderCards();
       renderChart(activeKey);
+      renderFutures();
       const ts = document.getElementById('ts');
       if (priceData.last_updated) {
         const d = new Date(priceData.last_updated);
@@ -849,6 +874,52 @@
     document.querySelectorAll('.tab').forEach(t => t.classList.remove('on'));
     btn.classList.add('on');
     renderChart(key);
+  }
+
+  /* ── WTI Futures forward curve ── */
+  function renderFutures() {
+    const tbody  = document.getElementById('futures-tbody');
+    const asOfEl = document.getElementById('futures-as-of');
+    const wti = priceData?.futures?.WTI;
+
+    if (!wti || !wti.curve || !wti.curve.length) {
+      tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--faint);padding:2rem">Futures data not yet available — will populate on next GitHub Actions run.</td></tr>';
+      return;
+    }
+
+    const front = wti.curve[0].value;
+    const vals  = wti.curve.map(c => c.value);
+    const minV  = Math.min(...vals);
+    const maxV  = Math.max(...vals);
+    const range = maxV - minV || 1;
+
+    tbody.innerHTML = wti.curve.map(c => {
+      const spread    = c.value - front;
+      const spreadCls = spread > 0.05 ? 'down' : spread < -0.05 ? 'up' : 'flat';
+      const spreadStr = c.contract === 1 ? '<span class="flat">—</span>'
+                      : `<span class="${spreadCls}">${spread >= 0 ? '+' : ''}$${Math.abs(spread).toFixed(2)}</span>`;
+      const structLabel = c.contract === 1 ? '<span style="color:var(--faint);font-size:.72rem">active</span>'
+                        : spread > 0.05 ? '<span class="down" style="font-size:.78rem">contango ▲</span>'
+                        : spread < -0.05 ? '<span class="up" style="font-size:.78rem">backwardation ▼</span>'
+                        : '<span class="flat" style="font-size:.78rem">flat</span>';
+      const barPct = ((c.value - minV) / range * 100).toFixed(1);
+
+      return `<tr>
+        <td><span class="futures-contract-badge">C${c.contract}</span></td>
+        <td style="font-weight:500">${c.label}</td>
+        <td><span class="futures-price">$${c.value.toFixed(2)}</span></td>
+        <td>${spreadStr}</td>
+        <td>
+          ${structLabel}
+          <div class="futures-bar-wrap" style="margin-top:4px"><div class="futures-bar" style="width:${barPct}%"></div></div>
+        </td>
+        <td style="color:var(--faint);font-size:.78rem">${c.period || '—'}</td>
+      </tr>`;
+    }).join('');
+
+    if (wti.as_of) {
+      asOfEl.textContent = `WTI Crude Oil Futures · as of ${wti.as_of} · Source: US EIA Open Data API · Updated by GitHub Actions`;
+    }
   }
 
   /* ── Boot + auto-refresh every 60 s ── */
