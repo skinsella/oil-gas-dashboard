@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-03-06T21:06:40.928699+00:00",
+  "last_updated": "2026-03-06T21:22:25.163249+00:00",
   "source": "EU Weekly Oil Bulletin \u2014 European Commission",
   "as_of": "2026-03-02",
   "ireland_history": [
@@ -565,5 +565,849 @@
       "price_per_litre": 1.7871,
       "is_ireland": false
     }
-  ]
+  ],
+  "margin_history": [
+    {
+      "week": "2026-03-02",
+      "pretax_eur_l": 0.8626,
+      "withtax_eur_l": 1.2278,
+      "brent_eur_l": 0.3837,
+      "gross_margin": 0.4789,
+      "tax_eur_l": 0.3652
+    },
+    {
+      "week": "2026-02-23",
+      "pretax_eur_l": 0.6305,
+      "withtax_eur_l": 0.9644,
+      "brent_eur_l": 0.3825,
+      "gross_margin": 0.248,
+      "tax_eur_l": 0.3339
+    },
+    {
+      "week": "2026-02-16",
+      "pretax_eur_l": 0.6155,
+      "withtax_eur_l": 0.9473,
+      "brent_eur_l": 0.3751,
+      "gross_margin": 0.2404,
+      "tax_eur_l": 0.3318
+    },
+    {
+      "week": "2026-02-09",
+      "pretax_eur_l": 0.6111,
+      "withtax_eur_l": 0.9424,
+      "brent_eur_l": 0.3696,
+      "gross_margin": 0.2415,
+      "tax_eur_l": 0.3313
+    },
+    {
+      "week": "2026-02-02",
+      "pretax_eur_l": 0.6207,
+      "withtax_eur_l": 0.9532,
+      "brent_eur_l": 0.3741,
+      "gross_margin": 0.2466,
+      "tax_eur_l": 0.3325
+    },
+    {
+      "week": "2026-01-26",
+      "pretax_eur_l": 0.6185,
+      "withtax_eur_l": 0.9507,
+      "brent_eur_l": 0.356,
+      "gross_margin": 0.2625,
+      "tax_eur_l": 0.3322
+    },
+    {
+      "week": "2026-01-19",
+      "pretax_eur_l": 0.6078,
+      "withtax_eur_l": 0.9386,
+      "brent_eur_l": 0.3623,
+      "gross_margin": 0.2455,
+      "tax_eur_l": 0.3308
+    },
+    {
+      "week": "2026-01-12",
+      "pretax_eur_l": 0.6062,
+      "withtax_eur_l": 0.9369,
+      "brent_eur_l": 0.3385,
+      "gross_margin": 0.2677,
+      "tax_eur_l": 0.3307
+    },
+    {
+      "week": "2026-01-05",
+      "pretax_eur_l": 0.6083,
+      "withtax_eur_l": 0.9392,
+      "brent_eur_l": 0.3353,
+      "gross_margin": 0.273,
+      "tax_eur_l": 0.3309
+    },
+    {
+      "week": "2025-12-29",
+      "pretax_eur_l": 0.6044,
+      "withtax_eur_l": 0.9348,
+      "brent_eur_l": 0.3379,
+      "gross_margin": 0.2665,
+      "tax_eur_l": 0.3304
+    },
+    {
+      "week": "2025-12-22",
+      "pretax_eur_l": 0.6113,
+      "withtax_eur_l": 0.9426,
+      "brent_eur_l": 0.3258,
+      "gross_margin": 0.2855,
+      "tax_eur_l": 0.3313
+    },
+    {
+      "week": "2025-12-15",
+      "pretax_eur_l": 0.6128,
+      "withtax_eur_l": 0.9443,
+      "brent_eur_l": 0.335,
+      "gross_margin": 0.2778,
+      "tax_eur_l": 0.3315
+    },
+    {
+      "week": "2025-12-08",
+      "pretax_eur_l": 0.624,
+      "withtax_eur_l": 0.957,
+      "brent_eur_l": 0.3453,
+      "gross_margin": 0.2787,
+      "tax_eur_l": 0.333
+    },
+    {
+      "week": "2025-12-01",
+      "pretax_eur_l": 0.6391,
+      "withtax_eur_l": 0.9741,
+      "brent_eur_l": 0.3477,
+      "gross_margin": 0.2914,
+      "tax_eur_l": 0.335
+    },
+    {
+      "week": "2025-11-24",
+      "pretax_eur_l": 0.6704,
+      "withtax_eur_l": 1.0097,
+      "brent_eur_l": 0.3467,
+      "gross_margin": 0.3237,
+      "tax_eur_l": 0.3393
+    },
+    {
+      "week": "2025-11-17",
+      "pretax_eur_l": 0.6438,
+      "withtax_eur_l": 0.9795,
+      "brent_eur_l": 0.3411,
+      "gross_margin": 0.3027,
+      "tax_eur_l": 0.3357
+    },
+    {
+      "week": "2025-11-10",
+      "pretax_eur_l": 0.6378,
+      "withtax_eur_l": 0.9727,
+      "brent_eur_l": 0.3495,
+      "gross_margin": 0.2883,
+      "tax_eur_l": 0.3349
+    },
+    {
+      "week": "2025-11-03",
+      "pretax_eur_l": 0.6354,
+      "withtax_eur_l": 0.9699,
+      "brent_eur_l": 0.3552,
+      "gross_margin": 0.2802,
+      "tax_eur_l": 0.3345
+    },
+    {
+      "week": "2025-10-27",
+      "pretax_eur_l": 0.6294,
+      "withtax_eur_l": 0.9631,
+      "brent_eur_l": 0.3416,
+      "gross_margin": 0.2878,
+      "tax_eur_l": 0.3337
+    },
+    {
+      "week": "2025-10-20",
+      "pretax_eur_l": 0.6049,
+      "withtax_eur_l": 0.9354,
+      "brent_eur_l": 0.3365,
+      "gross_margin": 0.2684,
+      "tax_eur_l": 0.3305
+    },
+    {
+      "week": "2025-10-13",
+      "pretax_eur_l": 0.6177,
+      "withtax_eur_l": 0.9498,
+      "brent_eur_l": 0.3624,
+      "gross_margin": 0.2553,
+      "tax_eur_l": 0.3321
+    },
+    {
+      "week": "2025-10-06",
+      "pretax_eur_l": 0.6201,
+      "withtax_eur_l": 0.9526,
+      "brent_eur_l": 0.3617,
+      "gross_margin": 0.2584,
+      "tax_eur_l": 0.3325
+    },
+    {
+      "week": "2025-09-29",
+      "pretax_eur_l": 0.6227,
+      "withtax_eur_l": 0.9555,
+      "brent_eur_l": 0.3714,
+      "gross_margin": 0.2513,
+      "tax_eur_l": 0.3328
+    },
+    {
+      "week": "2025-09-22",
+      "pretax_eur_l": 0.6126,
+      "withtax_eur_l": 0.9441,
+      "brent_eur_l": 0.3648,
+      "gross_margin": 0.2478,
+      "tax_eur_l": 0.3315
+    },
+    {
+      "week": "2025-09-15",
+      "pretax_eur_l": 0.6148,
+      "withtax_eur_l": 0.9466,
+      "brent_eur_l": 0.3594,
+      "gross_margin": 0.2554,
+      "tax_eur_l": 0.3318
+    },
+    {
+      "week": "2025-09-08",
+      "pretax_eur_l": 0.6199,
+      "withtax_eur_l": 0.9524,
+      "brent_eur_l": 0.3585,
+      "gross_margin": 0.2614,
+      "tax_eur_l": 0.3325
+    },
+    {
+      "week": "2025-09-01",
+      "pretax_eur_l": 0.6035,
+      "withtax_eur_l": 0.9337,
+      "brent_eur_l": 0.3639,
+      "gross_margin": 0.2396,
+      "tax_eur_l": 0.3302
+    },
+    {
+      "week": "2025-08-25",
+      "pretax_eur_l": 0.6021,
+      "withtax_eur_l": 0.9321,
+      "brent_eur_l": 0.3647,
+      "gross_margin": 0.2374,
+      "tax_eur_l": 0.33
+    },
+    {
+      "week": "2025-08-18",
+      "pretax_eur_l": 0.6123,
+      "withtax_eur_l": 0.9437,
+      "brent_eur_l": 0.3619,
+      "gross_margin": 0.2504,
+      "tax_eur_l": 0.3314
+    },
+    {
+      "week": "2025-08-11",
+      "pretax_eur_l": 0.628,
+      "withtax_eur_l": 0.9616,
+      "brent_eur_l": 0.3689,
+      "gross_margin": 0.2591,
+      "tax_eur_l": 0.3336
+    },
+    {
+      "week": "2025-08-04",
+      "pretax_eur_l": 0.6421,
+      "withtax_eur_l": 0.9776,
+      "brent_eur_l": 0.3938,
+      "gross_margin": 0.2483,
+      "tax_eur_l": 0.3355
+    },
+    {
+      "week": "2025-07-28",
+      "pretax_eur_l": 0.642,
+      "withtax_eur_l": 0.9774,
+      "brent_eur_l": 0.3783,
+      "gross_margin": 0.2637,
+      "tax_eur_l": 0.3354
+    },
+    {
+      "week": "2025-07-21",
+      "pretax_eur_l": 0.641,
+      "withtax_eur_l": 0.9763,
+      "brent_eur_l": 0.3809,
+      "gross_margin": 0.2601,
+      "tax_eur_l": 0.3353
+    },
+    {
+      "week": "2025-07-14",
+      "pretax_eur_l": 0.6538,
+      "withtax_eur_l": 0.9909,
+      "brent_eur_l": 0.3862,
+      "gross_margin": 0.2676,
+      "tax_eur_l": 0.3371
+    },
+    {
+      "week": "2025-07-07",
+      "pretax_eur_l": 0.6658,
+      "withtax_eur_l": 1.0044,
+      "brent_eur_l": 0.3733,
+      "gross_margin": 0.2925,
+      "tax_eur_l": 0.3386
+    },
+    {
+      "week": "2025-06-30",
+      "pretax_eur_l": 0.6818,
+      "withtax_eur_l": 1.0226,
+      "brent_eur_l": 0.3755,
+      "gross_margin": 0.3063,
+      "tax_eur_l": 0.3408
+    },
+    {
+      "week": "2025-06-23",
+      "pretax_eur_l": 0.6634,
+      "withtax_eur_l": 1.0017,
+      "brent_eur_l": 0.429,
+      "gross_margin": 0.2344,
+      "tax_eur_l": 0.3383
+    },
+    {
+      "week": "2025-06-16",
+      "pretax_eur_l": 0.6251,
+      "withtax_eur_l": 0.9583,
+      "brent_eur_l": 0.3861,
+      "gross_margin": 0.239,
+      "tax_eur_l": 0.3332
+    },
+    {
+      "week": "2025-06-09",
+      "pretax_eur_l": 0.6082,
+      "withtax_eur_l": 0.939,
+      "brent_eur_l": 0.3703,
+      "gross_margin": 0.2379,
+      "tax_eur_l": 0.3308
+    },
+    {
+      "week": "2025-06-02",
+      "pretax_eur_l": 0.6082,
+      "withtax_eur_l": 0.9391,
+      "brent_eur_l": 0.3566,
+      "gross_margin": 0.2516,
+      "tax_eur_l": 0.3309
+    },
+    {
+      "week": "2025-05-26",
+      "pretax_eur_l": 0.609,
+      "withtax_eur_l": 0.94,
+      "brent_eur_l": 0.364,
+      "gross_margin": 0.245,
+      "tax_eur_l": 0.331
+    },
+    {
+      "week": "2025-05-19",
+      "pretax_eur_l": 0.6085,
+      "withtax_eur_l": 0.9394,
+      "brent_eur_l": 0.366,
+      "gross_margin": 0.2425,
+      "tax_eur_l": 0.3309
+    },
+    {
+      "week": "2025-05-12",
+      "pretax_eur_l": 0.6094,
+      "withtax_eur_l": 0.9404,
+      "brent_eur_l": 0.3528,
+      "gross_margin": 0.2566,
+      "tax_eur_l": 0.331
+    },
+    {
+      "week": "2025-05-05",
+      "pretax_eur_l": 0.6085,
+      "withtax_eur_l": 0.9394,
+      "brent_eur_l": 0.3521,
+      "gross_margin": 0.2564,
+      "tax_eur_l": 0.3309
+    },
+    {
+      "week": "2025-04-28",
+      "pretax_eur_l": 0.6068,
+      "withtax_eur_l": 0.9375,
+      "brent_eur_l": 0.3761,
+      "gross_margin": 0.2307,
+      "tax_eur_l": 0.3307
+    },
+    {
+      "week": "2025-04-21",
+      "pretax_eur_l": 0.6118,
+      "withtax_eur_l": 0.9431,
+      "brent_eur_l": 0.3714,
+      "gross_margin": 0.2404,
+      "tax_eur_l": 0.3313
+    },
+    {
+      "week": "2025-04-14",
+      "pretax_eur_l": 0.6452,
+      "withtax_eur_l": 0.981,
+      "brent_eur_l": 0.3654,
+      "gross_margin": 0.2798,
+      "tax_eur_l": 0.3358
+    },
+    {
+      "week": "2025-04-07",
+      "pretax_eur_l": 0.6537,
+      "withtax_eur_l": 0.9908,
+      "brent_eur_l": 0.4281,
+      "gross_margin": 0.2256,
+      "tax_eur_l": 0.3371
+    },
+    {
+      "week": "2025-03-31",
+      "pretax_eur_l": 0.6596,
+      "withtax_eur_l": 0.9975,
+      "brent_eur_l": 0.4324,
+      "gross_margin": 0.2272,
+      "tax_eur_l": 0.3379
+    },
+    {
+      "week": "2025-03-24",
+      "pretax_eur_l": 0.6576,
+      "withtax_eur_l": 0.9951,
+      "brent_eur_l": 0.4196,
+      "gross_margin": 0.238,
+      "tax_eur_l": 0.3375
+    },
+    {
+      "week": "2025-03-17",
+      "pretax_eur_l": 0.6568,
+      "withtax_eur_l": 0.9942,
+      "brent_eur_l": 0.4127,
+      "gross_margin": 0.2441,
+      "tax_eur_l": 0.3374
+    },
+    {
+      "week": "2025-03-10",
+      "pretax_eur_l": 0.664,
+      "withtax_eur_l": 1.0024,
+      "brent_eur_l": 0.4172,
+      "gross_margin": 0.2468,
+      "tax_eur_l": 0.3384
+    },
+    {
+      "week": "2025-03-03",
+      "pretax_eur_l": 0.6827,
+      "withtax_eur_l": 1.0236,
+      "brent_eur_l": 0.4463,
+      "gross_margin": 0.2364,
+      "tax_eur_l": 0.3409
+    },
+    {
+      "week": "2025-02-24",
+      "pretax_eur_l": 0.6898,
+      "withtax_eur_l": 1.0317,
+      "brent_eur_l": 0.4573,
+      "gross_margin": 0.2325,
+      "tax_eur_l": 0.3419
+    },
+    {
+      "week": "2025-02-17",
+      "pretax_eur_l": 0.6894,
+      "withtax_eur_l": 1.0312,
+      "brent_eur_l": 0.4565,
+      "gross_margin": 0.2329,
+      "tax_eur_l": 0.3418
+    },
+    {
+      "week": "2025-02-10",
+      "pretax_eur_l": 0.6835,
+      "withtax_eur_l": 1.0245,
+      "brent_eur_l": 0.4595,
+      "gross_margin": 0.224,
+      "tax_eur_l": 0.341
+    },
+    {
+      "week": "2025-02-03",
+      "pretax_eur_l": 0.685,
+      "withtax_eur_l": 1.0262,
+      "brent_eur_l": 0.4737,
+      "gross_margin": 0.2113,
+      "tax_eur_l": 0.3412
+    },
+    {
+      "week": "2025-01-27",
+      "pretax_eur_l": 0.6907,
+      "withtax_eur_l": 1.0327,
+      "brent_eur_l": 0.4774,
+      "gross_margin": 0.2133,
+      "tax_eur_l": 0.342
+    },
+    {
+      "week": "2025-01-20",
+      "pretax_eur_l": 0.691,
+      "withtax_eur_l": 1.033,
+      "brent_eur_l": 0.5048,
+      "gross_margin": 0.1862,
+      "tax_eur_l": 0.342
+    },
+    {
+      "week": "2025-01-13",
+      "pretax_eur_l": 0.6879,
+      "withtax_eur_l": 1.0295,
+      "brent_eur_l": 0.4819,
+      "gross_margin": 0.206,
+      "tax_eur_l": 0.3416
+    },
+    {
+      "week": "2025-01-06",
+      "pretax_eur_l": 0.6765,
+      "withtax_eur_l": 1.0166,
+      "brent_eur_l": 0.455,
+      "gross_margin": 0.2215,
+      "tax_eur_l": 0.3401
+    },
+    {
+      "week": "2024-12-30",
+      "pretax_eur_l": 0.6578,
+      "withtax_eur_l": 0.9954,
+      "brent_eur_l": 0.4404,
+      "gross_margin": 0.2174,
+      "tax_eur_l": 0.3376
+    },
+    {
+      "week": "2024-12-23",
+      "pretax_eur_l": 0.6579,
+      "withtax_eur_l": 0.9955,
+      "brent_eur_l": 0.4466,
+      "gross_margin": 0.2113,
+      "tax_eur_l": 0.3376
+    },
+    {
+      "week": "2024-12-16",
+      "pretax_eur_l": 0.6473,
+      "withtax_eur_l": 0.9834,
+      "brent_eur_l": 0.4435,
+      "gross_margin": 0.2038,
+      "tax_eur_l": 0.3361
+    },
+    {
+      "week": "2024-12-09",
+      "pretax_eur_l": 0.6425,
+      "withtax_eur_l": 0.978,
+      "brent_eur_l": 0.4403,
+      "gross_margin": 0.2022,
+      "tax_eur_l": 0.3355
+    },
+    {
+      "week": "2024-12-02",
+      "pretax_eur_l": 0.6466,
+      "withtax_eur_l": 0.9827,
+      "brent_eur_l": 0.4439,
+      "gross_margin": 0.2027,
+      "tax_eur_l": 0.3361
+    },
+    {
+      "week": "2024-11-25",
+      "pretax_eur_l": 0.6499,
+      "withtax_eur_l": 0.9864,
+      "brent_eur_l": 0.4485,
+      "gross_margin": 0.2014,
+      "tax_eur_l": 0.3365
+    },
+    {
+      "week": "2024-11-18",
+      "pretax_eur_l": 0.6355,
+      "withtax_eur_l": 0.97,
+      "brent_eur_l": 0.4345,
+      "gross_margin": 0.201,
+      "tax_eur_l": 0.3345
+    },
+    {
+      "week": "2024-11-11",
+      "pretax_eur_l": 0.6304,
+      "withtax_eur_l": 0.9643,
+      "brent_eur_l": 0.4466,
+      "gross_margin": 0.1838,
+      "tax_eur_l": 0.3339
+    },
+    {
+      "week": "2024-11-04",
+      "pretax_eur_l": 0.6236,
+      "withtax_eur_l": 0.9566,
+      "brent_eur_l": 0.4188,
+      "gross_margin": 0.2048,
+      "tax_eur_l": 0.333
+    },
+    {
+      "week": "2024-10-28",
+      "pretax_eur_l": 0.6284,
+      "withtax_eur_l": 0.962,
+      "brent_eur_l": 0.4343,
+      "gross_margin": 0.1941,
+      "tax_eur_l": 0.3336
+    },
+    {
+      "week": "2024-10-21",
+      "pretax_eur_l": 0.6434,
+      "withtax_eur_l": 0.979,
+      "brent_eur_l": 0.4322,
+      "gross_margin": 0.2112,
+      "tax_eur_l": 0.3356
+    },
+    {
+      "week": "2024-10-14",
+      "pretax_eur_l": 0.6562,
+      "withtax_eur_l": 0.9935,
+      "brent_eur_l": 0.4572,
+      "gross_margin": 0.199,
+      "tax_eur_l": 0.3373
+    },
+    {
+      "week": "2024-10-07",
+      "pretax_eur_l": 0.6483,
+      "withtax_eur_l": 0.9846,
+      "brent_eur_l": 0.4346,
+      "gross_margin": 0.2137,
+      "tax_eur_l": 0.3363
+    },
+    {
+      "week": "2024-09-30",
+      "pretax_eur_l": 0.6074,
+      "withtax_eur_l": 0.9382,
+      "brent_eur_l": 0.4161,
+      "gross_margin": 0.1913,
+      "tax_eur_l": 0.3308
+    },
+    {
+      "week": "2024-09-23",
+      "pretax_eur_l": 0.6031,
+      "withtax_eur_l": 0.9333,
+      "brent_eur_l": 0.4241,
+      "gross_margin": 0.179,
+      "tax_eur_l": 0.3302
+    },
+    {
+      "week": "2024-09-16",
+      "pretax_eur_l": 0.6054,
+      "withtax_eur_l": 0.9359,
+      "brent_eur_l": 0.4076,
+      "gross_margin": 0.1978,
+      "tax_eur_l": 0.3305
+    },
+    {
+      "week": "2024-09-09",
+      "pretax_eur_l": 0.6266,
+      "withtax_eur_l": 0.96,
+      "brent_eur_l": 0.4286,
+      "gross_margin": 0.198,
+      "tax_eur_l": 0.3334
+    },
+    {
+      "week": "2024-09-02",
+      "pretax_eur_l": 0.6335,
+      "withtax_eur_l": 0.9678,
+      "brent_eur_l": 0.4596,
+      "gross_margin": 0.1739,
+      "tax_eur_l": 0.3343
+    },
+    {
+      "week": "2024-08-26",
+      "pretax_eur_l": 0.6491,
+      "withtax_eur_l": 0.9855,
+      "brent_eur_l": 0.4483,
+      "gross_margin": 0.2008,
+      "tax_eur_l": 0.3364
+    },
+    {
+      "week": "2024-08-19",
+      "pretax_eur_l": 0.6688,
+      "withtax_eur_l": 1.0078,
+      "brent_eur_l": 0.4698,
+      "gross_margin": 0.199,
+      "tax_eur_l": 0.339
+    },
+    {
+      "week": "2024-08-12",
+      "pretax_eur_l": 0.6707,
+      "withtax_eur_l": 1.01,
+      "brent_eur_l": 0.4539,
+      "gross_margin": 0.2168,
+      "tax_eur_l": 0.3393
+    },
+    {
+      "week": "2024-08-05",
+      "pretax_eur_l": 0.7042,
+      "withtax_eur_l": 1.0311,
+      "brent_eur_l": 0.4604,
+      "gross_margin": 0.2438,
+      "tax_eur_l": 0.3269
+    },
+    {
+      "week": "2024-07-29",
+      "pretax_eur_l": 0.6948,
+      "withtax_eur_l": 1.0205,
+      "brent_eur_l": 0.4798,
+      "gross_margin": 0.215,
+      "tax_eur_l": 0.3257
+    },
+    {
+      "week": "2024-07-22",
+      "pretax_eur_l": 0.6953,
+      "withtax_eur_l": 1.021,
+      "brent_eur_l": 0.4971,
+      "gross_margin": 0.1982,
+      "tax_eur_l": 0.3257
+    },
+    {
+      "week": "2024-07-15",
+      "pretax_eur_l": 0.703,
+      "withtax_eur_l": 1.0298,
+      "brent_eur_l": 0.5006,
+      "gross_margin": 0.2024,
+      "tax_eur_l": 0.3268
+    },
+    {
+      "week": "2024-07-08",
+      "pretax_eur_l": 0.7067,
+      "withtax_eur_l": 1.034,
+      "brent_eur_l": 0.511,
+      "gross_margin": 0.1957,
+      "tax_eur_l": 0.3273
+    },
+    {
+      "week": "2024-07-01",
+      "pretax_eur_l": 0.7001,
+      "withtax_eur_l": 1.0265,
+      "brent_eur_l": 0.5076,
+      "gross_margin": 0.1925,
+      "tax_eur_l": 0.3264
+    },
+    {
+      "week": "2024-06-24",
+      "pretax_eur_l": 0.6931,
+      "withtax_eur_l": 1.0185,
+      "brent_eur_l": 0.4985,
+      "gross_margin": 0.1946,
+      "tax_eur_l": 0.3254
+    },
+    {
+      "week": "2024-06-17",
+      "pretax_eur_l": 0.677,
+      "withtax_eur_l": 1.0003,
+      "brent_eur_l": 0.4735,
+      "gross_margin": 0.2035,
+      "tax_eur_l": 0.3233
+    },
+    {
+      "week": "2024-06-10",
+      "pretax_eur_l": 0.6727,
+      "withtax_eur_l": 0.9954,
+      "brent_eur_l": 0.4479,
+      "gross_margin": 0.2248,
+      "tax_eur_l": 0.3227
+    },
+    {
+      "week": "2024-06-03",
+      "pretax_eur_l": 0.6827,
+      "withtax_eur_l": 1.0068,
+      "brent_eur_l": 0.4694,
+      "gross_margin": 0.2133,
+      "tax_eur_l": 0.3241
+    },
+    {
+      "week": "2024-05-27",
+      "pretax_eur_l": 0.6883,
+      "withtax_eur_l": 1.0131,
+      "brent_eur_l": 0.4655,
+      "gross_margin": 0.2228,
+      "tax_eur_l": 0.3248
+    },
+    {
+      "week": "2024-05-20",
+      "pretax_eur_l": 0.6956,
+      "withtax_eur_l": 1.0214,
+      "brent_eur_l": 0.4726,
+      "gross_margin": 0.223,
+      "tax_eur_l": 0.3258
+    },
+    {
+      "week": "2024-05-13",
+      "pretax_eur_l": 0.6948,
+      "withtax_eur_l": 1.0205,
+      "brent_eur_l": 0.4833,
+      "gross_margin": 0.2115,
+      "tax_eur_l": 0.3257
+    },
+    {
+      "week": "2024-05-06",
+      "pretax_eur_l": 0.7246,
+      "withtax_eur_l": 1.0312,
+      "brent_eur_l": 0.5004,
+      "gross_margin": 0.2242,
+      "tax_eur_l": 0.3066
+    },
+    {
+      "week": "2024-04-29",
+      "pretax_eur_l": 0.7295,
+      "withtax_eur_l": 1.0368,
+      "brent_eur_l": 0.5194,
+      "gross_margin": 0.2101,
+      "tax_eur_l": 0.3073
+    },
+    {
+      "week": "2024-04-22",
+      "pretax_eur_l": 0.7339,
+      "withtax_eur_l": 1.0417,
+      "brent_eur_l": 0.53,
+      "gross_margin": 0.2039,
+      "tax_eur_l": 0.3078
+    },
+    {
+      "week": "2024-04-15",
+      "pretax_eur_l": 0.743,
+      "withtax_eur_l": 1.0522,
+      "brent_eur_l": 0.5431,
+      "gross_margin": 0.1999,
+      "tax_eur_l": 0.3092
+    },
+    {
+      "week": "2024-04-08",
+      "pretax_eur_l": 0.74,
+      "withtax_eur_l": 1.0487,
+      "brent_eur_l": 0.525,
+      "gross_margin": 0.215,
+      "tax_eur_l": 0.3087
+    },
+    {
+      "week": "2024-04-01",
+      "pretax_eur_l": 0.7531,
+      "withtax_eur_l": 1.0467,
+      "brent_eur_l": 0.5021,
+      "gross_margin": 0.251,
+      "tax_eur_l": 0.2936
+    },
+    {
+      "week": "2024-03-25",
+      "pretax_eur_l": 0.7358,
+      "withtax_eur_l": 1.0271,
+      "brent_eur_l": 0.4985,
+      "gross_margin": 0.2373,
+      "tax_eur_l": 0.2913
+    },
+    {
+      "week": "2024-03-18",
+      "pretax_eur_l": 0.7421,
+      "withtax_eur_l": 1.0342,
+      "brent_eur_l": 0.4881,
+      "gross_margin": 0.254,
+      "tax_eur_l": 0.2921
+    },
+    {
+      "week": "2024-03-11",
+      "pretax_eur_l": 0.7565,
+      "withtax_eur_l": 1.0506,
+      "brent_eur_l": 0.493,
+      "gross_margin": 0.2635,
+      "tax_eur_l": 0.2941
+    }
+  ],
+  "pass_through": {
+    "signal": "SYMMETRIC",
+    "asymmetry": -0.019,
+    "pt_when_rising": 0.532,
+    "pt_when_falling": 0.551,
+    "weeks_used": 89,
+    "n_rising_weeks": 42,
+    "n_falling_weeks": 47,
+    "interpretation": "When Brent rises, retail moves 0.53\u00d7 as much. When Brent falls, retail moves 0.55\u00d7 as much."
+  }
 }
