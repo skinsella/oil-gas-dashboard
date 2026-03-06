@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Oil &amp; Gas Price Dashboard</title>
+  <meta name="description" content="Live oil and gas price dashboard — WTI Crude, Brent Crude, Natural Gas, Gasoline, Heating Oil">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #0d1117;
+      --card:      #161b22;
+      --card2:     #21262d;
+      --border:    #30363d;
+      --text:      #e6edf3;
+      --muted:     #8b949e;
+      --faint:     #6e7681;
+      --orange:    #f0883e;
+      --amber:     #d4a843;
+      --blue:      #58a6ff;
+      --purple:    #bc8cff;
+      --rose:      #e091a0;
+      --green:     #3fb950;
+      --red:       #f85149;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', system-ui, sans-serif;
+      min-height: 100vh;
+      line-height: 1.5;
+    }
+
+    a { color: var(--orange); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* ── HEADER ──────────────────────────────────────────────────── */
+    header {
+      background: var(--card);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 200;
+    }
+    .header-inner {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 0.75rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 1.1rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .logo-icon { font-size: 1.35rem; line-height: 1; }
+    .logo em { color: var(--orange); font-style: normal; }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 0.875rem;
+      font-size: 0.8rem;
+      color: var(--muted);
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+    .live-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      background: rgba(63,185,80,0.12);
+      border: 1px solid rgba(63,185,80,0.35);
+      color: var(--green);
+      padding: 0.2rem 0.55rem;
+      border-radius: 9999px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+    }
+    .live-dot {
+      width: 6px; height: 6px;
+      background: var(--green);
+      border-radius: 50%;
+      animation: blink 2s infinite;
+    }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.2} }
+
+    .refresh-btn {
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      padding: 0.3rem 0.65rem;
+      border-radius: 0.375rem;
+      cursor: pointer;
+      font-size: 0.8rem;
+      transition: border-color .2s, color .2s;
+    }
+    .refresh-btn:hover { border-color: var(--orange); color: var(--orange); }
+    .refresh-btn.spinning { animation: spin .7s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── TICKER TAPE ─────────────────────────────────────────────── */
+    .ticker-wrap {
+      background: var(--card);
+      border-bottom: 1px solid var(--border);
+      height: 52px;
+      overflow: hidden;
+    }
+
+    /* ── LAYOUT ──────────────────────────────────────────────────── */
+    .container {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 1.5rem;
+    }
+    .section-hd {
+      display: flex;
+      align-items: baseline;
+      gap: 0.65rem;
+      margin-bottom: 1rem;
+    }
+    .section-hd h2 {
+      font-size: 0.9375rem;
+      font-weight: 600;
+    }
+    .section-hd span {
+      font-size: 0.775rem;
+      color: var(--faint);
+    }
+
+    /* ── CARDS ───────────────────────────────────────────────────── */
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    @media (max-width:1200px) { .cards { grid-template-columns: repeat(3,1fr); } }
+    @media (max-width: 760px) { .cards { grid-template-columns: repeat(2,1fr); } }
+    @media (max-width: 480px) { .cards { grid-template-columns: 1fr; } }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 0.75rem;
+      overflow: hidden;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    .card:hover {
+      box-shadow: 0 0 0 1px var(--orange), 0 4px 20px rgba(240,136,62,.08);
+      border-color: var(--orange);
+    }
+    .card[data-t="gas"]:hover {
+      box-shadow: 0 0 0 1px var(--blue), 0 4px 20px rgba(88,166,255,.08);
+      border-color: var(--blue);
+    }
+    .card[data-t="ref"]:hover {
+      box-shadow: 0 0 0 1px var(--purple), 0 4px 20px rgba(188,140,255,.08);
+      border-color: var(--purple);
+    }
+
+    .card-top {
+      padding: 1rem 1rem 0.75rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .card-row1 {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.35rem;
+    }
+    .card-name { font-size: 0.8125rem; font-weight: 600; }
+    .card-sym {
+      font-size: 0.6375rem;
+      font-family: monospace;
+      color: var(--faint);
+      background: var(--card2);
+      padding: 0.1rem 0.35rem;
+      border-radius: 0.2rem;
+    }
+    .card-price {
+      font-size: 1.6rem;
+      font-weight: 700;
+      line-height: 1.15;
+      letter-spacing: -.02em;
+    }
+    .card[data-t="crude"] .card-price { color: var(--orange); }
+    .card[data-t="gas"]   .card-price { color: var(--blue); }
+    .card[data-t="ref"]   .card-price { color: var(--purple); }
+
+    .card-change {
+      font-size: 0.8rem;
+      font-weight: 500;
+      margin-top: 0.15rem;
+    }
+    .up   { color: var(--green); }
+    .down { color: var(--red); }
+    .flat { color: var(--muted); }
+    .card-unit { font-size: 0.65rem; color: var(--faint); margin-top: 0.2rem; }
+
+    .card-chart { height: 150px; overflow: hidden; background: var(--card); }
+
+    /* ── HISTORY CHART ───────────────────────────────────────────── */
+    .chart-box {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 0.75rem;
+      padding: 1.25rem;
+      margin-bottom: 2rem;
+    }
+    .tabs {
+      display: flex;
+      gap: 0.4rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.1rem;
+    }
+    .tab {
+      padding: 0.3rem 0.7rem;
+      border: 1px solid var(--border);
+      border-radius: 0.375rem;
+      background: none;
+      color: var(--muted);
+      font-size: 0.78rem;
+      cursor: pointer;
+      transition: all .18s;
+    }
+    .tab:hover                   { border-color: var(--orange); color: var(--orange); }
+    .tab.on                      { background: var(--orange); border-color: var(--orange); color: #000; font-weight: 600; }
+    .tab[data-k="NATGAS"].on     { background: var(--blue);   border-color: var(--blue);   color: #000; }
+    .tab[data-k="RBOB"].on,
+    .tab[data-k="HEATINGOIL"].on { background: var(--purple); border-color: var(--purple); color: #000; }
+    .tab[data-k="ALL"].on        { background: var(--card2);  border-color: var(--muted);  color: var(--text); }
+
+    .chart-wrap { position: relative; height: 280px; }
+    #no-data {
+      display: none;
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: var(--faint);
+      font-size: 0.85rem;
+      gap: 0.4rem;
+    }
+    #no-data .icon { font-size: 2rem; }
+
+    /* ── ADVANCED CHART ──────────────────────────────────────────── */
+    .adv-box {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 0.75rem;
+      overflow: hidden;
+      margin-bottom: 2rem;
+    }
+    .adv-hd {
+      padding: 0.9rem 1.25rem;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.8125rem;
+      color: var(--muted);
+    }
+    .adv-hd strong { color: var(--text); margin-right: 0.5rem; }
+    .adv-inner { height: 520px; }
+
+    /* ── FOOTER ──────────────────────────────────────────────────── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 1rem 1.5rem;
+      text-align: center;
+      font-size: 0.73rem;
+      color: var(--faint);
+      line-height: 1.8;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══ HEADER ═══════════════════════════════════════════════════════════════ -->
+<header>
+  <div class="header-inner">
+    <div class="logo">
+      <span class="logo-icon">🛢</span>
+      Oil &amp; <em>Gas</em> Dashboard
+    </div>
+    <div class="header-right">
+      <div class="live-badge"><div class="live-dot"></div>LIVE</div>
+      <span id="ts">—</span>
+      <button class="refresh-btn" id="refBtn" onclick="load()">↻ Refresh</button>
+    </div>
+  </div>
+</header>
+
+<!-- ═══ TICKER TAPE ══════════════════════════════════════════════════════════ -->
+<div class="ticker-wrap">
+  <div class="tradingview-widget-container" style="height:100%">
+    <div class="tradingview-widget-container__widget" style="height:100%"></div>
+    <script type="text/javascript"
+      src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js" async>
+    {
+      "symbols": [
+        {"proName":"TVC:USOIL",   "title":"WTI Crude"},
+        {"proName":"TVC:UKOIL",   "title":"Brent Crude"},
+        {"proName":"TVC:NGAS",    "title":"Natural Gas"},
+        {"proName":"NYMEX:RB1!",  "title":"RBOB Gasoline"},
+        {"proName":"NYMEX:HO1!",  "title":"Heating Oil"},
+        {"proName":"TVC:DXY",     "title":"USD Index"},
+        {"proName":"OANDA:XAUUSD","title":"Gold"},
+        {"proName":"TVC:SPX",     "title":"S&P 500"}
+      ],
+      "showSymbolLogo": false,
+      "colorTheme": "dark",
+      "isTransparent": true,
+      "displayMode": "adaptive",
+      "locale": "en"
+    }
+    </script>
+  </div>
+</div>
+
+<!-- ═══ MAIN ══════════════════════════════════════════════════════════════════ -->
+<div class="container">
+
+  <!-- ── LIVE CARDS ─────────────────────────────────────────────────────────── -->
+  <div class="section-hd">
+    <h2>Live Prices</h2>
+    <span>Streaming via TradingView — EIA official daily close shown in header</span>
+  </div>
+
+  <div class="cards">
+
+    <!-- WTI -->
+    <div class="card" data-t="crude">
+      <div class="card-top">
+        <div class="card-row1">
+          <span class="card-name">WTI Crude Oil</span>
+          <span class="card-sym">USOIL</span>
+        </div>
+        <div class="card-price" id="p-WTI">—</div>
+        <div class="card-change" id="c-WTI"><span class="flat">—</span></div>
+        <div class="card-unit">USD / barrel · EIA daily close</div>
+      </div>
+      <div class="card-chart">
+        <div class="tradingview-widget-container" style="height:100%;width:100%">
+          <div class="tradingview-widget-container__widget" style="height:100%;width:100%"></div>
+          <script type="text/javascript"
+            src="https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js" async>
+          {"symbol":"TVC:USOIL","width":"100%","height":150,"locale":"en","dateRange":"1M","colorTheme":"dark","isTransparent":true,"chartOnly":true}
+          </script>
+        </div>
+      </div>
+    </div>
+
+    <!-- BRENT -->
+    <div class="card" data-t="crude">
+      <div class="card-top">
+        <div class="card-row1">
+          <span class="card-name">Brent Crude</span>
+          <span class="card-sym">UKOIL</span>
+        </div>
+        <div class="card-price" id="p-BRENT">—</div>
+        <div class="card-change" id="c-BRENT"><span class="flat">—</span></div>
+        <div class="card-unit">USD / barrel · EIA daily close</div>
+      </div>
+      <div class="card-chart">
+        <div class="tradingview-widget-container" style="height:100%;width:100%">
+          <div class="tradingview-widget-container__widget" style="height:100%;width:100%"></div>
+          <script type="text/javascript"
+            src="https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js" async>
+          {"symbol":"TVC:UKOIL","width":"100%","height":150,"locale":"en","dateRange":"1M","colorTheme":"dark","isTransparent":true,"chartOnly":true}
+          </script>
+        </div>
+      </div>
+    </div>
+
+    <!-- NATURAL GAS -->
+    <div class="card" data-t="gas">
+      <div class="card-top">
+        <div class="card-row1">
+          <span class="card-name">Natural Gas</span>
+          <span class="card-sym">NGAS</span>
+        </div>
+        <div class="card-price" id="p-NATGAS">—</div>
+        <div class="card-change" id="c-NATGAS"><span class="flat">—</span></div>
+        <div class="card-unit">USD / MMBtu · Henry Hub</div>
+      </div>
+      <div class="card-chart">
+        <div class="tradingview-widget-container" style="height:100%;width:100%">
+          <div class="tradingview-widget-container__widget" style="height:100%;width:100%"></div>
+          <script type="text/javascript"
+            src="https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js" async>
+          {"symbol":"TVC:NGAS","width":"100%","height":150,"locale":"en","dateRange":"1M","colorTheme":"dark","isTransparent":true,"chartOnly":true}
+          </script>
+        </div>
+      </div>
+    </div>
+
+    <!-- GASOLINE -->
+    <div class="card" data-t="ref">
+      <div class="card-top">
+        <div class="card-row1">
+          <span class="card-name">Gasoline</span>
+          <span class="card-sym">RB1!</span>
+        </div>
+        <div class="card-price" id="p-RBOB">—</div>
+        <div class="card-change" id="c-RBOB"><span class="flat">—</span></div>
+        <div class="card-unit">USD / gallon · NY Harbor Conv.</div>
+      </div>
+      <div class="card-chart">
+        <div class="tradingview-widget-container" style="height:100%;width:100%">
+          <div class="tradingview-widget-container__widget" style="height:100%;width:100%"></div>
+          <script type="text/javascript"
+            src="https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js" async>
+          {"symbol":"NYMEX:RB1!","width":"100%","height":150,"locale":"en","dateRange":"1M","colorTheme":"dark","isTransparent":true,"chartOnly":true}
+          </script>
+        </div>
+      </div>
+    </div>
+
+    <!-- HEATING OIL -->
+    <div class="card" data-t="ref">
+      <div class="card-top">
+        <div class="card-row1">
+          <span class="card-name">Heating Oil</span>
+          <span class="card-sym">HO1!</span>
+        </div>
+        <div class="card-price" id="p-HEATINGOIL">—</div>
+        <div class="card-change" id="c-HEATINGOIL"><span class="flat">—</span></div>
+        <div class="card-unit">USD / gallon · NY Harbor No.2</div>
+      </div>
+      <div class="card-chart">
+        <div class="tradingview-widget-container" style="height:100%;width:100%">
+          <div class="tradingview-widget-container__widget" style="height:100%;width:100%"></div>
+          <script type="text/javascript"
+            src="https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js" async>
+          {"symbol":"NYMEX:HO1!","width":"100%","height":150,"locale":"en","dateRange":"1M","colorTheme":"dark","isTransparent":true,"chartOnly":true}
+          </script>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /cards -->
+
+  <!-- ── 30-DAY HISTORY ─────────────────────────────────────────────────────── -->
+  <div class="section-hd">
+    <h2>Price History</h2>
+    <span>Official EIA daily spot prices — 60-day window — updated by GitHub Actions</span>
+  </div>
+
+  <div class="chart-box">
+    <div class="tabs">
+      <button class="tab on"  data-k="WTI"        onclick="switchTab('WTI',this)">WTI Crude</button>
+      <button class="tab"     data-k="BRENT"       onclick="switchTab('BRENT',this)">Brent Crude</button>
+      <button class="tab"     data-k="NATGAS"      onclick="switchTab('NATGAS',this)">Natural Gas</button>
+      <button class="tab"     data-k="RBOB"        onclick="switchTab('RBOB',this)">Gasoline</button>
+      <button class="tab"     data-k="HEATINGOIL"  onclick="switchTab('HEATINGOIL',this)">Heating Oil</button>
+      <button class="tab"     data-k="ALL"         onclick="switchTab('ALL',this)">All (% change)</button>
+    </div>
+    <div class="chart-wrap">
+      <canvas id="histChart"></canvas>
+      <div id="no-data">
+        <span class="icon">📊</span>
+        <span>Historical data not yet available.</span>
+        <span style="font-size:.75rem">Run <code>python scripts/fetch_prices.py</code> or trigger the GitHub Action to populate.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── ADVANCED TRADINGVIEW CHART ─────────────────────────────────────────── -->
+  <div class="section-hd">
+    <h2>Advanced Chart</h2>
+    <span>Full technical analysis — powered by TradingView (use symbol search to switch instrument)</span>
+  </div>
+
+  <div class="adv-box">
+    <div class="adv-hd">
+      <strong>WTI Crude Oil — USOIL</strong>
+      Use the symbol field inside the chart to switch to UKOIL, NGAS, NYMEX:RB1!, NYMEX:HO1!, etc.
+    </div>
+    <div class="adv-inner">
+      <div class="tradingview-widget-container" style="height:100%;width:100%">
+        <div class="tradingview-widget-container__widget" style="height:100%;width:100%"></div>
+        <script type="text/javascript"
+          src="https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js" async>
+        {
+          "autosize": true,
+          "symbol": "TVC:USOIL",
+          "interval": "D",
+          "timezone": "Etc/UTC",
+          "theme": "dark",
+          "style": "1",
+          "locale": "en",
+          "backgroundColor": "rgba(22,27,34,1)",
+          "gridColor": "rgba(48,54,61,0.3)",
+          "hide_top_toolbar": false,
+          "hide_legend": false,
+          "save_image": false,
+          "calendar": false,
+          "support_host": "https://www.tradingview.com"
+        }
+        </script>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /container -->
+
+<!-- ═══ FOOTER ════════════════════════════════════════════════════════════════ -->
+<footer>
+  <p>
+    Live charts: <a href="https://www.tradingview.com/widget/" target="_blank" rel="noopener">TradingView</a> &nbsp;·&nbsp;
+    Daily data: <a href="https://www.eia.gov/opendata/" target="_blank" rel="noopener">US EIA Open Data API</a> &nbsp;·&nbsp;
+    Prices updated automatically via GitHub Actions (weekdays 21:00 &amp; 00:00 UTC)
+  </p>
+  <p>Not financial advice. For informational purposes only.</p>
+</footer>
+
+<!-- ═══ DASHBOARD SCRIPT ══════════════════════════════════════════════════════ -->
+<script>
+  /* ── Commodity metadata ── */
+  const META = {
+    WTI:        { label: 'WTI Crude Oil',    color: '#f0883e', dp: 2 },
+    BRENT:      { label: 'Brent Crude',      color: '#d4a843', dp: 2 },
+    NATGAS:     { label: 'Natural Gas',      color: '#58a6ff', dp: 3 },
+    RBOB:       { label: 'Gasoline',         color: '#bc8cff', dp: 4 },
+    HEATINGOIL: { label: 'Heating Oil',      color: '#e091a0', dp: 4 },
+  };
+
+  let priceData = null;
+  let chart = null;
+  let activeKey = 'WTI';
+
+  /* ── Load prices.json ── */
+  async function load() {
+    const btn = document.getElementById('refBtn');
+    btn.classList.add('spinning');
+    try {
+      const r = await fetch('./data/prices.json?_=' + Date.now());
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      priceData = await r.json();
+      renderCards();
+      renderChart(activeKey);
+      const ts = document.getElementById('ts');
+      if (priceData.last_updated) {
+        const d = new Date(priceData.last_updated);
+        ts.textContent = 'EIA: ' + d.toLocaleString('en-IE', {
+          dateStyle: 'medium', timeStyle: 'short', timeZone: 'UTC'
+        }) + ' UTC';
+      }
+    } catch (e) {
+      console.warn('prices.json load failed:', e.message);
+    } finally {
+      btn.classList.remove('spinning');
+    }
+  }
+
+  /* ── Populate card headers ── */
+  function renderCards() {
+    const c = priceData?.commodities || {};
+    for (const [key, meta] of Object.entries(META)) {
+      const hist = c[key]?.history || [];
+      if (hist.length < 2) continue;
+      const cur = hist[0].value, prev = hist[1].value;
+      const diff = cur - prev, pct = diff / prev * 100;
+      const priceEl  = document.getElementById('p-' + key);
+      const changeEl = document.getElementById('c-' + key);
+      if (priceEl)  priceEl.textContent  = '$' + cur.toFixed(meta.dp);
+      if (changeEl) {
+        const arrow = diff >= 0 ? '▲' : '▼';
+        const cls   = diff > 0 ? 'up' : diff < 0 ? 'down' : 'flat';
+        const sign  = diff >= 0 ? '+' : '';
+        changeEl.innerHTML =
+          `<span class="${cls}">${arrow} ${sign}${diff.toFixed(meta.dp)} (${sign}${pct.toFixed(2)}%)</span>` +
+          `<span style="color:var(--faint);font-size:.7rem;margin-left:.4rem">vs prev close</span>`;
+      }
+    }
+  }
+
+  /* ── Chart.js history ── */
+  function renderChart(key) {
+    const noData = document.getElementById('no-data');
+    const ctx = document.getElementById('histChart').getContext('2d');
+    if (chart) { chart.destroy(); chart = null; }
+
+    const c = priceData?.commodities || {};
+    let labels = [], datasets = [];
+
+    if (key === 'ALL') {
+      let base = null;
+      for (const [k, meta] of Object.entries(META)) {
+        const hist = [...(c[k]?.history || [])].reverse();
+        if (!hist.length) continue;
+        if (!base) base = hist.map(h => h.period);
+        const v0 = hist[0].value;
+        datasets.push({
+          label: meta.label,
+          data: hist.map(h => +((h.value - v0) / v0 * 100).toFixed(3)),
+          borderColor: meta.color,
+          backgroundColor: meta.color + '12',
+          borderWidth: 1.8,
+          pointRadius: 0,
+          tension: 0.3,
+          fill: false,
+        });
+      }
+      labels = base || [];
+    } else {
+      const meta = META[key];
+      const hist = [...(c[key]?.history || [])].reverse();
+      labels = hist.map(h => h.period);
+      datasets = [{
+        label: meta.label + ' (' + (c[key]?.unit || '') + ')',
+        data: hist.map(h => h.value),
+        borderColor: meta.color,
+        backgroundColor: meta.color + '18',
+        borderWidth: 2,
+        pointRadius: 0,
+        tension: 0.3,
+        fill: true,
+      }];
+    }
+
+    if (!labels.length) {
+      noData.style.display = 'flex';
+      return;
+    }
+    noData.style.display = 'none';
+
+    chart = new Chart(ctx, {
+      type: 'line',
+      data: { labels, datasets },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        interaction: { mode: 'index', intersect: false },
+        plugins: {
+          legend: {
+            display: key === 'ALL',
+            labels: { color: '#8b949e', boxWidth: 10, font: { size: 11 } }
+          },
+          tooltip: {
+            backgroundColor: '#21262d',
+            borderColor: '#30363d',
+            borderWidth: 1,
+            titleColor: '#e6edf3',
+            bodyColor: '#8b949e',
+            padding: 10,
+            callbacks: {
+              label: ctx => {
+                const v = +ctx.raw;
+                if (key === 'ALL') return '  ' + ctx.dataset.label + ': ' + (v >= 0 ? '+' : '') + v + '%';
+                return '  ' + ctx.dataset.label + ': $' + v.toFixed(META[key]?.dp ?? 2);
+              }
+            }
+          }
+        },
+        scales: {
+          x: {
+            grid: { color: '#1c2128' },
+            ticks: { color: '#6e7681', maxTicksLimit: 9, font: { size: 11 } }
+          },
+          y: {
+            grid: { color: '#1c2128' },
+            ticks: {
+              color: '#6e7681',
+              font: { size: 11 },
+              callback: v => key === 'ALL' ? (v >= 0 ? '+' : '') + v + '%' : '$' + v
+            }
+          }
+        }
+      }
+    });
+  }
+
+  function switchTab(key, btn) {
+    activeKey = key;
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('on'));
+    btn.classList.add('on');
+    renderChart(key);
+  }
+
+  /* ── Boot + auto-refresh every 60 s ── */
+  load();
+  setInterval(load, 60000);
+</script>
+
+</body>
+</html>

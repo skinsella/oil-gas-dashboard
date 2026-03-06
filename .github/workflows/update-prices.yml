@@ -1,0 +1,43 @@
+name: Update Oil & Gas Prices
+
+on:
+  schedule:
+    - cron: '0 21 * * 1-5'   # Weekdays at 21:00 UTC (after US market close)
+    - cron: '0 0 * * 2-6'    # Weekdays at 00:00 UTC (overnight refresh)
+  workflow_dispatch:           # Manual trigger via GitHub Actions tab
+
+jobs:
+  update-prices:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Fetch prices from EIA
+        env:
+          EIA_API_KEY: ${{ secrets.EIA_API_KEY }}
+        run: python scripts/fetch_prices.py
+
+      - name: Commit and push if data changed
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/prices.json
+          if git diff --staged --quiet; then
+            echo "No changes to prices.json — skipping commit"
+          else
+            git commit -m "chore: update prices $(date -u '+%Y-%m-%d %H:%M UTC')"
+            git push
+          fi
