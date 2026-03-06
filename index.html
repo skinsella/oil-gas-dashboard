@@ -452,6 +452,15 @@
     .trans-chart-wrap { position: relative; height: 260px; }
     .eu-chart-wrap    { position: relative; height: 540px; }
 
+    /* ── MARGIN / PASS-THROUGH ────────────────────────────────────── */
+    .tab-margin.on    { background: var(--purple); border-color: var(--purple); color: #000; font-weight: 600; }
+    .tab-margin:hover { border-color: var(--purple); color: var(--purple); }
+    .margin-note {
+      font-size: 0.72rem; color: var(--faint); line-height: 1.65;
+      margin-bottom: 1.5rem; border-left: 3px solid var(--border); padding-left: 0.75rem;
+    }
+    .margin-note strong { color: var(--muted); }
+
   /* ── FOOTER ──────────────────────────────────────────────────── */
     footer {
       border-top: 1px solid var(--border);
@@ -821,6 +830,39 @@
   <div class="irl-chart-box">
     <div class="eu-chart-wrap">
       <canvas id="euChart"></canvas>
+    </div>
+  </div>
+
+  <!-- ── GROSS MARGIN & PASS-THROUGH ANALYSIS ───────────────────────────────── -->
+  <div class="section-hd" id="margin-analysis">
+    <h2>Gross Margin &amp; Price Pass-Through</h2>
+    <span>How crude cost changes translate to retail prices · EU Bulletin pre-tax + EIA Brent + ECB EUR/USD · 2-year weekly</span>
+  </div>
+
+  <p class="margin-note">
+    <strong>Gross margin</strong> = Ireland pre-tax retail price (EU Oil Bulletin depot price, ex all tax)
+    minus Brent crude cost converted to €/litre — it captures refinery processing, transport, distribution, and dealer markup combined.
+    <strong>Pass-through (β)</strong> is the fraction of a €1 move in Brent crude that appears in the pre-tax retail price within the same week.
+    β = 1.0 means full, immediate pass-through. β &lt; 1.0 means costs are partially absorbed.
+    If β_rising &gt; β_falling, retailers transmit cost <em>increases</em> faster than cost <em>savings</em>
+    — the standard empirical signal of asymmetric pricing and potential market power.
+    Note: EU Bulletin prices are survey depot prices; oilprices.ie tracks the higher final delivery price.
+  </p>
+
+  <div class="afford-grid">
+    <div class="afford-card" id="pt-card-margin"></div>
+    <div class="afford-card" id="pt-card-avg"></div>
+    <div class="afford-card" id="pt-card-signal"></div>
+  </div>
+
+  <div class="chart-box">
+    <div class="tabs" id="margin-tabs">
+      <button class="tab tab-margin on" onclick="switchMarginTab('margin',this)">Gross Margin History</button>
+      <button class="tab tab-margin"    onclick="switchMarginTab('decomp',this)">Price Decomposition</button>
+      <button class="tab tab-margin"    onclick="switchMarginTab('pt',this)">Pass-Through β</button>
+    </div>
+    <div class="chart-wrap">
+      <canvas id="marginChart"></canvas>
     </div>
   </div>
 
@@ -1511,10 +1553,202 @@
 
     const span = document.getElementById('eu-as-of');
     if (span && d.as_of) span.textContent = 'week ending ' + d.as_of;
+
+    renderMarginAnalysis(d);
   }
 
   loadEuBulletin();
   setInterval(loadEuBulletin, 3600000); // EU bulletin is weekly, refresh hourly
+
+  /* ════════════════════════════════════════════════════════════
+     GROSS MARGIN & PASS-THROUGH ANALYSIS
+  ════════════════════════════════════════════════════════════ */
+  let marginChart     = null;
+  let activeMarginTab = 'margin';
+
+  function renderMarginAnalysis(d) {
+    const mh = d?.margin_history;
+    const pt = d?.pass_through || {};
+    if (!mh?.length) return;
+
+    const n52   = Math.min(52, mh.length);
+    const avg52 = mh.slice(0, n52).reduce((s, h) => s + h.gross_margin, 0) / n52;
+    const cur   = mh[0];
+    const delta = cur.gross_margin - avg52;
+    const dCls  = delta > 0.01 ? 'down' : delta < -0.01 ? 'up' : 'flat'; // higher margin = bad for consumers
+
+    /* Card 1 — current margin */
+    const c1 = document.getElementById('pt-card-margin');
+    if (c1) c1.innerHTML =
+      `<div class="lbl">Current Gross Margin (Depot)</div>` +
+      `<div class="val">€${cur.gross_margin.toFixed(4)}/L</div>` +
+      `<div class="sub"><span class="${dCls}">${delta >= 0 ? '+' : ''}€${delta.toFixed(4)} vs 52-week avg</span></div>` +
+      `<div class="dt" style="margin-top:.3rem">pre-tax retail − Brent cost · ${cur.week}</div>`;
+
+    /* Card 2 — 52w avg + range */
+    const c2 = document.getElementById('pt-card-avg');
+    if (c2) {
+      const minM = Math.min(...mh.map(h => h.gross_margin));
+      const maxM = Math.max(...mh.map(h => h.gross_margin));
+      c2.innerHTML =
+        `<div class="lbl">52-Week Avg Gross Margin</div>` +
+        `<div class="val">€${avg52.toFixed(4)}/L</div>` +
+        `<div class="sub">2-yr range: €${minM.toFixed(4)} – €${maxM.toFixed(4)}</div>` +
+        `<div class="dt" style="margin-top:.3rem">${n52} weeks used · source: EU Bulletin + EIA + ECB</div>`;
+    }
+
+    /* Card 3 — pass-through signal */
+    const c3 = document.getElementById('pt-card-signal');
+    if (c3) {
+      const sigMap = {
+        ASYMMETRIC:        { cls: 'signal-bear', icon: '⚠', label: 'ASYMMETRIC',    desc: 'Rises pass through faster than falls' },
+        SYMMETRIC:         { cls: 'signal-neut', icon: '→', label: 'SYMMETRIC',     desc: 'Equal pass-through in both directions' },
+        FAVORABLE:         { cls: 'signal-bull', icon: '✓', label: 'FAVORABLE',     desc: 'Savings pass through faster than rises' },
+        INSUFFICIENT_DATA: { cls: 'signal-neut', icon: '?', label: 'INSUFFICIENT',  desc: 'More weekly data needed' },
+      };
+      const sig  = sigMap[pt.signal] || sigMap.INSUFFICIENT_DATA;
+      const ptUp = pt.pt_when_rising  != null ? `β↑ = ${pt.pt_when_rising}` : '';
+      const ptDn = pt.pt_when_falling != null ? `β↓ = ${pt.pt_when_falling}` : '';
+      c3.innerHTML =
+        `<div class="lbl">Pass-Through Signal</div>` +
+        `<div class="val" style="font-size:1rem;padding-top:.25rem"><span class="signal ${sig.cls}">${sig.icon} ${sig.label}</span></div>` +
+        `<div class="sub" style="margin-top:.4rem">${sig.desc}</div>` +
+        `<div class="dt" style="margin-top:.3rem">${ptUp}&nbsp;&nbsp;${ptDn} · ${pt.weeks_used ?? 0} weeks</div>`;
+    }
+
+    renderMarginChart(activeMarginTab);
+  }
+
+  function renderMarginChart(key) {
+    activeMarginTab = key;
+    const ctx = document.getElementById('marginChart');
+    if (!ctx || !euBulData?.margin_history?.length) return;
+    if (marginChart) { marginChart.destroy(); marginChart = null; }
+
+    const mh     = [...euBulData.margin_history].reverse(); // chronological
+    const pt     = euBulData.pass_through || {};
+    const labels = mh.map(h => h.week);
+    const COPTS  = {
+      responsive: true, maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+    };
+    const TIP = {
+      backgroundColor: '#21262d', borderColor: '#30363d', borderWidth: 1,
+      titleColor: '#e6edf3', bodyColor: '#8b949e', padding: 10,
+    };
+
+    if (key === 'margin') {
+      const margins = mh.map(h => h.gross_margin);
+      const avg52   = margins.reduce((s, v) => s + v, 0) / margins.length;
+      marginChart = new Chart(ctx.getContext('2d'), {
+        type: 'line',
+        data: {
+          labels,
+          datasets: [
+            { label: 'Gross margin (€/L)', data: margins,
+              borderColor: '#bc8cff', backgroundColor: 'rgba(188,140,255,0.12)',
+              borderWidth: 2, pointRadius: 0, tension: 0.2, fill: true },
+            { label: '52-week average', data: margins.map(() => avg52),
+              borderColor: 'rgba(139,148,158,0.5)', borderDash: [6,3],
+              borderWidth: 1.5, pointRadius: 0, fill: false },
+          ],
+        },
+        options: { ...COPTS,
+          plugins: { legend: { display: true, labels: { color: '#8b949e', boxWidth: 10, font: { size: 11 } } },
+            tooltip: { ...TIP, callbacks: { label: c => '  ' + c.dataset.label + ': €' + (+c.raw).toFixed(4) + '/L' } } },
+          scales: {
+            x: { grid: { color: '#1c2128' }, ticks: { color: '#6e7681', maxTicksLimit: 12, font: { size: 11 } } },
+            y: { grid: { color: '#1c2128' }, ticks: { color: '#6e7681', font: { size: 11 }, callback: v => '€' + (+v).toFixed(3) } },
+          },
+        },
+      });
+
+    } else if (key === 'decomp') {
+      marginChart = new Chart(ctx.getContext('2d'), {
+        type: 'line',
+        data: {
+          labels,
+          datasets: [
+            { label: 'Brent crude cost (€/L)', data: mh.map(h => h.brent_eur_l),
+              borderColor: '#d4a843', backgroundColor: 'rgba(212,168,67,0.65)',
+              borderWidth: 1, pointRadius: 0, tension: 0.2, fill: true },
+            { label: 'Supply chain margin (€/L)', data: mh.map(h => h.gross_margin),
+              borderColor: '#bc8cff', backgroundColor: 'rgba(188,140,255,0.65)',
+              borderWidth: 1, pointRadius: 0, tension: 0.2, fill: true },
+            { label: 'Tax — excise + VAT 13.5% (€/L)', data: mh.map(h => h.tax_eur_l ?? 0),
+              borderColor: '#6e7681', backgroundColor: 'rgba(110,118,129,0.55)',
+              borderWidth: 1, pointRadius: 0, tension: 0.2, fill: true },
+          ],
+        },
+        options: { ...COPTS,
+          plugins: { legend: { display: true, labels: { color: '#8b949e', boxWidth: 10, font: { size: 11 } } },
+            tooltip: { ...TIP, callbacks: { label: c => '  ' + c.dataset.label + ': €' + (+c.raw).toFixed(4) + '/L' } } },
+          scales: {
+            x: { grid: { color: '#1c2128' }, ticks: { color: '#6e7681', maxTicksLimit: 12, font: { size: 11 } } },
+            y: { stacked: true, grid: { color: '#1c2128' }, ticks: { color: '#6e7681', font: { size: 11 }, callback: v => '€' + (+v).toFixed(2) } },
+          },
+        },
+      });
+
+    } else if (key === 'pt') {
+      const ptUp = pt.pt_when_rising;
+      const ptDn = pt.pt_when_falling;
+      if (ptUp == null || ptDn == null) {
+        // No data — show a placeholder
+        const el = ctx.parentElement;
+        el.innerHTML = '<p style="color:var(--faint);text-align:center;padding:3rem">Not enough weekly data yet for pass-through analysis.</p>';
+        return;
+      }
+      const upC = ptUp > ptDn + 0.15 ? '#f85149' : '#8b949e';
+      const dnC = ptDn > ptUp + 0.15 ? '#3fb950' : '#8b949e';
+      marginChart = new Chart(ctx.getContext('2d'), {
+        type: 'bar',
+        data: {
+          labels: [
+            `When Brent is RISING (${pt.n_rising_weeks ?? '?'} wks)`,
+            `When Brent is FALLING (${pt.n_falling_weeks ?? '?'} wks)`,
+          ],
+          datasets: [
+            { label: 'Pass-through ratio (β)',
+              data: [ptUp, ptDn],
+              backgroundColor: [upC + 'bb', dnC + 'bb'],
+              borderColor: [upC, dnC],
+              borderWidth: 2, borderRadius: 6 },
+            { type: 'line', label: 'Full pass-through (β = 1.0)',
+              data: [1.0, 1.0],
+              borderColor: 'rgba(255,255,255,0.25)', borderDash: [6,3],
+              borderWidth: 1.5, pointRadius: 0, fill: false },
+          ],
+        },
+        options: { ...COPTS,
+          plugins: { legend: { display: true, labels: { color: '#8b949e', boxWidth: 10, font: { size: 11 } } },
+            tooltip: { ...TIP,
+              callbacks: {
+                label: c => {
+                  if (c.datasetIndex === 1) return '';
+                  const v = +c.raw;
+                  const wks = c.dataIndex === 0 ? pt.n_rising_weeks : pt.n_falling_weeks;
+                  return `  β = ${v.toFixed(3)}  →  ${Math.round(v*100)}c retail move per €1 Brent move  (${wks} weeks)`;
+                }
+              }
+            },
+          },
+          scales: {
+            x: { grid: { color: '#1c2128' }, ticks: { color: '#8b949e', font: { size: 12 } } },
+            y: { grid: { color: '#1c2128' },
+              min: 0, max: Math.min(1.5, Math.max(1.2, ptUp * 1.3, ptDn * 1.3)),
+              ticks: { color: '#6e7681', font: { size: 11 }, callback: v => 'β ' + (+v).toFixed(2) } },
+          },
+        },
+      });
+    }
+  }
+
+  function switchMarginTab(key, btn) {
+    document.querySelectorAll('.tab-margin').forEach(t => t.classList.remove('on'));
+    btn.classList.add('on');
+    renderMarginChart(key);
+  }
 </script>
 
 </body>

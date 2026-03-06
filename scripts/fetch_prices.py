@@ -126,8 +126,9 @@ ALL_FUND_SERIES = {**STOCKS_SERIES, **SUPPLY_SERIES, **TRADE_SERIES}
 
 # ── ECB EUR/USD exchange rate ──────────────────────────────────────────────────
 
-ECB_EURUSD_URL = "https://data-api.ecb.europa.eu/service/data/EXR/D.USD.EUR.SP00.A"
-ECB_DAYS = 90
+ECB_EURUSD_URL   = "https://data-api.ecb.europa.eu/service/data/EXR/D.USD.EUR.SP00.A"
+ECB_DAYS         = 730   # 2 years of daily EUR/USD (for margin analysis alignment)
+BRENT_WEEKS      = 104   # 2 years of weekly Brent (for margin history)
 
 # ── Fetch helpers ─────────────────────────────────────────────────────────────
 
@@ -155,6 +156,28 @@ def fetch_natgas_spots() -> dict:
         ("sort[0][column]", "period"), ("sort[0][direction]", "desc"),
         ("length", str(DAYS)),
     ])
+
+
+def fetch_brent_weekly() -> list:
+    """Fetch BRENT_WEEKS of weekly Brent spot prices for margin analysis."""
+    raw = _get("https://api.eia.gov/v2/petroleum/pri/spt/data/", [
+        ("api_key", EIA_API_KEY), ("frequency", "weekly"),
+        ("data[0]", "value"),
+        ("facets[series][]", "RBRTE"),
+        ("sort[0][column]", "period"), ("sort[0][direction]", "desc"),
+        ("length", str(BRENT_WEEKS)),
+    ])
+    result = []
+    for rec in raw.get("response", {}).get("data", []):
+        v = rec.get("value")
+        if v is None or v == "":
+            continue
+        try:
+            result.append({"period": rec["period"], "value": round(float(v), 4)})
+        except (ValueError, TypeError):
+            pass
+    result.sort(key=lambda x: x["period"], reverse=True)
+    return result
 
 
 def fetch_ecb_eurusd() -> list:
@@ -228,9 +251,10 @@ def main() -> None:
         except Exception as e:
             print(f"  Warning: could not read existing prices.json: {e}")
 
-    commodities  = dict(existing.get("commodities", {}))
-    fundamentals = dict(existing.get("fundamentals", {}))
-    eurusd       = list(existing.get("eurusd", []))
+    commodities    = dict(existing.get("commodities", {}))
+    fundamentals   = dict(existing.get("fundamentals", {}))
+    eurusd         = list(existing.get("eurusd", []))
+    brent_weekly   = list(existing.get("brent_weekly", []))
     errors: list[str] = []
 
     # ── Daily spot prices ──────────────────────────────────────────────────────
@@ -298,8 +322,21 @@ def main() -> None:
             print(f"  WARNING: {msg}", file=sys.stderr)
             errors.append(msg)
 
+    # ── Weekly Brent (2-year history for margin analysis) ───────────────────────
+    print("  [weekly Brent — 2yr]")
+    try:
+        brent_weekly = fetch_brent_weekly()
+        if brent_weekly:
+            print(f"    BRENT weekly  {len(brent_weekly):3d} pts  {brent_weekly[0]['value']:.4f} $/bbl  ({brent_weekly[0]['period']})")
+        else:
+            print("    BRENT weekly  no records")
+    except Exception as e:
+        msg = f"Weekly Brent fetch failed: {e}"
+        print(f"  WARNING: {msg}", file=sys.stderr)
+        errors.append(msg)
+
     # ── ECB EUR/USD ─────────────────────────────────────────────────────────────
-    print("  [ECB EUR/USD]")
+    print("  [ECB EUR/USD — 2yr]")
     try:
         eurusd = fetch_ecb_eurusd()
         if eurusd:
@@ -320,7 +357,8 @@ def main() -> None:
         "errors":       errors if errors else None,
         "commodities":  commodities,
         "fundamentals": fundamentals,
-        "eurusd":       eurusd,
+        "eurusd":        eurusd,
+        "brent_weekly":  brent_weekly,
     }
 
     with open(OUTPUT_PATH, "w") as f:
