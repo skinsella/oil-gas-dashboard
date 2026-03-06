@@ -461,6 +461,22 @@
     }
     .margin-note strong { color: var(--muted); }
 
+    /* ── FRESHNESS BADGES ────────────────────────────────────────── */
+    .freshness-badge {
+      display: inline-flex;
+      align-items: center;
+      font-size: 0.62rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      padding: 0.12rem 0.45rem;
+      border-radius: 9999px;
+      margin-left: 0.5rem;
+      vertical-align: middle;
+    }
+    .fresh-green { background: rgba(63,185,80,0.14);  border: 1px solid rgba(63,185,80,0.4);  color: #3fb950; }
+    .fresh-amber { background: rgba(212,168,67,0.14); border: 1px solid rgba(212,168,67,0.4); color: #d4a843; }
+    .fresh-red   { background: rgba(248,81,73,0.14);  border: 1px solid rgba(248,81,73,0.4);  color: #f85149; }
+
   /* ── FOOTER ──────────────────────────────────────────────────── */
     footer {
       border-top: 1px solid var(--border);
@@ -614,7 +630,7 @@
 
   <!-- ── 30-DAY HISTORY ─────────────────────────────────────────────────────── -->
   <div class="section-hd">
-    <h2>Price History</h2>
+    <h2>Price History <span id="badge-eia-daily" class="freshness-badge"></span></h2>
     <span>Official EIA daily spot prices — 60-day window — updated by GitHub Actions</span>
   </div>
 
@@ -677,7 +693,7 @@
 
   <!-- ── WEEKLY MARKET FUNDAMENTALS ────────────────────────────────────────── -->
   <div class="section-hd" id="fundamentals">
-    <h2>📊 Weekly Market Fundamentals</h2>
+    <h2>📊 Weekly Market Fundamentals <span id="badge-eia-weekly" class="freshness-badge"></span></h2>
     <span>EIA Weekly Petroleum Status Report · updated every Thursday · current as of most recent report</span>
   </div>
 
@@ -712,7 +728,7 @@
 
   <!-- ── IRISH HOME HEATING OIL ──────────────────────────────────────────────── -->
   <div class="section-hd" id="ireland">
-    <h2>🇮🇪 Irish Home Heating Oil</h2>
+    <h2>🇮🇪 Irish Home Heating Oil <span id="badge-ireland" class="freshness-badge"></span></h2>
     <span>Kerosene · 500 litre delivery · county prices scraped daily from <a href="https://www.oilprices.ie" target="_blank" rel="noopener">oilprices.ie</a></span>
   </div>
 
@@ -801,6 +817,18 @@
     </table>
   </div>
 
+  <!-- ── INTER-COUNTY DISTANCE REGRESSION ──────────────────────────────────── -->
+  <div class="section-hd">
+    <h2>County Price vs. Distance to Oil Terminal</h2>
+    <span>OLS regression: price per litre ~ min distance to nearest import terminal · residual = unexplained county premium / discount</span>
+  </div>
+  <div class="irl-chart-box">
+    <div style="position:relative;height:340px">
+      <canvas id="distRegrChart"></canvas>
+    </div>
+    <p id="distRegrStats" style="font-size:0.72rem;color:var(--faint);margin-top:0.75rem;line-height:1.6"></p>
+  </div>
+
   <div class="section-hd">
     <h2>Irish National Average — Price Trend</h2>
     <span>€ per 500L · daily · source oilprices.ie</span>
@@ -824,7 +852,7 @@
 
   <!-- ── EU OIL BULLETIN COUNTRY COMPARISON ─────────────────────────────────── -->
   <div class="section-hd" id="eu-comparison">
-    <h2>EU Heating Oil Price Comparison</h2>
+    <h2>EU Heating Oil Price Comparison <span id="badge-eu-comp" class="freshness-badge"></span></h2>
     <span>Heating gas oil with taxes · <span id="eu-as-of">latest week</span> · source: <a href="https://energy.ec.europa.eu/data-and-analysis/weekly-oil-bulletin_en" target="_blank" rel="noopener">EU Weekly Oil Bulletin</a></span>
   </div>
   <div class="irl-chart-box">
@@ -835,7 +863,7 @@
 
   <!-- ── GROSS MARGIN & PASS-THROUGH ANALYSIS ───────────────────────────────── -->
   <div class="section-hd" id="margin-analysis">
-    <h2>Gross Margin &amp; Price Pass-Through</h2>
+    <h2>Gross Margin &amp; Price Pass-Through <span id="badge-margin" class="freshness-badge"></span></h2>
     <span>How crude cost changes translate to retail prices · EU Bulletin pre-tax + EIA Brent + ECB EUR/USD · 2-year weekly</span>
   </div>
 
@@ -908,6 +936,7 @@
       renderChart(activeKey);
       renderFundamentals();
       if (irlData) renderTransmissionChart();
+      renderFreshnessBadges();
       const ts = document.getElementById('ts');
       if (priceData.last_updated) {
         const d = new Date(priceData.last_updated);
@@ -1203,7 +1232,9 @@
       renderIrlChart(irlData);
       renderAffordability(irlData);
       renderTileMap(irlData);
+      renderDistanceRegression(irlData);
       if (priceData) renderTransmissionChart();
+      renderFreshnessBadges();
     } catch (e) {
       console.warn('ireland_prices.json failed:', e.message);
     }
@@ -1494,6 +1525,7 @@
       if (!r.ok) throw new Error('HTTP ' + r.status);
       euBulData = await r.json();
       renderEuBulletin(euBulData);
+      renderFreshnessBadges();
     } catch (e) {
       console.warn('eu_bulletin.json failed:', e.message);
     }
@@ -1675,7 +1707,11 @@
             { label: 'Supply chain margin (€/L)', data: mh.map(h => h.gross_margin),
               borderColor: '#bc8cff', backgroundColor: 'rgba(188,140,255,0.65)',
               borderWidth: 1, pointRadius: 0, tension: 0.2, fill: true },
-            { label: 'Tax — excise + VAT 13.5% (€/L)', data: mh.map(h => h.tax_eur_l ?? 0),
+            { label: 'Carbon charge (€/L)', data: mh.map(h => h.carbon_eur_l ?? 0),
+              borderColor: '#e091a0', backgroundColor: 'rgba(224,145,160,0.65)',
+              borderWidth: 1, pointRadius: 0, tension: 0.0, fill: true },
+            { label: 'Other excise + VAT 13.5% (€/L)',
+              data: mh.map(h => +((h.other_mot_eur_l ?? 0) + (h.vat_eur_l ?? 0)).toFixed(4)),
               borderColor: '#6e7681', backgroundColor: 'rgba(110,118,129,0.55)',
               borderWidth: 1, pointRadius: 0, tension: 0.2, fill: true },
           ],
@@ -1748,6 +1784,178 @@
     document.querySelectorAll('.tab-margin').forEach(t => t.classList.remove('on'));
     btn.classList.add('on');
     renderMarginChart(key);
+  }
+
+  /* ════════════════════════════════════════════════════════════
+     INTER-COUNTY DISTANCE REGRESSION
+  ════════════════════════════════════════════════════════════ */
+  const COUNTY_CENTROIDS = {
+    "Carlow":    [52.840, -6.926],  "Cavan":     [53.990, -7.363],
+    "Clare":     [52.905, -8.981],  "Cork":      [51.898, -8.475],
+    "Donegal":   [54.655, -8.104],  "Dublin":    [53.350, -6.266],
+    "Galway":    [53.278, -9.050],  "Kerry":     [52.156, -9.567],
+    "Kildare":   [53.160, -6.910],  "Kilkenny":  [52.654, -7.244],
+    "Laois":     [52.994, -7.332],  "Leitrim":   [54.080, -8.001],
+    "Limerick":  [52.668, -8.630],  "Longford":  [53.727, -7.793],
+    "Louth":     [53.923, -6.488],  "Mayo":      [53.860, -9.299],
+    "Meath":     [53.608, -6.660],  "Monaghan":  [54.249, -6.968],
+    "Offaly":    [53.274, -7.774],  "Roscommon": [53.759, -8.199],
+    "Sligo":     [54.270, -8.470],  "Tipperary": [52.473, -8.162],
+    "Waterford": [52.260, -7.110],  "Westmeath": [53.535, -7.462],
+    "Wexford":   [52.336, -6.463],  "Wicklow":   [52.980, -6.403],
+  };
+
+  const OIL_TERMINALS = [
+    { name: "Dublin Port",    lat: 53.349, lng: -6.215 },
+    { name: "Cork Harbour",   lat: 51.851, lng: -8.297 },
+    { name: "Foynes Port",    lat: 52.612, lng: -9.110 },
+    { name: "Waterford Port", lat: 52.260, lng: -7.110 },
+  ];
+
+  function haversineKm(lat1, lng1, lat2, lng2) {
+    const R    = 6371;
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLng = (lng2 - lng1) * Math.PI / 180;
+    const a    = Math.sin(dLat / 2) ** 2 +
+                 Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                 Math.sin(dLng / 2) ** 2;
+    return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  }
+
+  function minDistToTerminal(lat, lng) {
+    return Math.min(...OIL_TERMINALS.map(t => haversineKm(lat, lng, t.lat, t.lng)));
+  }
+
+  function olsRegress(xs, ys) {
+    const n  = xs.length;
+    const mx = xs.reduce((a, b) => a + b) / n;
+    const my = ys.reduce((a, b) => a + b) / n;
+    const ss = xs.reduce((s, x)    => s + (x - mx) ** 2, 0);
+    const sp = xs.reduce((s, x, i) => s + (x - mx) * (ys[i] - my), 0);
+    const beta  = sp / ss;
+    const alpha = my - beta * mx;
+    const yhat  = xs.map(x => alpha + beta * x);
+    const ssTot = ys.reduce((s, y)    => s + (y - my) ** 2, 0);
+    const ssRes = ys.reduce((s, y, i) => s + (y - yhat[i]) ** 2, 0);
+    const r2    = ssTot > 0 ? 1 - ssRes / ssTot : 0;
+    return { alpha, beta, r2, yhat };
+  }
+
+  let distRegrChart = null;
+
+  function renderDistanceRegression(d) {
+    const ctx = document.getElementById('distRegrChart');
+    if (!ctx) return;
+    const counties = d?.counties || {};
+    const pts = [];
+    for (const [name, v] of Object.entries(counties)) {
+      const c = COUNTY_CENTROIDS[name];
+      if (!c || !v.price_per_litre) continue;
+      pts.push({ name, ppl: v.price_per_litre, dist: minDistToTerminal(c[0], c[1]) });
+    }
+    if (pts.length < 5) return;
+
+    const xs = pts.map(p => p.dist);
+    const ys = pts.map(p => p.ppl);
+    const { alpha, beta, r2, yhat } = olsRegress(xs, ys);
+
+    const residuals = pts.map((p, i) => ({ name: p.name, resid: p.ppl - yhat[i] }))
+                         .sort((a, b) => b.resid - a.resid);
+
+    if (distRegrChart) { distRegrChart.destroy(); distRegrChart = null; }
+
+    distRegrChart = new Chart(ctx.getContext('2d'), {
+      type: 'bar',
+      data: {
+        labels: residuals.map(r => r.name),
+        datasets: [{
+          label: 'Price residual vs distance model (€/L)',
+          data:  residuals.map(r => +r.resid.toFixed(4)),
+          backgroundColor: residuals.map(r => r.resid > 0 ? 'rgba(248,81,73,0.7)'  : 'rgba(63,185,80,0.7)'),
+          borderColor:     residuals.map(r => r.resid > 0 ? '#f85149' : '#3fb950'),
+          borderWidth: 1, borderRadius: 3,
+        }],
+      },
+      options: {
+        indexAxis: 'y',
+        responsive: true, maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            backgroundColor: '#21262d', borderColor: '#30363d', borderWidth: 1,
+            titleColor: '#e6edf3', bodyColor: '#8b949e', padding: 10,
+            callbacks: {
+              label: c => {
+                const v = +c.raw;
+                return `  ${v >= 0 ? '+' : ''}€${v.toFixed(4)}/L vs distance-predicted price`;
+              }
+            }
+          },
+        },
+        scales: {
+          x: {
+            grid: { color: '#1c2128' },
+            ticks: { color: '#6e7681', font: { size: 11 },
+              callback: v => (v >= 0 ? '+' : '') + '€' + (+v).toFixed(3) },
+          },
+          y: { grid: { color: '#1c2128' }, ticks: { color: '#8b949e', font: { size: 11 } } },
+        },
+      },
+    });
+
+    const statsEl = document.getElementById('distRegrStats');
+    if (statsEl) {
+      const per100c = (beta * 100 * 100).toFixed(2); // β per 100 km, converted to cent/L
+      statsEl.innerHTML =
+        `Distance effect: <strong>${per100c > 0 ? '+' : ''}${per100c}c/L per 100 km</strong> from nearest import terminal &nbsp;·&nbsp; ` +
+        `R² = <strong>${r2.toFixed(3)}</strong> &nbsp;·&nbsp; ` +
+        `n = <strong>${pts.length}</strong> counties &nbsp;·&nbsp; ` +
+        `<span style="color:#f85149">■</span> paying more than distance predicts &nbsp; ` +
+        `<span style="color:#3fb950">■</span> paying less`;
+    }
+  }
+
+  /* ════════════════════════════════════════════════════════════
+     FRESHNESS BADGES
+  ════════════════════════════════════════════════════════════ */
+  function ageDays(dateStr) {
+    if (!dateStr) return Infinity;
+    const d = new Date(dateStr);
+    if (isNaN(d.getTime())) return Infinity;
+    return (Date.now() - d.getTime()) / 86400000;
+  }
+
+  function freshnessClass(days, greenDays, amberDays) {
+    if (days <= greenDays) return 'fresh-green';
+    if (days <= amberDays) return 'fresh-amber';
+    return 'fresh-red';
+  }
+
+  function setBadge(id, dateStr, greenDays, amberDays) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const days = ageDays(dateStr);
+    if (!isFinite(days)) { el.textContent = ''; return; }
+    const cls = freshnessClass(days, greenDays, amberDays);
+    const age = days < 1 ? '<1d' : Math.round(days) + 'd';
+    el.className   = `freshness-badge ${cls}`;
+    el.textContent = age + ' ago';
+  }
+
+  function renderFreshnessBadges() {
+    // EIA daily prices — data date (not script run date)
+    const eiaDate  = priceData?.commodities?.BRENT?.history?.[0]?.period;
+    setBadge('badge-eia-daily',  eiaDate,  3,  7);
+    // EIA weekly fundamentals
+    const fundDate = priceData?.fundamentals?.CRUDE_STOCKS?.history?.[0]?.period;
+    setBadge('badge-eia-weekly', fundDate, 7, 14);
+    // Irish heating oil (last_updated is ISO timestamp)
+    const irlDate  = irlData?.last_updated;
+    setBadge('badge-ireland',    irlDate,  2,  5);
+    // EU Bulletin (as_of is YYYY-MM-DD week date)
+    const euDate   = euBulData?.as_of || euBulData?.last_updated;
+    setBadge('badge-eu-comp',    euDate,   7, 14);
+    setBadge('badge-margin',     euDate,   7, 14);
   }
 </script>
 

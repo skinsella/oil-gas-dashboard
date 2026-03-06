@@ -37,6 +37,26 @@ BASE_URL      = "https://energy.ec.europa.eu"
 HISTORY_WEEKS  = 104   # ~2 years
 LITRES_PER_BBL = 158.987
 
+# ── Ireland Carbon Tax on Home Heating (kerosene / heating gas oil) ───────────
+# Rate changes effective 1 May each year (Budget announcement, applied May)
+CARBON_TAX_SCHEDULE = [
+    ("2026-05-01", 71.00),
+    ("2025-05-01", 63.50),
+    ("2024-05-01", 56.00),
+    ("2023-05-01", 48.50),
+    ("2022-05-01", 41.00),
+    ("2021-05-01", 33.50),
+]
+CO2_FACTOR_KEROSENE = 0.0025407  # tonnes CO2 per litre of kerosene/heating gas oil
+
+
+def carbon_rate_for_week(week_str: str) -> float:
+    """Return the carbon tax rate (€/tonne CO2) applicable for a given week (YYYY-MM-DD)."""
+    for effective_date, rate in CARBON_TAX_SCHEDULE:
+        if week_str >= effective_date:
+            return rate
+    return CARBON_TAX_SCHEDULE[-1][1]  # earliest known rate
+
 COUNTRY_NAMES = {
     "AT": "Austria",     "BE": "Belgium",     "BG": "Bulgaria",
     "CY": "Cyprus",      "CZ": "Czech Rep.",  "DE": "Germany",
@@ -235,13 +255,22 @@ def compute_margin_history(
         gross_margin = round(pretax - brent_eur_l, 4)
         tax_eur_l    = round(withtax - pretax, 4) if withtax is not None else None
 
+        # Tax decomposition
+        carbon_eur_l    = round(carbon_rate_for_week(wk) * CO2_FACTOR_KEROSENE, 4)
+        vat_eur_l       = round(withtax * (0.135 / 1.135), 4) if withtax is not None else None
+        # excise = withtax/1.135 - pretax; other_mot = excise - carbon
+        other_mot_eur_l = round((withtax / 1.135 - pretax) - carbon_eur_l, 4) if withtax is not None else None
+
         result.append({
-            "week":         wk,
-            "pretax_eur_l": pretax,
-            "withtax_eur_l": withtax,
-            "brent_eur_l":  brent_eur_l,
-            "gross_margin": gross_margin,
-            "tax_eur_l":    tax_eur_l,
+            "week":           wk,
+            "pretax_eur_l":   pretax,
+            "withtax_eur_l":  withtax,
+            "brent_eur_l":    brent_eur_l,
+            "gross_margin":   gross_margin,
+            "tax_eur_l":      tax_eur_l,
+            "carbon_eur_l":   carbon_eur_l,
+            "vat_eur_l":      vat_eur_l,
+            "other_mot_eur_l": other_mot_eur_l,
         })
 
     # Return newest first (match existing convention)
