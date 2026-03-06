@@ -273,7 +273,90 @@
     .adv-hd strong { color: var(--text); margin-right: 0.5rem; }
     .adv-inner { height: 520px; }
 
-    /* ── FOOTER ──────────────────────────────────────────────────── */
+    /* ── FUTURES BOX ─────────────────────────────────────────────── */
+    .futures-box {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 0.75rem;
+      overflow: hidden;
+      margin-bottom: 2rem;
+      height: 500px;
+    }
+
+    /* ── IRELAND SECTION ──────────────────────────────────────────── */
+    .irl-banner {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    @media (max-width: 760px) { .irl-banner { grid-template-columns: repeat(2,1fr); } }
+    @media (max-width: 400px) { .irl-banner { grid-template-columns: 1fr; } }
+    .irl-stat {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 0.5rem;
+      padding: 0.875rem 1rem;
+    }
+    .irl-stat .lbl { font-size: 0.72rem; color: var(--faint); display: block; margin-bottom: 0.3rem; }
+    .irl-stat .val { font-size: 1.35rem; font-weight: 700; }
+    .irl-stat .sub { font-size: 0.72rem; color: var(--muted); margin-top: 0.2rem; }
+
+    .county-table-wrap {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 0.75rem;
+      overflow: hidden;
+      margin-bottom: 2rem;
+      overflow-x: auto;
+    }
+    .county-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.84rem;
+    }
+    .county-table th {
+      background: var(--card2);
+      color: var(--muted);
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      padding: 0.65rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+    .county-table td {
+      padding: 0.55rem 1rem;
+      border-bottom: 1px solid #1c2128;
+      white-space: nowrap;
+    }
+    .county-table tr:last-child td { border-bottom: none; }
+    .county-table tr:hover td { background: rgba(255,255,255,.025); }
+    .rank-badge {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      background: var(--card2);
+      font-size: 0.7rem; font-weight: 600; color: var(--muted);
+    }
+    .rank-badge.g { background: var(--green); color: #000; }
+    .county-link { color: var(--text); text-decoration: none; }
+    .county-link:hover { color: var(--orange); text-decoration: underline; }
+    .price-bar-wrap { background: var(--card2); border-radius: 9999px; height: 5px; width: 100px; overflow: hidden; }
+    .price-bar { height: 100%; border-radius: 9999px; }
+
+    .irl-chart-box {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 0.75rem;
+      padding: 1.25rem;
+      margin-bottom: 2rem;
+    }
+    .irl-chart-wrap { position: relative; height: 220px; }
+
+  /* ── FOOTER ──────────────────────────────────────────────────── */
     footer {
       border-top: 1px solid var(--border);
       padding: 1rem 1.5rem;
@@ -513,6 +596,131 @@
     </div>
   </div>
 
+
+  <!-- ── GLOBAL OIL FUTURES ──────────────────────────────────────────────────── -->
+  <div class="section-hd" id="futures">
+    <h2>🌍 Global Oil Futures</h2>
+    <span>Forward curve — WTI, Brent &amp; Natural Gas term structure (live)</span>
+  </div>
+  <div class="futures-box">
+    <div class="tradingview-widget-container" style="height:100%;width:100%">
+      <div class="tradingview-widget-container__widget" style="height:100%;width:100%"></div>
+      <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-market-quotes.js" async>
+      {
+        "title": "Energy Futures",
+        "width": "100%",
+        "height": "100%",
+        "locale": "en",
+        "showSymbolLogo": false,
+        "colorTheme": "dark",
+        "isTransparent": true,
+        "symbolsGroups": [
+          {
+            "name": "WTI Crude Futures (NYMEX)",
+            "symbols": [
+              {"name": "NYMEX:CL1!", "displayName": "WTI M1 — Front"},
+              {"name": "NYMEX:CL2!", "displayName": "WTI M2"},
+              {"name": "NYMEX:CL3!", "displayName": "WTI M3"},
+              {"name": "NYMEX:CL4!", "displayName": "WTI M4"},
+              {"name": "NYMEX:CL5!", "displayName": "WTI M5"},
+              {"name": "NYMEX:CL6!", "displayName": "WTI M6"}
+            ]
+          },
+          {
+            "name": "Brent Crude Futures (NYMEX)",
+            "symbols": [
+              {"name": "NYMEX:BB1!", "displayName": "Brent M1 — Front"},
+              {"name": "NYMEX:BB2!", "displayName": "Brent M2"},
+              {"name": "NYMEX:BB3!", "displayName": "Brent M3"},
+              {"name": "NYMEX:BB4!", "displayName": "Brent M4"},
+              {"name": "NYMEX:BB5!", "displayName": "Brent M5"},
+              {"name": "NYMEX:BB6!", "displayName": "Brent M6"}
+            ]
+          },
+          {
+            "name": "Natural Gas Futures (NYMEX)",
+            "symbols": [
+              {"name": "NYMEX:NG1!", "displayName": "Nat Gas M1 — Front"},
+              {"name": "NYMEX:NG2!", "displayName": "Nat Gas M2"},
+              {"name": "NYMEX:NG3!", "displayName": "Nat Gas M3"},
+              {"name": "NYMEX:NG4!", "displayName": "Nat Gas M4"},
+              {"name": "NYMEX:NG5!", "displayName": "Nat Gas M5"},
+              {"name": "NYMEX:NG6!", "displayName": "Nat Gas M6"}
+            ]
+          },
+          {
+            "name": "Refined Products (NYMEX)",
+            "symbols": [
+              {"name": "NYMEX:RB1!", "displayName": "RBOB Gasoline M1"},
+              {"name": "NYMEX:RB2!", "displayName": "RBOB Gasoline M2"},
+              {"name": "NYMEX:HO1!", "displayName": "Heating Oil M1"},
+              {"name": "NYMEX:HO2!", "displayName": "Heating Oil M2"}
+            ]
+          }
+        ]
+      }
+      </script>
+    </div>
+  </div>
+
+  <!-- ── IRISH HOME HEATING OIL ──────────────────────────────────────────────── -->
+  <div class="section-hd" id="ireland">
+    <h2>🇮🇪 Irish Home Heating Oil</h2>
+    <span>Kerosene · 500 litre delivery · county prices scraped daily from <a href="https://www.oilprices.ie" target="_blank" rel="noopener">oilprices.ie</a></span>
+  </div>
+
+  <div class="irl-banner">
+    <div class="irl-stat">
+      <span class="lbl">National Average (500L)</span>
+      <div class="val" id="irl-avg">—</div>
+      <div class="sub" id="irl-avg-c">—</div>
+    </div>
+    <div class="irl-stat">
+      <span class="lbl">Cheapest County</span>
+      <div class="val" id="irl-cheap-p">—</div>
+      <div class="sub" id="irl-cheap-n">—</div>
+    </div>
+    <div class="irl-stat">
+      <span class="lbl">Most Expensive</span>
+      <div class="val" id="irl-exp-p">—</div>
+      <div class="sub" id="irl-exp-n">—</div>
+    </div>
+    <div class="irl-stat">
+      <span class="lbl">Data Last Scraped</span>
+      <div class="val" style="font-size:.95rem;line-height:1.4" id="irl-ts">—</div>
+      <div class="sub">source: oilprices.ie</div>
+    </div>
+  </div>
+
+  <div class="county-table-wrap">
+    <table class="county-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>County</th>
+          <th>€ / 500L</th>
+          <th>c / Litre</th>
+          <th>vs National Avg</th>
+          <th>Day Change</th>
+          <th>Relative Price</th>
+        </tr>
+      </thead>
+      <tbody id="county-tbody">
+        <tr><td colspan="7" style="text-align:center;color:var(--faint);padding:2rem">Loading county data…</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section-hd">
+    <h2>Irish National Average — Price Trend</h2>
+    <span>€ per 500L · daily · source oilprices.ie</span>
+  </div>
+  <div class="irl-chart-box">
+    <div class="irl-chart-wrap">
+      <canvas id="irlChart"></canvas>
+    </div>
+  </div>
+
 </div><!-- /container -->
 
 <!-- ═══ FOOTER ════════════════════════════════════════════════════════════════ -->
@@ -520,7 +728,8 @@
   <p>
     Live charts: <a href="https://www.tradingview.com/widget/" target="_blank" rel="noopener">TradingView</a> &nbsp;·&nbsp;
     Daily data: <a href="https://www.eia.gov/opendata/" target="_blank" rel="noopener">US EIA Open Data API</a> &nbsp;·&nbsp;
-    Prices updated automatically via GitHub Actions (weekdays 21:00 &amp; 00:00 UTC)
+    Irish prices: <a href="https://www.oilprices.ie" target="_blank" rel="noopener">oilprices.ie</a> &nbsp;·&nbsp;
+    Updated automatically via GitHub Actions (weekdays 21:00 &amp; 00:00 UTC)
   </p>
   <p>Not financial advice. For informational purposes only.</p>
 </footer>
@@ -692,6 +901,125 @@
   /* ── Boot + auto-refresh every 60 s ── */
   load();
   setInterval(load, 60000);
+
+  /* ════════════════════════════════════════════════════════════
+     IRELAND HEATING OIL
+  ════════════════════════════════════════════════════════════ */
+  let irlData  = null;
+  let irlChart = null;
+
+  async function loadIreland() {
+    try {
+      const r = await fetch('./data/ireland_prices.json?_=' + Date.now());
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      irlData = await r.json();
+      renderIrlBanner(irlData);
+      renderCountyTable(irlData);
+      renderIrlChart(irlData);
+    } catch (e) {
+      console.warn('ireland_prices.json failed:', e.message);
+    }
+  }
+
+  function renderIrlBanner(d) {
+    const counties = Object.entries(d.counties || {});
+    if (!counties.length) return;
+    const avg = d.national_avg_500l;
+    const el = id => document.getElementById(id);
+    el('irl-avg').textContent   = avg ? '€' + avg.toFixed(2) : '—';
+    el('irl-avg-c').textContent = avg ? (avg / 5).toFixed(1) + 'c / litre' : '—';
+    const sorted = [...counties].sort((a,b) => a[1].price_500l - b[1].price_500l);
+    const [cn, cv] = sorted[0]    || [];
+    const [en, ev] = sorted.at(-1) || [];
+    if (cn) { el('irl-cheap-p').textContent = '€' + cv.price_500l.toFixed(2); el('irl-cheap-n').textContent = cn; }
+    if (en) { el('irl-exp-p').textContent   = '€' + ev.price_500l.toFixed(2); el('irl-exp-n').textContent   = en; }
+    if (d.last_updated) {
+      const dt = new Date(d.last_updated);
+      el('irl-ts').textContent = dt.toLocaleString('en-IE', { dateStyle: 'medium', timeStyle: 'short', timeZone: 'UTC' }) + ' UTC';
+    }
+  }
+
+  function renderCountyTable(d) {
+    const tbody  = document.getElementById('county-tbody');
+    const entries = Object.entries(d.counties || {});
+    if (!entries.length) {
+      tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:var(--faint);padding:2rem">No county data yet</td></tr>';
+      return;
+    }
+    const sorted = [...entries].sort((a,b) => a[1].price_500l - b[1].price_500l);
+    const avg  = d.national_avg_500l || 0;
+    const minP = sorted[0][1].price_500l;
+    const maxP = sorted.at(-1)[1].price_500l;
+
+    tbody.innerHTML = sorted.map(([county, v], i) => {
+      const rank = i + 1;
+      const badge = `<span class="rank-badge${rank<=3?' g':''}">${rank}</span>`;
+      const vsAvg = avg ? v.price_500l - avg : 0;
+      const vsC   = vsAvg < 0 ? 'up' : vsAvg > 0 ? 'down' : 'flat';
+      const vsStr = avg ? (vsAvg >= 0 ? '+' : '') + '€' + Math.abs(vsAvg).toFixed(2) : '—';
+
+      let changeTd = '<span class="flat">—</span>';
+      if (v.change !== null && v.change !== undefined) {
+        const cls   = v.change < 0 ? 'up' : v.change > 0 ? 'down' : 'flat';
+        const arrow = v.change > 0 ? '▲' : v.change < 0 ? '▼' : '→';
+        changeTd = `<span class="${cls}">${arrow} €${Math.abs(v.change).toFixed(2)} (${v.change_pct >= 0?'+':''}${v.change_pct.toFixed(1)}%)</span>`;
+      }
+
+      const barPct   = maxP > minP ? ((v.price_500l - minP) / (maxP - minP) * 100).toFixed(1) : 0;
+      const barColor = vsAvg < -15 ? 'var(--green)' : vsAvg > 15 ? 'var(--red)' : 'var(--muted)';
+
+      return `<tr>
+        <td>${badge}</td>
+        <td><a href="https://www.oilprices.ie/County/${encodeURIComponent(county)}" target="_blank" rel="noopener" class="county-link">${county}</a></td>
+        <td><strong>€${v.price_500l.toFixed(2)}</strong></td>
+        <td>${(v.price_500l / 5).toFixed(1)}c</td>
+        <td><span class="${vsC}">${vsStr}</span></td>
+        <td>${changeTd}</td>
+        <td><div class="price-bar-wrap"><div class="price-bar" style="width:${barPct}%;background:${barColor}"></div></div></td>
+      </tr>`;
+    }).join('');
+  }
+
+  function renderIrlChart(d) {
+    const ctx = document.getElementById('irlChart').getContext('2d');
+    if (irlChart) { irlChart.destroy(); irlChart = null; }
+    const hist = [...(d.history || [])].reverse();
+    if (!hist.length) return;
+    irlChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: hist.map(h => h.date),
+        datasets: [{
+          label: 'National Avg €/500L',
+          data: hist.map(h => h.national_avg),
+          borderColor: '#4ade80',
+          backgroundColor: 'rgba(74,222,128,0.08)',
+          borderWidth: 2,
+          pointRadius: 3,
+          tension: 0.3,
+          fill: true,
+        }]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            backgroundColor: '#21262d', borderColor: '#30363d', borderWidth: 1,
+            titleColor: '#e6edf3', bodyColor: '#8b949e',
+            callbacks: { label: c => '  €' + (+c.raw).toFixed(2) + ' / 500L' }
+          }
+        },
+        scales: {
+          x: { grid: { color: '#1c2128' }, ticks: { color: '#6e7681', maxTicksLimit: 8, font: { size: 11 } } },
+          y: { grid: { color: '#1c2128' }, ticks: { color: '#6e7681', font: { size: 11 }, callback: v => '€' + v } }
+        }
+      }
+    });
+  }
+
+  loadIreland();
+  setInterval(loadIreland, 300000); // refresh every 5 minutes
 </script>
 
 </body>
