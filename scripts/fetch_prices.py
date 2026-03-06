@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Fetch oil and gas daily spot prices from EIA Open Data API v2.
+Fetch oil and gas prices + weekly market fundamentals from EIA Open Data API v2.
 Saves results to data/prices.json for the GitHub Pages dashboard.
 
 EIA API key required — register free at https://www.eia.gov/opendata/
@@ -22,12 +22,13 @@ if not EIA_API_KEY:
     print("Register for a free key at https://www.eia.gov/opendata/", file=sys.stderr)
     sys.exit(1)
 
-SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+SCRIPT_DIR  = os.path.dirname(os.path.abspath(__file__))
 OUTPUT_PATH = os.path.join(SCRIPT_DIR, "..", "data", "prices.json")
 
-DAYS = 60  # How many days of history to keep
+DAYS  = 60   # days of daily spot-price history
+WEEKS = 52   # weeks of weekly fundamentals history
 
-# ── EIA series definitions ────────────────────────────────────────────────────
+# ── Daily spot-price series ───────────────────────────────────────────────────
 
 PETROLEUM_SERIES = {
     "WTI": {
@@ -65,137 +66,125 @@ NATGAS_SERIES = {
     },
 }
 
-WTI_FUTURES_SERIES = {
-    "RCLC1": {"contract": 1, "label": "Front Month"},
-    "RCLC2": {"contract": 2, "label": "2nd Month"},
-    "RCLC3": {"contract": 3, "label": "3rd Month"},
-    "RCLC4": {"contract": 4, "label": "4th Month"},
+# ── Weekly fundamentals series (EIA Weekly Petroleum Status Report) ───────────
+
+# Petroleum stocks endpoint
+STOCKS_SERIES = {
+    "CRUDE_STOCKS": {
+        "series": "WCRSTUS1",
+        "name": "US Crude Oil Stocks",
+        "unit": "Mbbls",
+        "url": "https://api.eia.gov/v2/petroleum/stoc/wstk/data/",
+    },
+    "GASOLINE_STOCKS": {
+        "series": "WGTSTUS1",
+        "name": "US Total Gasoline Stocks",
+        "unit": "Mbbls",
+        "url": "https://api.eia.gov/v2/petroleum/stoc/wstk/data/",
+    },
+    "DISTILLATE_STOCKS": {
+        "series": "WDISTUS1",
+        "name": "US Distillate Stocks",
+        "unit": "Mbbls",
+        "url": "https://api.eia.gov/v2/petroleum/stoc/wstk/data/",
+    },
+    "SPR_STOCKS": {
+        "series": "WCSSTUS1",
+        "name": "Strategic Petroleum Reserve",
+        "unit": "Mbbls",
+        "url": "https://api.eia.gov/v2/petroleum/stoc/wstk/data/",
+    },
 }
+
+# Supply / demand weekly endpoint
+SUPPLY_SERIES = {
+    "CRUDE_PRODUCTION": {
+        "series": "WCRFPUS2",
+        "name": "US Crude Production",
+        "unit": "kb/d",
+        "url": "https://api.eia.gov/v2/petroleum/sum/sndw/data/",
+    },
+    "REFINERY_UTIL": {
+        "series": "WPULEUS3",
+        "name": "US Refinery Utilization",
+        "unit": "%",
+        "url": "https://api.eia.gov/v2/petroleum/sum/sndw/data/",
+    },
+}
+
+# Trade / movements endpoint
+TRADE_SERIES = {
+    "CRUDE_IMPORTS": {
+        "series": "WCRIMUS2",
+        "name": "US Crude Imports",
+        "unit": "kb/d",
+        "url": "https://api.eia.gov/v2/petroleum/move/wkly/data/",
+    },
+}
+
+ALL_FUND_SERIES = {**STOCKS_SERIES, **SUPPLY_SERIES, **TRADE_SERIES}
 
 # ── Fetch helpers ─────────────────────────────────────────────────────────────
 
+def _get(url: str, params: list) -> dict:
+    resp = requests.get(url, params=params, timeout=30)
+    resp.raise_for_status()
+    return resp.json()
+
+
 def fetch_petroleum_spots() -> dict:
-    """Fetch petroleum spot prices from EIA API v2."""
-    url = "https://api.eia.gov/v2/petroleum/pri/spt/data/"
     series_ids = [v["series"] for v in PETROLEUM_SERIES.values()]
-
-    params = [
-        ("api_key", EIA_API_KEY),
-        ("frequency", "daily"),
+    return _get("https://api.eia.gov/v2/petroleum/pri/spt/data/", [
+        ("api_key", EIA_API_KEY), ("frequency", "daily"),
         ("data[0]", "value"),
-        ("sort[0][column]", "period"),
-        ("sort[0][direction]", "desc"),
+        ("sort[0][column]", "period"), ("sort[0][direction]", "desc"),
         ("length", str(DAYS)),
-    ] + [("facets[series][]", s) for s in series_ids]
-
-    resp = requests.get(url, params=params, timeout=30)
-    resp.raise_for_status()
-    return resp.json()
-
-
-def fetch_wti_futures() -> dict:
-    """Fetch WTI crude oil futures contracts 1-4 from EIA API v2."""
-    url = "https://api.eia.gov/v2/petroleum/pri/fut/data/"
-    params = [
-        ("api_key", EIA_API_KEY),
-        ("frequency", "daily"),
-        ("data[0]", "value"),
-        ("sort[0][column]", "period"),
-        ("sort[0][direction]", "desc"),
-        ("length", "10"),
-    ] + [("facets[series][]", s) for s in WTI_FUTURES_SERIES.keys()]
-
-    resp = requests.get(url, params=params, timeout=30)
-    resp.raise_for_status()
-    return resp.json()
-
-
-def parse_futures(raw: dict) -> dict:
-    """Parse EIA futures response into a forward curve dict."""
-    latest: dict[str, dict] = {}
-
-    for record in raw.get("response", {}).get("data", []):
-        sid = record.get("series")
-        period = record.get("period")
-        value = record.get("value")
-
-        if sid not in WTI_FUTURES_SERIES or value is None or value == "":
-            continue
-        try:
-            value = float(value)
-        except (ValueError, TypeError):
-            continue
-
-        if sid not in latest:
-            latest[sid] = {"period": period, "value": round(value, 4)}
-
-    curve = []
-    for sid, meta in WTI_FUTURES_SERIES.items():
-        if sid in latest:
-            curve.append({
-                "contract": meta["contract"],
-                "label": meta["label"],
-                "series": sid,
-                "period": latest[sid]["period"],
-                "value": latest[sid]["value"],
-            })
-
-    curve.sort(key=lambda x: x["contract"])
-    as_of = curve[0]["period"] if curve else None
-
-    return {
-        "WTI": {
-            "name": "WTI Crude Oil Futures (NYMEX)",
-            "unit": "$/bbl",
-            "as_of": as_of,
-            "curve": curve,
-        }
-    }
+    ] + [("facets[series][]", s) for s in series_ids])
 
 
 def fetch_natgas_spots() -> dict:
-    """Fetch natural gas Henry Hub spot price from EIA API v2."""
-    url = "https://api.eia.gov/v2/natural-gas/pri/fut/data/"
-
-    params = [
-        ("api_key", EIA_API_KEY),
-        ("frequency", "daily"),
+    return _get("https://api.eia.gov/v2/natural-gas/pri/fut/data/", [
+        ("api_key", EIA_API_KEY), ("frequency", "daily"),
         ("data[0]", "value"),
         ("facets[series][]", "RNGWHHD"),
-        ("sort[0][column]", "period"),
-        ("sort[0][direction]", "desc"),
+        ("sort[0][column]", "period"), ("sort[0][direction]", "desc"),
         ("length", str(DAYS)),
-    ]
+    ])
 
-    resp = requests.get(url, params=params, timeout=30)
-    resp.raise_for_status()
-    return resp.json()
 
+def fetch_fund_group(series_map: dict) -> dict:
+    """Fetch one group of weekly fundamentals (all series share the same URL)."""
+    url = next(iter(series_map.values()))["url"]
+    series_ids = [v["series"] for v in series_map.values()]
+    return _get(url, [
+        ("api_key", EIA_API_KEY), ("frequency", "weekly"),
+        ("data[0]", "value"),
+        ("sort[0][column]", "period"), ("sort[0][direction]", "desc"),
+        ("length", str(WEEKS * len(series_ids))),
+    ] + [("facets[series][]", s) for s in series_ids])
+
+
+# ── Parsers ───────────────────────────────────────────────────────────────────
 
 def parse_response(raw: dict, series_map: dict) -> dict[str, list]:
-    """Parse EIA v2 response into {commodity_key: [{period, value}, ...]}."""
+    """Parse an EIA v2 response into {key: [{period, value}, ...]}."""
     result: dict[str, list] = {k: [] for k in series_map}
-
     for record in raw.get("response", {}).get("data", []):
-        sid = record.get("series") or record.get("series-description", "")
+        sid    = record.get("series") or record.get("series-description", "")
         period = record.get("period")
-        value = record.get("value")
-
+        value  = record.get("value")
         if value is None or value == "":
             continue
         try:
             value = float(value)
         except (ValueError, TypeError):
             continue
-
         for key, meta in series_map.items():
             if sid == meta["series"]:
                 result[key].append({"period": period, "value": round(value, 4)})
                 break
-
     for key in result:
         result[key].sort(key=lambda x: x["period"], reverse=True)
-
     return result
 
 
@@ -203,9 +192,9 @@ def parse_response(raw: dict, series_map: dict) -> dict[str, list]:
 
 def main() -> None:
     now_utc = datetime.now(timezone.utc)
-    print(f"[{now_utc.isoformat()}] Fetching EIA spot prices...")
+    print(f"[{now_utc.isoformat()}] Fetching EIA data...")
 
-    # Load existing data so we can preserve anything that fails to refresh
+    # Load existing data so partial failures preserve previous values
     existing: dict = {}
     if os.path.exists(OUTPUT_PATH):
         try:
@@ -214,76 +203,84 @@ def main() -> None:
         except Exception as e:
             print(f"  Warning: could not read existing prices.json: {e}")
 
-    existing_commodities: dict = existing.get("commodities", {})
-    existing_futures: dict = existing.get("futures", {})
-
-    commodities = dict(existing_commodities)
-    futures = dict(existing_futures)
+    commodities  = dict(existing.get("commodities", {}))
+    fundamentals = dict(existing.get("fundamentals", {}))
     errors: list[str] = []
 
-    # -- Petroleum ----
+    # ── Daily spot prices ──────────────────────────────────────────────────────
+    print("  [spot prices]")
     try:
-        raw = fetch_petroleum_spots()
+        raw    = fetch_petroleum_spots()
         parsed = parse_response(raw, PETROLEUM_SERIES)
         for key, history in parsed.items():
             if history:
                 meta = PETROLEUM_SERIES[key]
                 commodities[key] = {
-                    "name": meta["name"],
-                    "unit": meta["unit"],
-                    "tv_symbol": meta["tv_symbol"],
-                    "history": history,
+                    "name": meta["name"], "unit": meta["unit"],
+                    "tv_symbol": meta["tv_symbol"], "history": history,
                 }
-                print(f"  {key:12s}  {len(history):2d} records  latest={history[0]['value']:8.4f} {meta['unit']}  ({history[0]['period']})")
+                print(f"    {key:12s}  {len(history):2d} pts  {history[0]['value']:8.4f} {meta['unit']}  ({history[0]['period']})")
             else:
-                print(f"  {key:12s}  no records returned")
+                print(f"    {key:12s}  no records")
     except Exception as e:
-        msg = f"Petroleum fetch failed: {e}"
+        msg = f"Petroleum spot fetch failed: {e}"
         print(f"  WARNING: {msg}", file=sys.stderr)
         errors.append(msg)
 
-    # -- Natural gas ----
     try:
-        raw = fetch_natgas_spots()
+        raw    = fetch_natgas_spots()
         parsed = parse_response(raw, NATGAS_SERIES)
         for key, history in parsed.items():
             if history:
                 meta = NATGAS_SERIES[key]
                 commodities[key] = {
-                    "name": meta["name"],
-                    "unit": meta["unit"],
-                    "tv_symbol": meta["tv_symbol"],
-                    "history": history,
+                    "name": meta["name"], "unit": meta["unit"],
+                    "tv_symbol": meta["tv_symbol"], "history": history,
                 }
-                print(f"  {key:12s}  {len(history):2d} records  latest={history[0]['value']:8.4f} {meta['unit']}  ({history[0]['period']})")
+                print(f"    {key:12s}  {len(history):2d} pts  {history[0]['value']:8.4f} {meta['unit']}  ({history[0]['period']})")
             else:
-                print(f"  {key:12s}  no records returned")
+                print(f"    {key:12s}  no records")
     except Exception as e:
         msg = f"Natural gas fetch failed: {e}"
         print(f"  WARNING: {msg}", file=sys.stderr)
         errors.append(msg)
 
-    # -- WTI Futures ----
-    try:
-        raw = fetch_wti_futures()
-        futures = parse_futures(raw)
-        wti_curve = futures.get("WTI", {}).get("curve", [])
-        for c in wti_curve:
-            print(f"  WTI CL{c['contract']}       value={c['value']:8.4f} $/bbl  ({c['period']})")
-    except Exception as e:
-        msg = f"WTI futures fetch failed: {e}"
-        print(f"  WARNING: {msg}", file=sys.stderr)
-        errors.append(msg)
+    # ── Weekly fundamentals ────────────────────────────────────────────────────
+    print("  [weekly fundamentals]")
+    for group_name, group_map in [
+        ("stocks",  STOCKS_SERIES),
+        ("supply",  SUPPLY_SERIES),
+        ("trade",   TRADE_SERIES),
+    ]:
+        try:
+            raw    = fetch_fund_group(group_map)
+            parsed = parse_response(raw, group_map)
+            for key, history in parsed.items():
+                if history:
+                    meta = ALL_FUND_SERIES[key]
+                    fundamentals[key] = {
+                        "name": meta["name"],
+                        "unit": meta["unit"],
+                        "history": history,
+                    }
+                    h0 = history[0]
+                    print(f"    {key:22s}  {len(history):2d} pts  {h0['value']} {meta['unit']}  ({h0['period']})")
+                else:
+                    print(f"    {key:22s}  no records")
+        except Exception as e:
+            msg = f"Fundamentals ({group_name}) fetch failed: {e}"
+            print(f"  WARNING: {msg}", file=sys.stderr)
+            errors.append(msg)
 
-    # -- Write output ----
+    # ── Write output ───────────────────────────────────────────────────────────
     os.makedirs(os.path.dirname(OUTPUT_PATH), exist_ok=True)
 
     output = {
         "last_updated": now_utc.isoformat(),
-        "source": "EIA Open Data API v2 — https://www.eia.gov/opendata/",
-        "errors": errors if errors else None,
-        "commodities": commodities,
-        "futures": futures,
+        "source":       "EIA Open Data API v2 — https://www.eia.gov/opendata/",
+        "errors":       errors if errors else None,
+        "commodities":  commodities,
+        "fundamentals": fundamentals,
     }
 
     with open(OUTPUT_PATH, "w") as f:

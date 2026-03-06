@@ -273,59 +273,41 @@
     .adv-hd strong { color: var(--text); margin-right: 0.5rem; }
     .adv-inner { height: 520px; }
 
-    /* ── FUTURES TABLE ───────────────────────────────────────────── */
-    .futures-box {
+    /* ── FUNDAMENTALS CARDS ──────────────────────────────────────── */
+    .fund-cards {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    @media (max-width: 900px)  { .fund-cards { grid-template-columns: repeat(2,1fr); } }
+    @media (max-width: 480px)  { .fund-cards { grid-template-columns: 1fr; } }
+
+    .fund-card {
       background: var(--card);
       border: 1px solid var(--border);
       border-radius: 0.75rem;
-      overflow: hidden;
-      margin-bottom: 2rem;
+      padding: 1rem 1.25rem 0.9rem;
     }
-    .futures-table-wrap { overflow-x: auto; }
-    .futures-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.88rem;
+    .fund-card .lbl  { font-size: 0.72rem; color: var(--faint); margin-bottom: 0.3rem; }
+    .fund-card .val  { font-size: 1.5rem; font-weight: 700; line-height: 1.15; letter-spacing:-.02em; }
+    .fund-card .chng { font-size: 0.8rem; margin-top: 0.15rem; }
+    .fund-card .dt   { font-size: 0.68rem; color: var(--faint); margin-top: 0.2rem; }
+    .signal {
+      display: inline-flex; align-items: center; gap: 0.3rem;
+      font-size: 0.65rem; font-weight: 700; letter-spacing: 0.06em;
+      padding: 0.15rem 0.5rem; border-radius: 9999px; margin-top: 0.5rem;
     }
-    .futures-table th {
-      background: var(--card2);
-      color: var(--muted);
-      font-size: 0.7rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: .05em;
-      padding: 0.65rem 1.25rem;
-      text-align: left;
-      border-bottom: 1px solid var(--border);
-      white-space: nowrap;
+    .signal-bull { background: rgba(63,185,80,.12);  border:1px solid rgba(63,185,80,.35);  color: var(--green); }
+    .signal-bear { background: rgba(248,81,73,.12);  border:1px solid rgba(248,81,73,.35);  color: var(--red);   }
+    .signal-neut { background: rgba(139,148,158,.1); border:1px solid rgba(139,148,158,.3); color: var(--muted); }
+
+    .tab-fund.on { background: var(--amber); border-color: var(--amber); color: #000; font-weight: 600; }
+    .tab-fund:hover { border-color: var(--amber); color: var(--amber); }
+
+    .fund-note {
+      font-size: 0.72rem; color: var(--faint); margin-top: 0.5rem; margin-bottom: 1.5rem; line-height: 1.6;
     }
-    .futures-table td {
-      padding: 0.75rem 1.25rem;
-      border-bottom: 1px solid #1c2128;
-      vertical-align: middle;
-    }
-    .futures-table tr:last-child td { border-bottom: none; }
-    .futures-table tr:hover td { background: rgba(255,255,255,.025); }
-    .futures-contract-badge {
-      display: inline-flex; align-items: center; justify-content: center;
-      width: 34px; height: 34px;
-      border-radius: 50%;
-      background: rgba(240,136,62,0.12);
-      border: 1px solid rgba(240,136,62,0.3);
-      font-size: 0.78rem; font-weight: 700; color: var(--orange);
-    }
-    .futures-price { font-size: 1.15rem; font-weight: 700; color: var(--orange); }
-    .futures-as-of {
-      padding: 0.55rem 1.25rem;
-      font-size: 0.72rem;
-      color: var(--faint);
-      border-top: 1px solid var(--border);
-      background: var(--card2);
-    }
-    .futures-bar-wrap {
-      background: var(--card2); border-radius: 9999px; height: 6px; width: 120px; overflow: hidden;
-    }
-    .futures-bar { height: 100%; border-radius: 9999px; background: var(--orange); opacity: 0.7; }
 
     /* ── IRELAND SECTION ──────────────────────────────────────────── */
     .irl-banner {
@@ -614,30 +596,39 @@
   </div>
 
 
-  <!-- ── WTI FUTURES FORWARD CURVE ──────────────────────────────────────────── -->
-  <div class="section-hd" id="futures">
-    <h2>🌍 WTI Crude Futures</h2>
-    <span>Forward curve — term structure · official EIA data · updated nightly by GitHub Actions</span>
+  <!-- ── WEEKLY MARKET FUNDAMENTALS ────────────────────────────────────────── -->
+  <div class="section-hd" id="fundamentals">
+    <h2>📊 Weekly Market Fundamentals</h2>
+    <span>EIA Weekly Petroleum Status Report · updated every Thursday · current as of most recent report</span>
   </div>
-  <div class="futures-box">
-    <div class="futures-table-wrap">
-      <table class="futures-table">
-        <thead>
-          <tr>
-            <th>Contract</th>
-            <th>Description</th>
-            <th>Price ($/bbl)</th>
-            <th>vs Front Month</th>
-            <th>Structure</th>
-            <th>EIA Period</th>
-          </tr>
-        </thead>
-        <tbody id="futures-tbody">
-          <tr><td colspan="6" style="text-align:center;color:var(--faint);padding:2rem">Loading futures data…</td></tr>
-        </tbody>
-      </table>
+
+  <p class="fund-note">
+    The weekly inventory draw/build is the single most-watched number in oil markets — a surprise draw tends to push prices up; a surprise build pushes them down.
+    Refinery utilization signals near-term crude demand; production shows the US supply response.
+  </p>
+
+  <!-- Headline stat cards -->
+  <div class="fund-cards">
+    <div class="fund-card" id="fc-crude-stocks"></div>
+    <div class="fund-card" id="fc-crude-production"></div>
+    <div class="fund-card" id="fc-refinery-util"></div>
+    <div class="fund-card" id="fc-crude-imports"></div>
+  </div>
+
+  <!-- Tabbed 52-week history chart -->
+  <div class="chart-box" style="margin-bottom:2rem">
+    <div class="tabs" id="fund-tabs">
+      <button class="tab tab-fund on" data-fk="CRUDE_STOCKS"      onclick="switchFundTab('CRUDE_STOCKS',this)">Crude Stocks</button>
+      <button class="tab tab-fund"    data-fk="CRUDE_PRODUCTION"  onclick="switchFundTab('CRUDE_PRODUCTION',this)">Production</button>
+      <button class="tab tab-fund"    data-fk="REFINERY_UTIL"     onclick="switchFundTab('REFINERY_UTIL',this)">Refinery Util</button>
+      <button class="tab tab-fund"    data-fk="CRUDE_IMPORTS"     onclick="switchFundTab('CRUDE_IMPORTS',this)">Imports</button>
+      <button class="tab tab-fund"    data-fk="GASOLINE_STOCKS"   onclick="switchFundTab('GASOLINE_STOCKS',this)">Gasoline</button>
+      <button class="tab tab-fund"    data-fk="DISTILLATE_STOCKS" onclick="switchFundTab('DISTILLATE_STOCKS',this)">Distillate</button>
+      <button class="tab tab-fund"    data-fk="SPR_STOCKS"        onclick="switchFundTab('SPR_STOCKS',this)">SPR</button>
     </div>
-    <div class="futures-as-of" id="futures-as-of">Source: US EIA Open Data API — updated by GitHub Actions (weekdays 21:00 &amp; 00:00 UTC)</div>
+    <div class="chart-wrap">
+      <canvas id="fundChart"></canvas>
+    </div>
   </div>
 
   <!-- ── IRISH HOME HEATING OIL ──────────────────────────────────────────────── -->
@@ -736,7 +727,7 @@
       priceData = await r.json();
       renderCards();
       renderChart(activeKey);
-      renderFutures();
+      renderFundamentals();
       const ts = document.getElementById('ts');
       if (priceData.last_updated) {
         const d = new Date(priceData.last_updated);
@@ -876,50 +867,140 @@
     renderChart(key);
   }
 
-  /* ── WTI Futures forward curve ── */
-  function renderFutures() {
-    const tbody  = document.getElementById('futures-tbody');
-    const asOfEl = document.getElementById('futures-as-of');
-    const wti = priceData?.futures?.WTI;
+  /* ── Weekly Market Fundamentals ── */
+  const FUND_META = {
+    CRUDE_STOCKS:      { label: 'US Crude Oil Stocks',        unit: 'Mbbls', color: '#f0883e',
+                         fmt: v => (v/1000).toFixed(1) + ' Mbbl',
+                         chgFmt: d => (d>=0?'+':'')+Math.round(d/1000*10)/10+' Mbbl w/w',
+                         signalKey: true },
+    CRUDE_PRODUCTION:  { label: 'US Crude Production',        unit: 'kb/d',  color: '#d4a843',
+                         fmt: v => v.toLocaleString() + ' kb/d',
+                         chgFmt: d => (d>=0?'+':'')+Math.round(d)+' kb/d w/w' },
+    REFINERY_UTIL:     { label: 'Refinery Utilization',       unit: '%',     color: '#58a6ff',
+                         fmt: v => v.toFixed(1) + '%',
+                         chgFmt: d => (d>=0?'+':'')+d.toFixed(1)+'pp w/w',
+                         higherIsBull: true },
+    CRUDE_IMPORTS:     { label: 'US Crude Imports',           unit: 'kb/d',  color: '#bc8cff',
+                         fmt: v => v.toLocaleString() + ' kb/d',
+                         chgFmt: d => (d>=0?'+':'')+Math.round(d)+' kb/d w/w' },
+    GASOLINE_STOCKS:   { label: 'US Gasoline Stocks',         unit: 'Mbbls', color: '#e091a0',
+                         fmt: v => (v/1000).toFixed(1) + ' Mbbl',
+                         chgFmt: d => (d>=0?'+':'')+Math.round(d/1000*10)/10+' Mbbl w/w' },
+    DISTILLATE_STOCKS: { label: 'US Distillate Stocks',       unit: 'Mbbls', color: '#3fb950',
+                         fmt: v => (v/1000).toFixed(1) + ' Mbbl',
+                         chgFmt: d => (d>=0?'+':'')+Math.round(d/1000*10)/10+' Mbbl w/w' },
+    SPR_STOCKS:        { label: 'Strategic Petroleum Reserve', unit: 'Mbbls', color: '#6e7681',
+                         fmt: v => (v/1000).toFixed(1) + ' Mbbl',
+                         chgFmt: d => (d>=0?'+':'')+Math.round(d/1000*10)/10+' Mbbl w/w' },
+  };
 
-    if (!wti || !wti.curve || !wti.curve.length) {
-      tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--faint);padding:2rem">Futures data not yet available — will populate on next GitHub Actions run.</td></tr>';
-      return;
+  let activeFundKey = 'CRUDE_STOCKS';
+  let fundChart = null;
+
+  function renderFundamentals() {
+    if (!priceData?.fundamentals) return;
+    const fund = priceData.fundamentals;
+
+    // Stat cards
+    const CARDS = [
+      { id: 'fc-crude-stocks',     key: 'CRUDE_STOCKS' },
+      { id: 'fc-crude-production', key: 'CRUDE_PRODUCTION' },
+      { id: 'fc-refinery-util',    key: 'REFINERY_UTIL' },
+      { id: 'fc-crude-imports',    key: 'CRUDE_IMPORTS' },
+    ];
+
+    for (const { id, key } of CARDS) {
+      const el = document.getElementById(id);
+      if (!el) continue;
+      const data = fund[key];
+      if (!data?.history?.length) { el.innerHTML = '<div class="lbl">—</div>'; continue; }
+
+      const meta = FUND_META[key];
+      const cur  = data.history[0].value;
+      const prev = data.history.length > 1 ? data.history[1].value : cur;
+      const diff = cur - prev;
+
+      // Directional class: for stocks a draw (diff<0) is bullish; for refinery util higher is bull
+      let cls;
+      if (meta.higherIsBull)      cls = diff > 0 ? 'up' : diff < 0 ? 'down' : 'flat';
+      else if (meta.signalKey)    cls = diff < 0 ? 'up' : diff > 0 ? 'down' : 'flat';
+      else                        cls = 'flat';
+
+      let signalHtml = '';
+      if (meta.signalKey) {
+        // Crude inventory signal — threshold ~1 Mbbls
+        const thresh = 1000;
+        if (diff < -thresh)      signalHtml = '<div><span class="signal signal-bull">▲ BULLISH SIGNAL</span></div>';
+        else if (diff > thresh)  signalHtml = '<div><span class="signal signal-bear">▼ BEARISH SIGNAL</span></div>';
+        else                     signalHtml = '<div><span class="signal signal-neut">→ NEUTRAL</span></div>';
+      }
+
+      el.innerHTML = `
+        <div class="lbl">${meta.label}</div>
+        <div class="val" style="color:${meta.color}">${meta.fmt(cur)}</div>
+        <div class="chng"><span class="${cls}">${meta.chgFmt(diff)}</span></div>
+        <div class="dt">${data.history[0].period}</div>
+        ${signalHtml}`;
     }
 
-    const front = wti.curve[0].value;
-    const vals  = wti.curve.map(c => c.value);
-    const minV  = Math.min(...vals);
-    const maxV  = Math.max(...vals);
-    const range = maxV - minV || 1;
+    renderFundChart(activeFundKey);
+  }
 
-    tbody.innerHTML = wti.curve.map(c => {
-      const spread    = c.value - front;
-      const spreadCls = spread > 0.05 ? 'down' : spread < -0.05 ? 'up' : 'flat';
-      const spreadStr = c.contract === 1 ? '<span class="flat">—</span>'
-                      : `<span class="${spreadCls}">${spread >= 0 ? '+' : ''}$${Math.abs(spread).toFixed(2)}</span>`;
-      const structLabel = c.contract === 1 ? '<span style="color:var(--faint);font-size:.72rem">active</span>'
-                        : spread > 0.05 ? '<span class="down" style="font-size:.78rem">contango ▲</span>'
-                        : spread < -0.05 ? '<span class="up" style="font-size:.78rem">backwardation ▼</span>'
-                        : '<span class="flat" style="font-size:.78rem">flat</span>';
-      const barPct = ((c.value - minV) / range * 100).toFixed(1);
+  function renderFundChart(key) {
+    activeFundKey = key;
+    const ctx = document.getElementById('fundChart').getContext('2d');
+    if (fundChart) { fundChart.destroy(); fundChart = null; }
 
-      return `<tr>
-        <td><span class="futures-contract-badge">C${c.contract}</span></td>
-        <td style="font-weight:500">${c.label}</td>
-        <td><span class="futures-price">$${c.value.toFixed(2)}</span></td>
-        <td>${spreadStr}</td>
-        <td>
-          ${structLabel}
-          <div class="futures-bar-wrap" style="margin-top:4px"><div class="futures-bar" style="width:${barPct}%"></div></div>
-        </td>
-        <td style="color:var(--faint);font-size:.78rem">${c.period || '—'}</td>
-      </tr>`;
-    }).join('');
+    const data = priceData?.fundamentals?.[key];
+    const meta = FUND_META[key];
+    if (!data?.history?.length || !meta) return;
 
-    if (wti.as_of) {
-      asOfEl.textContent = `WTI Crude Oil Futures · as of ${wti.as_of} · Source: US EIA Open Data API · Updated by GitHub Actions`;
-    }
+    const hist = [...data.history].reverse();
+
+    fundChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: hist.map(h => h.period),
+        datasets: [{
+          label: meta.label + ' (' + meta.unit + ')',
+          data: hist.map(h => h.value),
+          borderColor: meta.color,
+          backgroundColor: meta.color + '18',
+          borderWidth: 2,
+          pointRadius: 2,
+          tension: 0.2,
+          fill: true,
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        interaction: { mode: 'index', intersect: false },
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            backgroundColor: '#21262d', borderColor: '#30363d', borderWidth: 1,
+            titleColor: '#e6edf3', bodyColor: '#8b949e', padding: 10,
+            callbacks: {
+              label: c => '  ' + meta.label + ': ' + meta.fmt(+c.raw)
+            }
+          }
+        },
+        scales: {
+          x: { grid: { color: '#1c2128' }, ticks: { color: '#6e7681', maxTicksLimit: 12, font: { size: 11 } } },
+          y: {
+            grid: { color: '#1c2128' },
+            ticks: { color: '#6e7681', font: { size: 11 }, callback: v => meta.fmt(v) }
+          }
+        }
+      }
+    });
+  }
+
+  function switchFundTab(key, btn) {
+    document.querySelectorAll('.tab-fund').forEach(t => t.classList.remove('on'));
+    btn.classList.add('on');
+    renderFundChart(key);
   }
 
   /* ── Boot + auto-refresh every 60 s ── */
