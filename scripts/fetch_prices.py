@@ -124,6 +124,11 @@ TRADE_SERIES = {
 
 ALL_FUND_SERIES = {**STOCKS_SERIES, **SUPPLY_SERIES, **TRADE_SERIES}
 
+# ── ECB EUR/USD exchange rate ──────────────────────────────────────────────────
+
+ECB_EURUSD_URL = "https://data-api.ecb.europa.eu/service/data/EXR/D.USD.EUR.SP00.A"
+ECB_DAYS = 90
+
 # ── Fetch helpers ─────────────────────────────────────────────────────────────
 
 def _get(url: str, params: list) -> dict:
@@ -150,6 +155,26 @@ def fetch_natgas_spots() -> dict:
         ("sort[0][column]", "period"), ("sort[0][direction]", "desc"),
         ("length", str(DAYS)),
     ])
+
+
+def fetch_ecb_eurusd() -> list:
+    """Fetch ECB daily EUR/USD rate for the last ECB_DAYS observations."""
+    resp = requests.get(
+        ECB_EURUSD_URL,
+        params={"format": "jsondata", "lastNObservations": str(ECB_DAYS), "detail": "dataonly"},
+        timeout=30,
+    )
+    resp.raise_for_status()
+    raw = resp.json()
+    dates = [d["id"] for d in raw["structure"]["dimensions"]["observation"][0]["values"]]
+    obs   = raw["dataSets"][0]["series"]["0:0:0:0:0"]["observations"]
+    result = []
+    for idx_str, vals in obs.items():
+        idx = int(idx_str)
+        if idx < len(dates) and vals[0] is not None:
+            result.append({"date": dates[idx], "rate": round(float(vals[0]), 4)})
+    result.sort(key=lambda x: x["date"], reverse=True)
+    return result
 
 
 def fetch_fund_group(series_map: dict) -> dict:
@@ -205,6 +230,7 @@ def main() -> None:
 
     commodities  = dict(existing.get("commodities", {}))
     fundamentals = dict(existing.get("fundamentals", {}))
+    eurusd       = list(existing.get("eurusd", []))
     errors: list[str] = []
 
     # ── Daily spot prices ──────────────────────────────────────────────────────
@@ -272,6 +298,19 @@ def main() -> None:
             print(f"  WARNING: {msg}", file=sys.stderr)
             errors.append(msg)
 
+    # ── ECB EUR/USD ─────────────────────────────────────────────────────────────
+    print("  [ECB EUR/USD]")
+    try:
+        eurusd = fetch_ecb_eurusd()
+        if eurusd:
+            print(f"    EUR/USD  {len(eurusd):2d} pts  {eurusd[0]['rate']:.4f}  ({eurusd[0]['date']})")
+        else:
+            print("    EUR/USD  no records")
+    except Exception as e:
+        msg = f"ECB EUR/USD fetch failed: {e}"
+        print(f"  WARNING: {msg}", file=sys.stderr)
+        errors.append(msg)
+
     # ── Write output ───────────────────────────────────────────────────────────
     os.makedirs(os.path.dirname(OUTPUT_PATH), exist_ok=True)
 
@@ -281,6 +320,7 @@ def main() -> None:
         "errors":       errors if errors else None,
         "commodities":  commodities,
         "fundamentals": fundamentals,
+        "eurusd":       eurusd,
     }
 
     with open(OUTPUT_PATH, "w") as f:

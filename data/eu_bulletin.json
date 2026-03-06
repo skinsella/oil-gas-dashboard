@@ -1,0 +1,569 @@
+{
+  "last_updated": "2026-03-06T20:47:50.439795+00:00",
+  "source": "EU Weekly Oil Bulletin \u2014 European Commission",
+  "as_of": "2026-03-02",
+  "ireland_history": [
+    {
+      "week": "2026-03-02",
+      "price_per_litre": 1.2278
+    },
+    {
+      "week": "2026-02-23",
+      "price_per_litre": 0.9644
+    },
+    {
+      "week": "2026-02-16",
+      "price_per_litre": 0.9473
+    },
+    {
+      "week": "2026-02-09",
+      "price_per_litre": 0.9424
+    },
+    {
+      "week": "2026-02-02",
+      "price_per_litre": 0.9532
+    },
+    {
+      "week": "2026-01-26",
+      "price_per_litre": 0.9507
+    },
+    {
+      "week": "2026-01-19",
+      "price_per_litre": 0.9386
+    },
+    {
+      "week": "2026-01-12",
+      "price_per_litre": 0.9369
+    },
+    {
+      "week": "2026-01-05",
+      "price_per_litre": 0.9392
+    },
+    {
+      "week": "2025-12-29",
+      "price_per_litre": 0.9348
+    },
+    {
+      "week": "2025-12-22",
+      "price_per_litre": 0.9426
+    },
+    {
+      "week": "2025-12-15",
+      "price_per_litre": 0.9443
+    },
+    {
+      "week": "2025-12-08",
+      "price_per_litre": 0.957
+    },
+    {
+      "week": "2025-12-01",
+      "price_per_litre": 0.9741
+    },
+    {
+      "week": "2025-11-24",
+      "price_per_litre": 1.0097
+    },
+    {
+      "week": "2025-11-17",
+      "price_per_litre": 0.9795
+    },
+    {
+      "week": "2025-11-10",
+      "price_per_litre": 0.9727
+    },
+    {
+      "week": "2025-11-03",
+      "price_per_litre": 0.9699
+    },
+    {
+      "week": "2025-10-27",
+      "price_per_litre": 0.9631
+    },
+    {
+      "week": "2025-10-20",
+      "price_per_litre": 0.9354
+    },
+    {
+      "week": "2025-10-13",
+      "price_per_litre": 0.9498
+    },
+    {
+      "week": "2025-10-06",
+      "price_per_litre": 0.9526
+    },
+    {
+      "week": "2025-09-29",
+      "price_per_litre": 0.9555
+    },
+    {
+      "week": "2025-09-22",
+      "price_per_litre": 0.9441
+    },
+    {
+      "week": "2025-09-15",
+      "price_per_litre": 0.9466
+    },
+    {
+      "week": "2025-09-08",
+      "price_per_litre": 0.9524
+    },
+    {
+      "week": "2025-09-01",
+      "price_per_litre": 0.9337
+    },
+    {
+      "week": "2025-08-25",
+      "price_per_litre": 0.9321
+    },
+    {
+      "week": "2025-08-18",
+      "price_per_litre": 0.9437
+    },
+    {
+      "week": "2025-08-11",
+      "price_per_litre": 0.9616
+    },
+    {
+      "week": "2025-08-04",
+      "price_per_litre": 0.9776
+    },
+    {
+      "week": "2025-07-28",
+      "price_per_litre": 0.9774
+    },
+    {
+      "week": "2025-07-21",
+      "price_per_litre": 0.9763
+    },
+    {
+      "week": "2025-07-14",
+      "price_per_litre": 0.9909
+    },
+    {
+      "week": "2025-07-07",
+      "price_per_litre": 1.0044
+    },
+    {
+      "week": "2025-06-30",
+      "price_per_litre": 1.0226
+    },
+    {
+      "week": "2025-06-23",
+      "price_per_litre": 1.0017
+    },
+    {
+      "week": "2025-06-16",
+      "price_per_litre": 0.9583
+    },
+    {
+      "week": "2025-06-09",
+      "price_per_litre": 0.939
+    },
+    {
+      "week": "2025-06-02",
+      "price_per_litre": 0.9391
+    },
+    {
+      "week": "2025-05-26",
+      "price_per_litre": 0.94
+    },
+    {
+      "week": "2025-05-19",
+      "price_per_litre": 0.9394
+    },
+    {
+      "week": "2025-05-12",
+      "price_per_litre": 0.9404
+    },
+    {
+      "week": "2025-05-05",
+      "price_per_litre": 0.9394
+    },
+    {
+      "week": "2025-04-28",
+      "price_per_litre": 0.9375
+    },
+    {
+      "week": "2025-04-21",
+      "price_per_litre": 0.9431
+    },
+    {
+      "week": "2025-04-14",
+      "price_per_litre": 0.981
+    },
+    {
+      "week": "2025-04-07",
+      "price_per_litre": 0.9908
+    },
+    {
+      "week": "2025-03-31",
+      "price_per_litre": 0.9975
+    },
+    {
+      "week": "2025-03-24",
+      "price_per_litre": 0.9951
+    },
+    {
+      "week": "2025-03-17",
+      "price_per_litre": 0.9942
+    },
+    {
+      "week": "2025-03-10",
+      "price_per_litre": 1.0024
+    },
+    {
+      "week": "2025-03-03",
+      "price_per_litre": 1.0236
+    },
+    {
+      "week": "2025-02-24",
+      "price_per_litre": 1.0317
+    },
+    {
+      "week": "2025-02-17",
+      "price_per_litre": 1.0312
+    },
+    {
+      "week": "2025-02-10",
+      "price_per_litre": 1.0245
+    },
+    {
+      "week": "2025-02-03",
+      "price_per_litre": 1.0262
+    },
+    {
+      "week": "2025-01-27",
+      "price_per_litre": 1.0327
+    },
+    {
+      "week": "2025-01-20",
+      "price_per_litre": 1.033
+    },
+    {
+      "week": "2025-01-13",
+      "price_per_litre": 1.0295
+    },
+    {
+      "week": "2025-01-06",
+      "price_per_litre": 1.0166
+    },
+    {
+      "week": "2024-12-30",
+      "price_per_litre": 0.9954
+    },
+    {
+      "week": "2024-12-23",
+      "price_per_litre": 0.9955
+    },
+    {
+      "week": "2024-12-16",
+      "price_per_litre": 0.9834
+    },
+    {
+      "week": "2024-12-09",
+      "price_per_litre": 0.978
+    },
+    {
+      "week": "2024-12-02",
+      "price_per_litre": 0.9827
+    },
+    {
+      "week": "2024-11-25",
+      "price_per_litre": 0.9864
+    },
+    {
+      "week": "2024-11-18",
+      "price_per_litre": 0.97
+    },
+    {
+      "week": "2024-11-11",
+      "price_per_litre": 0.9643
+    },
+    {
+      "week": "2024-11-04",
+      "price_per_litre": 0.9566
+    },
+    {
+      "week": "2024-10-28",
+      "price_per_litre": 0.962
+    },
+    {
+      "week": "2024-10-21",
+      "price_per_litre": 0.979
+    },
+    {
+      "week": "2024-10-14",
+      "price_per_litre": 0.9935
+    },
+    {
+      "week": "2024-10-07",
+      "price_per_litre": 0.9846
+    },
+    {
+      "week": "2024-09-30",
+      "price_per_litre": 0.9382
+    },
+    {
+      "week": "2024-09-23",
+      "price_per_litre": 0.9333
+    },
+    {
+      "week": "2024-09-16",
+      "price_per_litre": 0.9359
+    },
+    {
+      "week": "2024-09-09",
+      "price_per_litre": 0.96
+    },
+    {
+      "week": "2024-09-02",
+      "price_per_litre": 0.9678
+    },
+    {
+      "week": "2024-08-26",
+      "price_per_litre": 0.9855
+    },
+    {
+      "week": "2024-08-19",
+      "price_per_litre": 1.0078
+    },
+    {
+      "week": "2024-08-12",
+      "price_per_litre": 1.01
+    },
+    {
+      "week": "2024-08-05",
+      "price_per_litre": 1.0311
+    },
+    {
+      "week": "2024-07-29",
+      "price_per_litre": 1.0205
+    },
+    {
+      "week": "2024-07-22",
+      "price_per_litre": 1.021
+    },
+    {
+      "week": "2024-07-15",
+      "price_per_litre": 1.0298
+    },
+    {
+      "week": "2024-07-08",
+      "price_per_litre": 1.034
+    },
+    {
+      "week": "2024-07-01",
+      "price_per_litre": 1.0265
+    },
+    {
+      "week": "2024-06-24",
+      "price_per_litre": 1.0185
+    },
+    {
+      "week": "2024-06-17",
+      "price_per_litre": 1.0003
+    },
+    {
+      "week": "2024-06-10",
+      "price_per_litre": 0.9954
+    },
+    {
+      "week": "2024-06-03",
+      "price_per_litre": 1.0068
+    },
+    {
+      "week": "2024-05-27",
+      "price_per_litre": 1.0131
+    },
+    {
+      "week": "2024-05-20",
+      "price_per_litre": 1.0214
+    },
+    {
+      "week": "2024-05-13",
+      "price_per_litre": 1.0205
+    },
+    {
+      "week": "2024-05-06",
+      "price_per_litre": 1.0312
+    },
+    {
+      "week": "2024-04-29",
+      "price_per_litre": 1.0368
+    },
+    {
+      "week": "2024-04-22",
+      "price_per_litre": 1.0417
+    },
+    {
+      "week": "2024-04-15",
+      "price_per_litre": 1.0522
+    },
+    {
+      "week": "2024-04-08",
+      "price_per_litre": 1.0487
+    },
+    {
+      "week": "2024-04-01",
+      "price_per_litre": 1.0467
+    },
+    {
+      "week": "2024-03-25",
+      "price_per_litre": 1.0271
+    },
+    {
+      "week": "2024-03-18",
+      "price_per_litre": 1.0342
+    },
+    {
+      "week": "2024-03-11",
+      "price_per_litre": 1.0506
+    }
+  ],
+  "eu_comparison": [
+    {
+      "code": "BE",
+      "name": "Belgium",
+      "price_per_litre": 0.8322,
+      "is_ireland": false
+    },
+    {
+      "code": "CZ",
+      "name": "Czech Rep.",
+      "price_per_litre": 0.863,
+      "is_ireland": false
+    },
+    {
+      "code": "RO",
+      "name": "Romania",
+      "price_per_litre": 0.8706,
+      "is_ireland": false
+    },
+    {
+      "code": "HR",
+      "name": "Croatia",
+      "price_per_litre": 0.895,
+      "is_ireland": false
+    },
+    {
+      "code": "LU",
+      "name": "Luxembourg",
+      "price_per_litre": 0.901,
+      "is_ireland": false
+    },
+    {
+      "code": "LT",
+      "name": "Lithuania",
+      "price_per_litre": 0.9293,
+      "is_ireland": false
+    },
+    {
+      "code": "ES",
+      "name": "Spain",
+      "price_per_litre": 0.9481,
+      "is_ireland": false
+    },
+    {
+      "code": "CY",
+      "name": "Cyprus",
+      "price_per_litre": 0.95,
+      "is_ireland": false
+    },
+    {
+      "code": "DE",
+      "name": "Germany",
+      "price_per_litre": 0.9893,
+      "is_ireland": false
+    },
+    {
+      "code": "MT",
+      "name": "Malta",
+      "price_per_litre": 1.0,
+      "is_ireland": false
+    },
+    {
+      "code": "PL",
+      "name": "Poland",
+      "price_per_litre": 1.0294,
+      "is_ireland": false
+    },
+    {
+      "code": "EE",
+      "name": "Estonia",
+      "price_per_litre": 1.048,
+      "is_ireland": false
+    },
+    {
+      "code": "SI",
+      "name": "Slovenia",
+      "price_per_litre": 1.1109,
+      "is_ireland": false
+    },
+    {
+      "code": "LV",
+      "name": "Latvia",
+      "price_per_litre": 1.1466,
+      "is_ireland": false
+    },
+    {
+      "code": "GR",
+      "name": "Greece",
+      "price_per_litre": 1.189,
+      "is_ireland": false
+    },
+    {
+      "code": "AT",
+      "name": "Austria",
+      "price_per_litre": 1.2037,
+      "is_ireland": false
+    },
+    {
+      "code": "FR",
+      "name": "France",
+      "price_per_litre": 1.225,
+      "is_ireland": false
+    },
+    {
+      "code": "IE",
+      "name": "Ireland",
+      "price_per_litre": 1.2278,
+      "is_ireland": true
+    },
+    {
+      "code": "SE",
+      "name": "Sweden",
+      "price_per_litre": 1.2386,
+      "is_ireland": false
+    },
+    {
+      "code": "FI",
+      "name": "Finland",
+      "price_per_litre": 1.2995,
+      "is_ireland": false
+    },
+    {
+      "code": "IT",
+      "name": "Italy",
+      "price_per_litre": 1.431,
+      "is_ireland": false
+    },
+    {
+      "code": "HU",
+      "name": "Hungary",
+      "price_per_litre": 1.5296,
+      "is_ireland": false
+    },
+    {
+      "code": "PT",
+      "name": "Portugal",
+      "price_per_litre": 1.552,
+      "is_ireland": false
+    },
+    {
+      "code": "DK",
+      "name": "Denmark",
+      "price_per_litre": 1.7871,
+      "is_ireland": false
+    }
+  ]
+}

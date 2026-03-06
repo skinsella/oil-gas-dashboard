@@ -382,6 +382,76 @@
     }
     .irl-chart-wrap { position: relative; height: 220px; }
 
+  /* ── AFFORDABILITY ───────────────────────────────────────────── */
+    .afford-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    @media (max-width: 760px) { .afford-grid { grid-template-columns: repeat(2,1fr); } }
+    @media (max-width: 400px) { .afford-grid { grid-template-columns: 1fr; } }
+    .afford-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 0.75rem;
+      padding: 1rem 1.25rem 0.9rem;
+    }
+    .afford-card .lbl { font-size: 0.72rem; color: var(--faint); margin-bottom: 0.3rem; }
+    .afford-card .val { font-size: 1.5rem; font-weight: 700; line-height: 1.15; letter-spacing: -.02em; color: var(--amber); }
+    .afford-card .sub { font-size: 0.72rem; color: var(--muted); margin-top: 0.2rem; }
+
+    /* ── COUNTY TILE MAP ─────────────────────────────────────────── */
+    .tile-map-outer {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 0.75rem;
+      padding: 1.25rem;
+      margin-bottom: 2rem;
+      display: flex;
+      gap: 2rem;
+      flex-wrap: wrap;
+      align-items: flex-start;
+    }
+    .tile-map {
+      display: grid;
+      grid-template-columns: repeat(6, 50px);
+      grid-template-rows: repeat(6, 50px);
+      gap: 4px;
+      flex-shrink: 0;
+    }
+    @media (max-width: 480px) {
+      .tile-map { grid-template-columns: repeat(6,38px); grid-template-rows: repeat(6,38px); }
+    }
+    .tile {
+      border-radius: 5px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: transform .15s, box-shadow .15s;
+      position: relative;
+    }
+    .tile:hover { transform: scale(1.12); z-index: 10; box-shadow: 0 4px 14px rgba(0,0,0,.6); }
+    .tile .t-abbr  { font-size: 0.58rem; font-weight: 700; line-height: 1.1; }
+    .tile .t-price { font-size: 0.5rem; opacity: .85; margin-top: 1px; }
+    .tile-legend-wrap { flex: 1; min-width: 200px; }
+    .tile-legend-scale {
+      height: 10px; border-radius: 5px;
+      background: linear-gradient(to right, #3fb950, #d4a843, #f85149);
+      margin: 0.5rem 0 0.25rem; max-width: 200px;
+    }
+    .tile-legend-labels {
+      display: flex; justify-content: space-between;
+      font-size: 0.65rem; color: var(--faint); max-width: 200px; margin-bottom: 0.75rem;
+    }
+    .tile-legend-note { font-size: 0.72rem; color: var(--muted); line-height: 1.6; }
+
+    /* ── TRANSMISSION / EU COMPARISON CHARTS ─────────────────────── */
+    .trans-chart-wrap { position: relative; height: 260px; }
+    .eu-chart-wrap    { position: relative; height: 540px; }
+
   /* ── FOOTER ──────────────────────────────────────────────────── */
     footer {
       border-top: 1px solid var(--border);
@@ -660,6 +730,49 @@
     </div>
   </div>
 
+  <!-- ── AFFORDABILITY ──────────────────────────────────────────────────────── -->
+  <div class="section-hd" style="margin-top:1.5rem">
+    <h2>🏠 Affordability</h2>
+    <span>Irish min wage €13.50/hr (Jan 2025) · 500L standard delivery · 2,000L/yr typical annual usage</span>
+  </div>
+  <div class="afford-grid">
+    <div class="afford-card">
+      <div class="lbl">Hours at Min Wage — 500L Fill</div>
+      <div class="val" id="aff-hours">—</div>
+      <div class="sub" id="aff-hours-sub">national average</div>
+    </div>
+    <div class="afford-card">
+      <div class="lbl">Annual Heating Cost (2,000L)</div>
+      <div class="val" id="aff-annual">—</div>
+      <div class="sub" id="aff-annual-sub">at national avg rate</div>
+    </div>
+    <div class="afford-card">
+      <div class="lbl">Cheapest vs. Dearest County Gap</div>
+      <div class="val" id="aff-gap">—</div>
+      <div class="sub" id="aff-gap-sub">per 500L · annualised</div>
+    </div>
+  </div>
+
+  <!-- ── COUNTY TILE MAP ─────────────────────────────────────────────────────── -->
+  <div class="section-hd">
+    <h2>County Price Map</h2>
+    <span>Schematic tile map · green = cheapest, red = dearest · hover/click a tile for details</span>
+  </div>
+  <div class="tile-map-outer">
+    <div id="county-tile-map" class="tile-map"></div>
+    <div class="tile-legend-wrap">
+      <div style="font-size:0.8rem;font-weight:600;color:var(--text)">Price per litre (€/L)</div>
+      <div class="tile-legend-scale"></div>
+      <div class="tile-legend-labels">
+        <span id="tile-min-lbl">—</span>
+        <span id="tile-max-lbl">—</span>
+      </div>
+      <div class="tile-legend-note" id="tile-legend-note">
+        Click a county tile to see its exact price.
+      </div>
+    </div>
+  </div>
+
   <div class="county-table-wrap">
     <table class="county-table">
       <thead>
@@ -689,6 +802,28 @@
     </div>
   </div>
 
+  <!-- ── BRENT → EUR/LITRE TRANSMISSION CHART ───────────────────────────────── -->
+  <div class="section-hd">
+    <h2>Brent → Irish Retail: Price Transmission</h2>
+    <span>Brent crude converted to €/L (wholesale, no tax) vs. Irish retail kerosene · source: EIA + ECB</span>
+  </div>
+  <div class="irl-chart-box">
+    <div class="trans-chart-wrap">
+      <canvas id="transChart"></canvas>
+    </div>
+  </div>
+
+  <!-- ── EU OIL BULLETIN COUNTRY COMPARISON ─────────────────────────────────── -->
+  <div class="section-hd" id="eu-comparison">
+    <h2>EU Heating Oil Price Comparison</h2>
+    <span>Heating gas oil with taxes · <span id="eu-as-of">latest week</span> · source: <a href="https://energy.ec.europa.eu/data-and-analysis/weekly-oil-bulletin_en" target="_blank" rel="noopener">EU Weekly Oil Bulletin</a></span>
+  </div>
+  <div class="irl-chart-box">
+    <div class="eu-chart-wrap">
+      <canvas id="euChart"></canvas>
+    </div>
+  </div>
+
 </div><!-- /container -->
 
 <!-- ═══ FOOTER ════════════════════════════════════════════════════════════════ -->
@@ -696,7 +831,9 @@
   <p>
     Live charts: <a href="https://www.tradingview.com/widget/" target="_blank" rel="noopener">TradingView</a> &nbsp;·&nbsp;
     Daily data: <a href="https://www.eia.gov/opendata/" target="_blank" rel="noopener">US EIA Open Data API</a> &nbsp;·&nbsp;
+    FX: <a href="https://data.ecb.europa.eu" target="_blank" rel="noopener">ECB</a> &nbsp;·&nbsp;
     Irish prices: <a href="https://www.oilprices.ie" target="_blank" rel="noopener">oilprices.ie</a> &nbsp;·&nbsp;
+    EU prices: <a href="https://energy.ec.europa.eu/data-and-analysis/weekly-oil-bulletin_en" target="_blank" rel="noopener">EU Weekly Oil Bulletin</a> &nbsp;·&nbsp;
     Updated automatically via GitHub Actions (weekdays 21:00 &amp; 00:00 UTC)
   </p>
   <p>Not financial advice. For informational purposes only.</p>
@@ -728,6 +865,7 @@
       renderCards();
       renderChart(activeKey);
       renderFundamentals();
+      if (irlData) renderTransmissionChart();
       const ts = document.getElementById('ts');
       if (priceData.last_updated) {
         const d = new Date(priceData.last_updated);
@@ -1021,6 +1159,9 @@
       renderIrlBanner(irlData);
       renderCountyTable(irlData);
       renderIrlChart(irlData);
+      renderAffordability(irlData);
+      renderTileMap(irlData);
+      if (priceData) renderTransmissionChart();
     } catch (e) {
       console.warn('ireland_prices.json failed:', e.message);
     }
@@ -1125,6 +1266,255 @@
 
   loadIreland();
   setInterval(loadIreland, 300000); // refresh every 5 minutes
+
+  /* ── Affordability widget ── */
+  function renderAffordability(d) {
+    const avg = d.national_avg_500l;
+    if (!avg) return;
+    const MIN_WAGE = 13.50;
+    const ANNUAL_L = 2000;
+    const counties = Object.values(d.counties || {});
+    if (!counties.length) return;
+    const sorted   = [...counties].sort((a, b) => a.price_500l - b.price_500l);
+    const cheapest = sorted[0].price_500l;
+    const dearest  = sorted.at(-1).price_500l;
+    const hours    = (avg / MIN_WAGE).toFixed(1);
+    const annual   = Math.round(avg / 500 * ANNUAL_L);
+    const gap500   = (dearest - cheapest).toFixed(2);
+    const gapAnn   = Math.round((dearest - cheapest) / 500 * ANNUAL_L);
+
+    document.getElementById('aff-hours').textContent    = hours + ' hrs';
+    document.getElementById('aff-hours-sub').textContent= 'at €' + MIN_WAGE.toFixed(2) + '/hr min wage · national avg';
+    document.getElementById('aff-annual').textContent   = '€' + annual.toLocaleString('en-IE');
+    document.getElementById('aff-annual-sub').textContent = '€' + (avg / 500).toFixed(4) + '/L avg rate';
+    document.getElementById('aff-gap').textContent      = '€' + gap500 + '/fill';
+    document.getElementById('aff-gap-sub').textContent  = '€' + gapAnn.toLocaleString('en-IE') + '/yr gap (cheapest vs dearest county)';
+  }
+
+  /* ── County tile map ── */
+  const COUNTY_GRID = {
+    "Donegal":   [1,1],
+    "Mayo":      [2,1], "Sligo":     [2,2], "Leitrim":   [2,3],
+    "Cavan":     [2,4], "Monaghan":  [2,5], "Louth":     [2,6],
+    "Roscommon": [3,2], "Longford":  [3,3], "Westmeath": [3,4],
+    "Meath":     [3,5], "Dublin":    [3,6],
+    "Galway":    [4,1], "Offaly":    [4,3], "Laois":     [4,4],
+    "Kildare":   [4,5], "Wicklow":   [4,6],
+    "Clare":     [5,2], "Tipperary": [5,3], "Kilkenny":  [5,4],
+    "Carlow":    [5,5], "Wexford":   [5,6],
+    "Kerry":     [6,1], "Limerick":  [6,2], "Cork":      [6,3], "Waterford": [6,4],
+  };
+  const COUNTY_ABBR = {
+    "Donegal":"DON","Mayo":"MAY","Sligo":"SLI","Leitrim":"LET","Cavan":"CAV",
+    "Monaghan":"MON","Louth":"LOU","Roscommon":"ROS","Longford":"LGF",
+    "Westmeath":"WMH","Meath":"MEA","Dublin":"DUB","Galway":"GAL","Offaly":"OFF",
+    "Laois":"LAO","Kildare":"KLD","Wicklow":"WIC","Clare":"CLA","Tipperary":"TIP",
+    "Kilkenny":"KKY","Carlow":"CAR","Wexford":"WEX","Kerry":"KER",
+    "Limerick":"LIM","Cork":"COR","Waterford":"WAT",
+  };
+
+  function tileHeatColor(pct) {
+    // pct 0-1 → green → amber → red
+    if (pct <= 0.5) {
+      const t = pct * 2;
+      return `rgb(${Math.round(63+t*(212-63))},${Math.round(185+t*(168-185))},${Math.round(80+t*(67-80))})`;
+    } else {
+      const t = (pct - 0.5) * 2;
+      return `rgb(${Math.round(212+t*(248-212))},${Math.round(168+t*(81-168))},${Math.round(67+t*(73-67))})`;
+    }
+  }
+
+  function renderTileMap(d) {
+    const mapEl = document.getElementById('county-tile-map');
+    if (!mapEl) return;
+    const counties = d.counties || {};
+    const entries  = Object.entries(counties);
+    if (!entries.length) return;
+    const prices = entries.map(([, v]) => v.price_per_litre);
+    const minP   = Math.min(...prices);
+    const maxP   = Math.max(...prices);
+    const minLbl = document.getElementById('tile-min-lbl');
+    const maxLbl = document.getElementById('tile-max-lbl');
+    if (minLbl) minLbl.textContent = '€' + minP.toFixed(2) + '/L (cheapest)';
+    if (maxLbl) maxLbl.textContent = '€' + maxP.toFixed(2) + '/L (dearest)';
+    mapEl.innerHTML = '';
+    for (const [county, v] of entries) {
+      const pos = COUNTY_GRID[county];
+      if (!pos) continue;
+      const pct   = maxP > minP ? (v.price_per_litre - minP) / (maxP - minP) : 0.5;
+      const bg    = tileHeatColor(pct);
+      const abbr  = COUNTY_ABBR[county] || county.slice(0, 3).toUpperCase();
+      const tile  = document.createElement('div');
+      tile.className = 'tile';
+      tile.title     = county + '\n€' + v.price_500l.toFixed(2) + '/500L\n€' + v.price_per_litre.toFixed(4) + '/L';
+      tile.style.cssText = `grid-row:${pos[0]};grid-column:${pos[1]};background:${bg};color:${pct>0.55?'#fff':'#000'};`;
+      tile.innerHTML = `<span class="t-abbr">${abbr}</span><span class="t-price">€${v.price_per_litre.toFixed(2)}</span>`;
+      tile.addEventListener('click', () => {
+        const n = document.getElementById('tile-legend-note');
+        if (n) n.innerHTML = `<strong>${county}</strong> — €${v.price_500l.toFixed(2)}/500L &nbsp;·&nbsp; €${v.price_per_litre.toFixed(4)}/L`;
+      });
+      mapEl.appendChild(tile);
+    }
+  }
+
+  /* ── Brent → EUR/litre price transmission chart ── */
+  let transChart = null;
+
+  function r4(v) { return Math.round(v * 10000) / 10000; }
+
+  function renderTransmissionChart() {
+    if (!priceData || !irlData) return;
+    const ctx = document.getElementById('transChart');
+    if (!ctx) return;
+    if (transChart) { transChart.destroy(); transChart = null; }
+
+    const brentHist  = [...(priceData.commodities?.BRENT?.history || [])].reverse();
+    const eurusdHist = [...(priceData.eurusd || [])].reverse();
+    const irlHist    = [...(irlData.history || [])].reverse();
+
+    // Build EUR/USD lookup by date
+    const fxMap = {};
+    for (const e of eurusdHist) fxMap[e.date] = e.rate;
+
+    // Brent converted to EUR/litre (1 bbl = 158.987 L)
+    const brentEurL = brentHist
+      .filter(b => fxMap[b.period])
+      .map(b => ({ date: b.period, value: r4(b.value / (fxMap[b.period] * 158.987)) }));
+
+    if (!brentEurL.length) return;
+
+    // Ireland retail per litre (accumulated history, carry last known forward)
+    const irlMap = {};
+    for (const h of irlHist) irlMap[h.date] = r4(h.national_avg / 500);
+    const labels = brentEurL.map(b => b.date);
+    let lastIrl  = null;
+    const ds2    = labels.map(d => {
+      if (irlMap[d] !== undefined) lastIrl = irlMap[d];
+      return lastIrl;
+    });
+
+    transChart = new Chart(ctx.getContext('2d'), {
+      type: 'line',
+      data: {
+        labels,
+        datasets: [
+          {
+            label: 'Brent crude (€/L wholesale)',
+            data: brentEurL.map(b => b.value),
+            borderColor: '#d4a843',
+            backgroundColor: 'rgba(212,168,67,0.08)',
+            borderWidth: 2, pointRadius: 0, tension: 0.2, fill: true, yAxisID: 'y',
+          },
+          {
+            label: 'Irish retail kerosene (€/L)',
+            data: ds2,
+            borderColor: '#4ade80',
+            backgroundColor: 'rgba(74,222,128,0.06)',
+            borderWidth: 2, pointRadius: 0, tension: 0.1, fill: true, yAxisID: 'y2',
+          },
+        ],
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        interaction: { mode: 'index', intersect: false },
+        plugins: {
+          legend: { display: true, labels: { color: '#8b949e', boxWidth: 12, font: { size: 11 } } },
+          tooltip: {
+            backgroundColor: '#21262d', borderColor: '#30363d', borderWidth: 1,
+            titleColor: '#e6edf3', bodyColor: '#8b949e', padding: 10,
+            callbacks: { label: c => '  ' + c.dataset.label + ': €' + (+c.raw).toFixed(4) + '/L' }
+          },
+        },
+        scales: {
+          x: { grid: { color: '#1c2128' }, ticks: { color: '#6e7681', maxTicksLimit: 10, font: { size: 11 } } },
+          y: {
+            position: 'left', grid: { color: '#1c2128' },
+            ticks: { color: '#d4a843', font: { size: 11 }, callback: v => '€' + (+v).toFixed(3) },
+            title: { display: true, text: 'Brent €/L (wholesale)', color: '#d4a843', font: { size: 10 } },
+          },
+          y2: {
+            position: 'right', grid: { drawOnChartArea: false },
+            ticks: { color: '#4ade80', font: { size: 11 }, callback: v => '€' + (+v).toFixed(3) },
+            title: { display: true, text: 'Irish retail €/L', color: '#4ade80', font: { size: 10 } },
+          },
+        },
+      },
+    });
+  }
+
+  /* ── EU Oil Bulletin country comparison ── */
+  let euBulData = null;
+  let euChart   = null;
+
+  async function loadEuBulletin() {
+    try {
+      const r = await fetch('./data/eu_bulletin.json?_=' + Date.now());
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      euBulData = await r.json();
+      renderEuBulletin(euBulData);
+    } catch (e) {
+      console.warn('eu_bulletin.json failed:', e.message);
+    }
+  }
+
+  function renderEuBulletin(d) {
+    const ctx = document.getElementById('euChart');
+    if (!ctx || !d?.eu_comparison?.length) return;
+    if (euChart) { euChart.destroy(); euChart = null; }
+
+    const comp   = [...d.eu_comparison].sort((a, b) => a.price_per_litre - b.price_per_litre);
+    const labels = comp.map(c => c.name);
+    const values = comp.map(c => c.price_per_litre);
+    const colors = comp.map(c => c.is_ireland ? '#f0883e' : '#58a6ff');
+
+    euChart = new Chart(ctx.getContext('2d'), {
+      type: 'bar',
+      data: {
+        labels,
+        datasets: [{
+          label: 'Heating gas oil €/L (with tax)',
+          data: values,
+          backgroundColor: colors,
+          borderColor: colors,
+          borderWidth: 0,
+          borderRadius: 3,
+        }],
+      },
+      options: {
+        indexAxis: 'y',
+        responsive: true, maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            backgroundColor: '#21262d', borderColor: '#30363d', borderWidth: 1,
+            titleColor: '#e6edf3', bodyColor: '#8b949e', padding: 10,
+            callbacks: {
+              label: c => {
+                const entry = comp[c.dataIndex];
+                return '  €' + (+c.raw).toFixed(4) + '/L' + (entry.is_ireland ? '  ◀ Ireland' : '');
+              }
+            }
+          },
+        },
+        scales: {
+          x: {
+            grid: { color: '#1c2128' },
+            ticks: { color: '#6e7681', font: { size: 11 }, callback: v => '€' + (+v).toFixed(2) },
+          },
+          y: {
+            grid: { color: '#1c2128' },
+            ticks: { color: '#8b949e', font: { size: 11 } },
+          },
+        },
+      },
+    });
+
+    const span = document.getElementById('eu-as-of');
+    if (span && d.as_of) span.textContent = 'week ending ' + d.as_of;
+  }
+
+  loadEuBulletin();
+  setInterval(loadEuBulletin, 3600000); // EU bulletin is weekly, refresh hourly
 </script>
 
 </body>

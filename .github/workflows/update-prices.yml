@@ -23,9 +23,9 @@ jobs:
           python-version: '3.12'
 
       - name: Install dependencies
-        run: pip install requests beautifulsoup4 lxml
+        run: pip install requests beautifulsoup4 lxml openpyxl
 
-      - name: Fetch global prices from EIA
+      - name: Fetch global prices from EIA + ECB EUR/USD
         env:
           EIA_API_KEY: ${{ secrets.EIA_API_KEY }}
         run: python scripts/fetch_prices.py
@@ -33,11 +33,14 @@ jobs:
       - name: Fetch Irish heating oil prices from oilprices.ie
         run: python scripts/fetch_ireland_prices.py
 
+      - name: Fetch EU Oil Bulletin heating oil prices
+        run: python scripts/fetch_eu_bulletin.py
+
       - name: Commit and push if data changed
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add data/prices.json data/ireland_prices.json
+          git add data/prices.json data/ireland_prices.json data/eu_bulletin.json
           if git diff --staged --quiet; then
             echo "No data changes — skipping commit"
           else
