@@ -1678,6 +1678,16 @@
     renderMarginChart(activeMarginTab);
   }
 
+  function showMarginPlaceholder(canvas, msg) {
+    /* Draw placeholder text on the canvas instead of destroying it */
+    const c = canvas.getContext('2d');
+    c.clearRect(0, 0, canvas.width, canvas.height);
+    c.fillStyle = '#6e7681';
+    c.font = '14px system-ui, sans-serif';
+    c.textAlign = 'center';
+    c.fillText(msg, canvas.width / 2, canvas.height / 2);
+  }
+
   function renderMarginChart(key) {
     activeMarginTab = key;
     const ctx = document.getElementById('marginChart');
@@ -1766,8 +1776,7 @@
       const ptUp = pt.pt_when_rising;
       const ptDn = pt.pt_when_falling;
       if (ptUp == null || ptDn == null) {
-        const el = ctx.parentElement;
-        el.innerHTML = '<p style="color:var(--faint);text-align:center;padding:3rem">Not enough weekly data yet for pass-through analysis.</p>';
+        showMarginPlaceholder(ctx, 'Not enough weekly data yet for pass-through analysis.');
         return;
       }
       const upC = ptUp > ptDn + 0.15 ? '#f85149' : '#8b949e';
@@ -1817,7 +1826,7 @@
       /* Rolling 26-week asymmetry over time */
       const rpt = euBulData?.rolling_pass_through || [];
       if (!rpt.length) {
-        ctx.parentElement.innerHTML = '<p style="color:var(--faint);text-align:center;padding:3rem">Not enough data for rolling analysis.</p>';
+        showMarginPlaceholder(ctx, 'Not enough data for rolling analysis.');
         return;
       }
       const rChron = [...rpt].reverse();
@@ -1858,7 +1867,7 @@
       /* Seasonal margin comparison: heating vs off-season */
       const seas = euBulData?.seasonal || {};
       if (!seas.heating_season_avg_margin) {
-        ctx.parentElement.innerHTML = '<p style="color:var(--faint);text-align:center;padding:3rem">Not enough data for seasonal analysis.</p>';
+        showMarginPlaceholder(ctx, 'Not enough data for seasonal analysis.');
         return;
       }
       /* Also plot monthly averages from margin history */
@@ -1904,7 +1913,7 @@
       /* Lag analysis — R² at different lags */
       const allLags = pt.all_lags || [];
       if (!allLags.length) {
-        ctx.parentElement.innerHTML = '<p style="color:var(--faint);text-align:center;padding:3rem">Not enough data for lag analysis.</p>';
+        showMarginPlaceholder(ctx, 'Not enough data for lag analysis.');
         return;
       }
       const bestLag = pt.best_lag_weeks ?? 0;

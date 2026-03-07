@@ -443,11 +443,11 @@ def compute_margin_stats(margin_history: list) -> dict:
     q1 = sorted_m[n // 4]
     q3 = sorted_m[3 * n // 4]
 
-    # Recent trend: last 12 weeks vs prior 12 weeks
-    recent = margin_history[:12]
-    prior  = margin_history[12:24]
-    recent_avg = sum(h["gross_margin"] for h in recent) / len(recent) if recent else None
-    prior_avg  = sum(h["gross_margin"] for h in prior) / len(prior) if prior else None
+    # Recent trend: last 12 weeks vs prior 12 weeks (filter out missing margins)
+    recent = [h["gross_margin"] for h in margin_history[:12] if h.get("gross_margin") is not None]
+    prior  = [h["gross_margin"] for h in margin_history[12:24] if h.get("gross_margin") is not None]
+    recent_avg = sum(recent) / len(recent) if recent else None
+    prior_avg  = sum(prior) / len(prior) if prior else None
     trend = None
     if recent_avg is not None and prior_avg is not None:
         diff = recent_avg - prior_avg
