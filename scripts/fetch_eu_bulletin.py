@@ -278,34 +278,26 @@ def compute_margin_history(
     return result
 
 
-def compute_pass_through(margin_history: list) -> dict:
+def _pass_through_core(chron: list, threshold: float = 0.003, lag: int = 0) -> dict | None:
     """
-    Asymmetric pass-through analysis.
-
-    β_up:   mean ratio of Δ(pretax retail) / Δ(Brent EUR/L) for weeks when Brent rose
-    β_down: mean ratio for weeks when Brent fell
-
-    β_up > β_down → retailers pass on cost INCREASES faster than DECREASES
-    (i.e. asymmetric — standard signal of market power / potential gouging)
+    Core pass-through computation for a given lag (weeks).
+    lag=0 means same-week; lag=1 means retail responds one week after Brent moves.
+    Returns None if insufficient data.
     """
-    # Need chronological order
-    chron = sorted(margin_history, key=lambda x: x["week"])
-    if len(chron) < 8:
-        return {"signal": "INSUFFICIENT_DATA", "weeks_used": len(chron)}
-
-    THRESHOLD = 0.003  # min weekly Brent move to count (€/L) — avoids noise
+    if len(chron) < max(8, lag + 2):
+        return None
 
     d_retail = []
     d_brent  = []
-    for i in range(1, len(chron)):
+    for i in range(1 + lag, len(chron)):
         dr = chron[i]["pretax_eur_l"] - chron[i-1]["pretax_eur_l"]
-        db = chron[i]["brent_eur_l"]  - chron[i-1]["brent_eur_l"]
-        if abs(db) >= THRESHOLD:
+        db = chron[i - lag]["brent_eur_l"] - chron[i - lag - 1]["brent_eur_l"]
+        if abs(db) >= threshold:
             d_retail.append(dr)
             d_brent.append(db)
 
     if not d_brent:
-        return {"signal": "INSUFFICIENT_DATA", "weeks_used": 0}
+        return None
 
     up_pairs = [(r, b) for r, b in zip(d_retail, d_brent) if b > 0]
     dn_pairs = [(r, b) for r, b in zip(d_retail, d_brent) if b < 0]
@@ -319,35 +311,209 @@ def compute_pass_through(margin_history: list) -> dict:
     pt_dn = mean_ratio(dn_pairs)
 
     if pt_up is None or pt_dn is None:
-        return {
-            "signal":          "INSUFFICIENT_DATA",
-            "weeks_used":      len(d_brent),
-            "pt_when_rising":  round(pt_up, 3) if pt_up else None,
-            "pt_when_falling": round(pt_dn, 3) if pt_dn else None,
-            "n_rising_weeks":  len(up_pairs),
-            "n_falling_weeks": len(dn_pairs),
-        }
+        return None
 
-    asymmetry = round(pt_up - pt_dn, 3)
+    # Correlation (R²) between Δbrent and Δretail as fit quality indicator
+    n = len(d_brent)
+    mean_b = sum(d_brent) / n
+    mean_r = sum(d_retail) / n
+    ss_b = sum((b - mean_b) ** 2 for b in d_brent)
+    ss_r = sum((r - mean_r) ** 2 for r in d_retail)
+    sp   = sum((d_brent[i] - mean_b) * (d_retail[i] - mean_r) for i in range(n))
+    r2   = (sp ** 2) / (ss_b * ss_r) if ss_b > 0 and ss_r > 0 else 0.0
 
+    return {
+        "lag":             lag,
+        "pt_when_rising":  round(pt_up, 3),
+        "pt_when_falling": round(pt_dn, 3),
+        "asymmetry":       round(pt_up - pt_dn, 3),
+        "r2":              round(r2, 3),
+        "weeks_used":      n,
+        "n_rising_weeks":  len(up_pairs),
+        "n_falling_weeks": len(dn_pairs),
+    }
+
+
+def compute_pass_through(margin_history: list) -> dict:
+    """
+    Asymmetric pass-through analysis with lag detection.
+
+    Tests lags 0–3 weeks and picks the lag with highest R² (best fit between
+    Brent changes and retail responses). This detects whether retailers respond
+    immediately or with a delay of 1–3 weeks.
+
+    β_up:   mean ratio of Δ(pretax retail) / Δ(Brent EUR/L) for weeks when Brent rose
+    β_down: mean ratio for weeks when Brent fell
+
+    β_up > β_down → retailers pass on cost INCREASES faster than DECREASES
+    (i.e. asymmetric — standard signal of market power / potential gouging)
+    """
+    chron = sorted(margin_history, key=lambda x: x["week"])
+    if len(chron) < 8:
+        return {"signal": "INSUFFICIENT_DATA", "weeks_used": len(chron)}
+
+    # Test lags 0–3 weeks, pick the one with highest R²
+    best = None
+    all_lags = []
+    for lag in range(4):
+        result = _pass_through_core(chron, threshold=0.003, lag=lag)
+        if result is not None:
+            all_lags.append(result)
+            if best is None or result["r2"] > best["r2"]:
+                best = result
+
+    if best is None:
+        return {"signal": "INSUFFICIENT_DATA", "weeks_used": 0}
+
+    asymmetry = best["asymmetry"]
     if asymmetry > 0.15:
-        signal = "ASYMMETRIC"    # prices rise faster than they fall
+        signal = "ASYMMETRIC"
     elif asymmetry < -0.15:
-        signal = "FAVORABLE"     # prices fall faster than they rise (competitive)
+        signal = "FAVORABLE"
     else:
-        signal = "SYMMETRIC"     # roughly equal pass-through in both directions
+        signal = "SYMMETRIC"
+
+    pt_up = best["pt_when_rising"]
+    pt_dn = best["pt_when_falling"]
 
     return {
         "signal":          signal,
         "asymmetry":       asymmetry,
-        "pt_when_rising":  round(pt_up, 3),
-        "pt_when_falling": round(pt_dn, 3),
-        "weeks_used":      len(d_brent),
-        "n_rising_weeks":  len(up_pairs),
-        "n_falling_weeks": len(dn_pairs),
+        "best_lag_weeks":  best["lag"],
+        "lag_r2":          best["r2"],
+        "pt_when_rising":  pt_up,
+        "pt_when_falling": pt_dn,
+        "weeks_used":      best["weeks_used"],
+        "n_rising_weeks":  best["n_rising_weeks"],
+        "n_falling_weeks": best["n_falling_weeks"],
+        "all_lags":        all_lags,
         "interpretation": (
+            f"Best fit at lag={best['lag']}w (R²={best['r2']:.3f}). "
             f"When Brent rises, retail moves {pt_up:.2f}× as much. "
             f"When Brent falls, retail moves {pt_dn:.2f}× as much."
+        ),
+    }
+
+
+def compute_rolling_pass_through(margin_history: list, window: int = 26) -> list:
+    """
+    Compute pass-through stats over rolling windows to track how pricing
+    behaviour evolves over time. Returns one entry per window-end week.
+    """
+    chron = sorted(margin_history, key=lambda x: x["week"])
+    if len(chron) < window:
+        return []
+
+    results = []
+    for end in range(window, len(chron) + 1):
+        segment = chron[end - window:end]
+        result = _pass_through_core(segment, threshold=0.003, lag=0)
+        if result is None:
+            continue
+        results.append({
+            "week_end":        segment[-1]["week"],
+            "week_start":      segment[0]["week"],
+            "pt_when_rising":  result["pt_when_rising"],
+            "pt_when_falling": result["pt_when_falling"],
+            "asymmetry":       result["asymmetry"],
+            "r2":              result["r2"],
+        })
+
+    results.sort(key=lambda x: x["week_end"], reverse=True)
+    return results
+
+
+def compute_margin_stats(margin_history: list) -> dict:
+    """
+    Compute summary statistics and confidence bands for the gross margin series.
+    """
+    if not margin_history:
+        return {}
+
+    margins = [h["gross_margin"] for h in margin_history if h.get("gross_margin") is not None]
+    if len(margins) < 4:
+        return {}
+
+    n    = len(margins)
+    mean = sum(margins) / n
+    var  = sum((m - mean) ** 2 for m in margins) / (n - 1)
+    std  = var ** 0.5
+
+    sorted_m = sorted(margins)
+    q1 = sorted_m[n // 4]
+    q3 = sorted_m[3 * n // 4]
+
+    # Recent trend: last 12 weeks vs prior 12 weeks
+    recent = margin_history[:12]
+    prior  = margin_history[12:24]
+    recent_avg = sum(h["gross_margin"] for h in recent) / len(recent) if recent else None
+    prior_avg  = sum(h["gross_margin"] for h in prior) / len(prior) if prior else None
+    trend = None
+    if recent_avg is not None and prior_avg is not None:
+        diff = recent_avg - prior_avg
+        if diff > 0.005:
+            trend = "WIDENING"
+        elif diff < -0.005:
+            trend = "NARROWING"
+        else:
+            trend = "STABLE"
+
+    return {
+        "mean":       round(mean, 4),
+        "std":        round(std, 4),
+        "band_upper": round(mean + std, 4),
+        "band_lower": round(mean - std, 4),
+        "q1":         round(q1, 4),
+        "q3":         round(q3, 4),
+        "min":        round(sorted_m[0], 4),
+        "max":        round(sorted_m[-1], 4),
+        "n_weeks":    n,
+        "trend":      trend,
+        "recent_12w_avg": round(recent_avg, 4) if recent_avg is not None else None,
+        "prior_12w_avg":  round(prior_avg, 4) if prior_avg is not None else None,
+    }
+
+
+def compute_seasonal_analysis(margin_history: list) -> dict:
+    """
+    Detect seasonal pricing patterns by grouping margins into heating season
+    (Oct–Mar) vs off-season (Apr–Sep). Irish heating oil demand peaks in winter,
+    so margins may widen seasonally.
+    """
+    if len(margin_history) < 26:
+        return {}
+
+    heating = []  # Oct–Mar
+    off     = []  # Apr–Sep
+    for h in margin_history:
+        month = int(h["week"][5:7])
+        gm = h.get("gross_margin")
+        if gm is None:
+            continue
+        if month >= 10 or month <= 3:
+            heating.append(gm)
+        else:
+            off.append(gm)
+
+    if len(heating) < 4 or len(off) < 4:
+        return {}
+
+    heat_avg = sum(heating) / len(heating)
+    off_avg  = sum(off) / len(off)
+    premium  = heat_avg - off_avg
+
+    return {
+        "heating_season_avg_margin": round(heat_avg, 4),
+        "off_season_avg_margin":     round(off_avg, 4),
+        "seasonal_premium":          round(premium, 4),
+        "heating_weeks":             len(heating),
+        "off_season_weeks":          len(off),
+        "signal": "WINTER_PREMIUM" if premium > 0.005 else
+                  "SUMMER_PREMIUM" if premium < -0.005 else "NO_SEASONAL_EFFECT",
+        "interpretation": (
+            f"Heating season margin avg €{heat_avg:.4f}/L vs "
+            f"off-season €{off_avg:.4f}/L "
+            f"({'winter +' if premium > 0 else 'summer +'}{abs(premium)*100:.2f}c/L)."
         ),
     }
 
@@ -404,10 +570,25 @@ def main() -> None:
             h0 = margin_history[0]
             print(f"  Latest ({h0['week']}): pretax={h0['pretax_eur_l']:.4f} brent={h0['brent_eur_l']:.4f} margin={h0['gross_margin']:.4f} €/L")
 
-        print("  Computing pass-through stats...")
+        print("  Computing pass-through stats (with lag detection)...")
         pt_stats = compute_pass_through(margin_history)
         print(f"  Pass-through signal: {pt_stats['signal']}  "
-              f"β_up={pt_stats.get('pt_when_rising','?')}  β_down={pt_stats.get('pt_when_falling','?')}")
+              f"β_up={pt_stats.get('pt_when_rising','?')}  β_down={pt_stats.get('pt_when_falling','?')}  "
+              f"best_lag={pt_stats.get('best_lag_weeks','?')}w")
+
+        print("  Computing rolling pass-through (26w windows)...")
+        rolling_pt = compute_rolling_pass_through(margin_history, window=26)
+        print(f"  Rolling pass-through: {len(rolling_pt)} data points")
+
+        print("  Computing margin statistics & confidence bands...")
+        margin_stats = compute_margin_stats(margin_history)
+        if margin_stats:
+            print(f"  Margin: mean={margin_stats['mean']:.4f} ±{margin_stats['std']:.4f} €/L  trend={margin_stats.get('trend','?')}")
+
+        print("  Computing seasonal analysis...")
+        seasonal = compute_seasonal_analysis(margin_history)
+        if seasonal:
+            print(f"  Seasonal: {seasonal['signal']}  premium={seasonal.get('seasonal_premium',0):.4f} €/L")
 
         output = {
             "last_updated":    now_utc.isoformat(),
@@ -417,6 +598,9 @@ def main() -> None:
             "eu_comparison":   eu_comparison,
             "margin_history":  margin_history,
             "pass_through":    pt_stats,
+            "rolling_pass_through": rolling_pt,
+            "margin_stats":    margin_stats,
+            "seasonal":        seasonal,
         }
 
     except Exception as e:

@@ -870,10 +870,14 @@
   <p class="margin-note">
     <strong>Gross margin</strong> = Ireland pre-tax retail price (EU Oil Bulletin depot price, ex all tax)
     minus Brent crude cost converted to €/litre — it captures refinery processing, transport, distribution, and dealer markup combined.
-    <strong>Pass-through (β)</strong> is the fraction of a €1 move in Brent crude that appears in the pre-tax retail price within the same week.
-    β = 1.0 means full, immediate pass-through. β &lt; 1.0 means costs are partially absorbed.
+    The ±1σ confidence bands show normal margin variability; excursions signal unusual pricing.
+    <strong>Pass-through (β)</strong> is the fraction of a €1 move in Brent crude that appears in the pre-tax retail price.
+    The model tests lags 0–3 weeks and picks the best-fit lag, detecting whether retailers respond immediately or with delay.
+    β = 1.0 means full pass-through. β &lt; 1.0 means costs are partially absorbed.
     If β_rising &gt; β_falling, retailers transmit cost <em>increases</em> faster than cost <em>savings</em>
     — the standard empirical signal of asymmetric pricing and potential market power.
+    <strong>Rolling asymmetry</strong> tracks how this behaviour evolves over 26-week sliding windows.
+    <strong>Seasonal analysis</strong> compares heating season (Oct–Mar) vs off-season margins to detect winter demand premiums.
     Note: EU Bulletin prices are survey depot prices; oilprices.ie tracks the higher final delivery price.
   </p>
 
@@ -881,6 +885,7 @@
     <div class="afford-card" id="pt-card-margin"></div>
     <div class="afford-card" id="pt-card-avg"></div>
     <div class="afford-card" id="pt-card-signal"></div>
+    <div class="afford-card" id="pt-card-seasonal"></div>
   </div>
 
   <div class="chart-box">
@@ -888,6 +893,9 @@
       <button class="tab tab-margin on" onclick="switchMarginTab('margin',this)">Gross Margin History</button>
       <button class="tab tab-margin"    onclick="switchMarginTab('decomp',this)">Price Decomposition</button>
       <button class="tab tab-margin"    onclick="switchMarginTab('pt',this)">Pass-Through β</button>
+      <button class="tab tab-margin"    onclick="switchMarginTab('rolling',this)">Rolling Asymmetry</button>
+      <button class="tab tab-margin"    onclick="switchMarginTab('seasonal',this)">Seasonal</button>
+      <button class="tab tab-margin"    onclick="switchMarginTab('lag',this)">Lag Analysis</button>
     </div>
     <div class="chart-wrap">
       <canvas id="marginChart"></canvas>
@@ -1641,11 +1649,30 @@
       const sig  = sigMap[pt.signal] || sigMap.INSUFFICIENT_DATA;
       const ptUp = pt.pt_when_rising  != null ? `β↑ = ${pt.pt_when_rising}` : '';
       const ptDn = pt.pt_when_falling != null ? `β↓ = ${pt.pt_when_falling}` : '';
+      const lagInfo = pt.best_lag_weeks != null ? ` · lag=${pt.best_lag_weeks}w (R²=${pt.lag_r2})` : '';
       c3.innerHTML =
         `<div class="lbl">Pass-Through Signal</div>` +
         `<div class="val" style="font-size:1rem;padding-top:.25rem"><span class="signal ${sig.cls}">${sig.icon} ${sig.label}</span></div>` +
         `<div class="sub" style="margin-top:.4rem">${sig.desc}</div>` +
-        `<div class="dt" style="margin-top:.3rem">${ptUp}&nbsp;&nbsp;${ptDn} · ${pt.weeks_used ?? 0} weeks</div>`;
+        `<div class="dt" style="margin-top:.3rem">${ptUp}&nbsp;&nbsp;${ptDn} · ${pt.weeks_used ?? 0} weeks${lagInfo}</div>`;
+    }
+
+    /* Card 4 — seasonal analysis */
+    const c4 = document.getElementById('pt-card-seasonal');
+    const seas = d?.seasonal || {};
+    if (c4 && seas.signal) {
+      const seasMap = {
+        WINTER_PREMIUM:      { cls: 'signal-bear', icon: '❄', label: 'WINTER PREMIUM' },
+        SUMMER_PREMIUM:      { cls: 'signal-bull', icon: '☀', label: 'SUMMER PREMIUM' },
+        NO_SEASONAL_EFFECT:  { cls: 'signal-neut', icon: '→', label: 'NO SEASONAL EFFECT' },
+      };
+      const ss = seasMap[seas.signal] || seasMap.NO_SEASONAL_EFFECT;
+      const prem = seas.seasonal_premium != null ? (seas.seasonal_premium * 100).toFixed(2) : '?';
+      c4.innerHTML =
+        `<div class="lbl">Seasonal Pattern</div>` +
+        `<div class="val" style="font-size:1rem;padding-top:.25rem"><span class="signal ${ss.cls}">${ss.icon} ${ss.label}</span></div>` +
+        `<div class="sub" style="margin-top:.4rem">Winter margin ${seas.seasonal_premium > 0 ? '+' : ''}${prem}c/L vs summer</div>` +
+        `<div class="dt" style="margin-top:.3rem">${seas.heating_weeks ?? 0} heating wks · ${seas.off_season_weeks ?? 0} off-season wks</div>`;
     }
 
     renderMarginChart(activeMarginTab);
@@ -1671,20 +1698,29 @@
 
     if (key === 'margin') {
       const margins = mh.map(h => h.gross_margin);
+      const ms = euBulData?.margin_stats || {};
       const avg52   = margins.reduce((s, v) => s + v, 0) / margins.length;
+      const datasets = [
+        { label: 'Gross margin (€/L)', data: margins,
+          borderColor: '#bc8cff', backgroundColor: 'rgba(188,140,255,0.12)',
+          borderWidth: 2, pointRadius: 0, tension: 0.2, fill: true, order: 1 },
+        { label: '52-week average', data: margins.map(() => avg52),
+          borderColor: 'rgba(139,148,158,0.5)', borderDash: [6,3],
+          borderWidth: 1.5, pointRadius: 0, fill: false, order: 2 },
+      ];
+      if (ms.band_upper != null) {
+        datasets.push(
+          { label: '+1σ band', data: margins.map(() => ms.band_upper),
+            borderColor: 'rgba(248,81,73,0.35)', borderDash: [4,4],
+            borderWidth: 1, pointRadius: 0, fill: false, order: 3 },
+          { label: '−1σ band', data: margins.map(() => ms.band_lower),
+            borderColor: 'rgba(63,185,80,0.35)', borderDash: [4,4],
+            borderWidth: 1, pointRadius: 0, fill: '-1', backgroundColor: 'rgba(139,148,158,0.06)', order: 3 },
+        );
+      }
       marginChart = new Chart(ctx.getContext('2d'), {
         type: 'line',
-        data: {
-          labels,
-          datasets: [
-            { label: 'Gross margin (€/L)', data: margins,
-              borderColor: '#bc8cff', backgroundColor: 'rgba(188,140,255,0.12)',
-              borderWidth: 2, pointRadius: 0, tension: 0.2, fill: true },
-            { label: '52-week average', data: margins.map(() => avg52),
-              borderColor: 'rgba(139,148,158,0.5)', borderDash: [6,3],
-              borderWidth: 1.5, pointRadius: 0, fill: false },
-          ],
-        },
+        data: { labels, datasets },
         options: { ...COPTS,
           plugins: { legend: { display: true, labels: { color: '#8b949e', boxWidth: 10, font: { size: 11 } } },
             tooltip: { ...TIP, callbacks: { label: c => '  ' + c.dataset.label + ': €' + (+c.raw).toFixed(4) + '/L' } } },
@@ -1730,7 +1766,6 @@
       const ptUp = pt.pt_when_rising;
       const ptDn = pt.pt_when_falling;
       if (ptUp == null || ptDn == null) {
-        // No data — show a placeholder
         const el = ctx.parentElement;
         el.innerHTML = '<p style="color:var(--faint);text-align:center;padding:3rem">Not enough weekly data yet for pass-through analysis.</p>';
         return;
@@ -1774,6 +1809,140 @@
             y: { grid: { color: '#1c2128' },
               min: 0, max: Math.min(1.5, Math.max(1.2, ptUp * 1.3, ptDn * 1.3)),
               ticks: { color: '#6e7681', font: { size: 11 }, callback: v => 'β ' + (+v).toFixed(2) } },
+          },
+        },
+      });
+
+    } else if (key === 'rolling') {
+      /* Rolling 26-week asymmetry over time */
+      const rpt = euBulData?.rolling_pass_through || [];
+      if (!rpt.length) {
+        ctx.parentElement.innerHTML = '<p style="color:var(--faint);text-align:center;padding:3rem">Not enough data for rolling analysis.</p>';
+        return;
+      }
+      const rChron = [...rpt].reverse();
+      marginChart = new Chart(ctx.getContext('2d'), {
+        type: 'line',
+        data: {
+          labels: rChron.map(r => r.week_end),
+          datasets: [
+            { label: 'β when Brent rising', data: rChron.map(r => r.pt_when_rising),
+              borderColor: '#f85149', backgroundColor: 'rgba(248,81,73,0.08)',
+              borderWidth: 2, pointRadius: 0, tension: 0.3, fill: false },
+            { label: 'β when Brent falling', data: rChron.map(r => r.pt_when_falling),
+              borderColor: '#3fb950', backgroundColor: 'rgba(63,185,80,0.08)',
+              borderWidth: 2, pointRadius: 0, tension: 0.3, fill: false },
+            { label: 'Asymmetry (β↑ − β↓)', data: rChron.map(r => r.asymmetry),
+              borderColor: '#d4a843', backgroundColor: 'rgba(212,168,67,0.12)',
+              borderWidth: 1.5, pointRadius: 0, tension: 0.3, fill: true },
+            { label: 'Zero line', data: rChron.map(() => 0),
+              borderColor: 'rgba(255,255,255,0.15)', borderDash: [4,4],
+              borderWidth: 1, pointRadius: 0, fill: false },
+          ],
+        },
+        options: { ...COPTS,
+          plugins: {
+            legend: { display: true, labels: { color: '#8b949e', boxWidth: 10, font: { size: 11 } } },
+            tooltip: { ...TIP,
+              callbacks: { label: c => `  ${c.dataset.label}: ${(+c.raw).toFixed(3)}` }
+            },
+          },
+          scales: {
+            x: { grid: { color: '#1c2128' }, ticks: { color: '#6e7681', maxTicksLimit: 12, font: { size: 11 } } },
+            y: { grid: { color: '#1c2128' }, ticks: { color: '#6e7681', font: { size: 11 }, callback: v => 'β ' + (+v).toFixed(2) } },
+          },
+        },
+      });
+
+    } else if (key === 'seasonal') {
+      /* Seasonal margin comparison: heating vs off-season */
+      const seas = euBulData?.seasonal || {};
+      if (!seas.heating_season_avg_margin) {
+        ctx.parentElement.innerHTML = '<p style="color:var(--faint);text-align:center;padding:3rem">Not enough data for seasonal analysis.</p>';
+        return;
+      }
+      /* Also plot monthly averages from margin history */
+      const monthBuckets = {};
+      for (const h of mh) {
+        const m = parseInt(h.week.slice(5,7));
+        if (!monthBuckets[m]) monthBuckets[m] = [];
+        monthBuckets[m].push(h.gross_margin);
+      }
+      const monthLabels = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+      const monthAvgs = monthLabels.map((_, i) => {
+        const b = monthBuckets[i+1];
+        return b && b.length ? b.reduce((s,v) => s+v, 0) / b.length : null;
+      });
+      const heatColor = monthLabels.map((_, i) => (i >= 9 || i <= 2) ? 'rgba(248,81,73,0.7)' : 'rgba(88,166,255,0.7)');
+      marginChart = new Chart(ctx.getContext('2d'), {
+        type: 'bar',
+        data: {
+          labels: monthLabels,
+          datasets: [{
+            label: 'Avg gross margin by month (€/L)',
+            data: monthAvgs,
+            backgroundColor: heatColor,
+            borderColor: heatColor.map(c => c.replace('0.7','1')),
+            borderWidth: 1, borderRadius: 4,
+          }],
+        },
+        options: { ...COPTS,
+          plugins: {
+            legend: { display: false },
+            tooltip: { ...TIP,
+              callbacks: { label: c => c.raw != null ? `  Avg margin: €${(+c.raw).toFixed(4)}/L` : '' }
+            },
+          },
+          scales: {
+            x: { grid: { color: '#1c2128' }, ticks: { color: '#8b949e', font: { size: 12 } } },
+            y: { grid: { color: '#1c2128' }, ticks: { color: '#6e7681', font: { size: 11 }, callback: v => '€' + (+v).toFixed(3) } },
+          },
+        },
+      });
+
+    } else if (key === 'lag') {
+      /* Lag analysis — R² at different lags */
+      const allLags = pt.all_lags || [];
+      if (!allLags.length) {
+        ctx.parentElement.innerHTML = '<p style="color:var(--faint);text-align:center;padding:3rem">Not enough data for lag analysis.</p>';
+        return;
+      }
+      const bestLag = pt.best_lag_weeks ?? 0;
+      marginChart = new Chart(ctx.getContext('2d'), {
+        type: 'bar',
+        data: {
+          labels: allLags.map(l => `Lag ${l.lag}w`),
+          datasets: [
+            { label: 'R² (fit quality)', data: allLags.map(l => l.r2),
+              backgroundColor: allLags.map(l => l.lag === bestLag ? 'rgba(88,166,255,0.8)' : 'rgba(139,148,158,0.4)'),
+              borderColor: allLags.map(l => l.lag === bestLag ? '#58a6ff' : '#6e7681'),
+              borderWidth: 2, borderRadius: 6, yAxisID: 'y' },
+            { type: 'line', label: 'Asymmetry (β↑ − β↓)', data: allLags.map(l => l.asymmetry),
+              borderColor: '#d4a843', backgroundColor: 'rgba(212,168,67,0.15)',
+              borderWidth: 2, pointRadius: 4, pointBackgroundColor: '#d4a843',
+              tension: 0.2, fill: false, yAxisID: 'y1' },
+          ],
+        },
+        options: { ...COPTS,
+          plugins: {
+            legend: { display: true, labels: { color: '#8b949e', boxWidth: 10, font: { size: 11 } } },
+            tooltip: { ...TIP,
+              callbacks: {
+                label: c => {
+                  if (c.datasetIndex === 0) return `  R² = ${(+c.raw).toFixed(3)}${c.dataIndex === allLags.findIndex(l => l.lag === bestLag) ? ' (best fit)' : ''}`;
+                  return `  Asymmetry = ${(+c.raw).toFixed(3)}`;
+                }
+              }
+            },
+          },
+          scales: {
+            x:  { grid: { color: '#1c2128' }, ticks: { color: '#8b949e', font: { size: 12 } } },
+            y:  { position: 'left', grid: { color: '#1c2128' }, min: 0, max: 1,
+                  title: { display: true, text: 'R²', color: '#58a6ff' },
+                  ticks: { color: '#6e7681', font: { size: 11 }, callback: v => (+v).toFixed(2) } },
+            y1: { position: 'right', grid: { drawOnChartArea: false },
+                  title: { display: true, text: 'Asymmetry', color: '#d4a843' },
+                  ticks: { color: '#6e7681', font: { size: 11 }, callback: v => (+v).toFixed(2) } },
           },
         },
       });
