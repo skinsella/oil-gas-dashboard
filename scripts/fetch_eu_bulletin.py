@@ -518,6 +518,97 @@ def compute_seasonal_analysis(margin_history: list) -> dict:
     }
 
 
+# ── Gouging detector ─────────────────────────────────────────────────────────
+
+def compute_gouging_detector(margin_history: list) -> dict:
+    """
+    Compare actual retail price to a 'justified price' that assumes full
+    pass-through of Brent cost changes. Weeks where retail exceeds the
+    justified price significantly may indicate margin expansion / gouging.
+    """
+    if len(margin_history) < 12:
+        return {}
+
+    chron = sorted(margin_history, key=lambda x: x["week"])
+
+    results = []
+    for i in range(1, len(chron)):
+        cur, prev = chron[i], chron[i - 1]
+        d_brent = cur["brent_eur_l"] - prev["brent_eur_l"]
+        justified = prev["pretax_eur_l"] + d_brent
+        actual    = cur["pretax_eur_l"]
+        gap       = actual - justified
+
+        withtax = cur.get("withtax_eur_l")
+        if withtax and cur["pretax_eur_l"] > 0:
+            tax_mult = withtax / cur["pretax_eur_l"]
+            justified_wt = round(justified * tax_mult, 4)
+            gap_wt       = round(withtax - justified_wt, 4)
+        else:
+            justified_wt = gap_wt = None
+
+        results.append({
+            "week": cur["week"],
+            "actual_pretax":    round(actual, 4),
+            "justified_pretax": round(justified, 4),
+            "gap_pretax":       round(gap, 4),
+            "actual_withtax":   withtax,
+            "justified_withtax": justified_wt,
+            "gap_withtax":      gap_wt,
+            "brent_change":     round(d_brent, 4),
+        })
+
+    results.sort(key=lambda x: x["week"], reverse=True)
+
+    gaps = [r["gap_pretax"] for r in results]
+    mean_gap = sum(gaps) / len(gaps)
+    std_gap  = (sum((g - mean_gap) ** 2 for g in gaps) / (len(gaps) - 1)) ** 0.5 if len(gaps) > 1 else 0
+
+    recent = results[:4] if len(results) >= 4 else results
+    avg_recent = sum(r["gap_pretax"] for r in recent) / len(recent) if recent else 0
+
+    if avg_recent > mean_gap + 2 * std_gap:
+        signal = "ALERT"
+    elif avg_recent > mean_gap + 1.5 * std_gap:
+        signal = "ELEVATED"
+    else:
+        signal = "NORMAL"
+
+    return {
+        "signal":             signal,
+        "recent_avg_gap":     round(avg_recent, 4),
+        "historical_mean_gap": round(mean_gap, 4),
+        "historical_std_gap": round(std_gap, 4),
+        "threshold_elevated": round(mean_gap + 1.5 * std_gap, 4),
+        "threshold_alert":    round(mean_gap + 2 * std_gap, 4),
+        "history":            results[:52],
+    }
+
+
+# ── Carbon tax projection ────────────────────────────────────────────────────
+
+def compute_carbon_projection() -> list:
+    """
+    Project carbon tax cost per litre and annual household cost to 2030.
+    Ireland's carbon tax rises €7.50/tonne/year until €100/tonne in 2030.
+    """
+    schedule = [
+        (2021, 33.50), (2022, 41.00), (2023, 48.50), (2024, 56.00),
+        (2025, 63.50), (2026, 71.00), (2027, 78.50), (2028, 86.00),
+        (2029, 93.50), (2030, 100.00),
+    ]
+    ANNUAL_L = 2000
+    return [
+        {
+            "year":  y,
+            "rate_per_tonne":           rate,
+            "carbon_per_litre":         round(rate * CO2_FACTOR_KEROSENE, 4),
+            "annual_carbon_cost_2000l": round(rate * CO2_FACTOR_KEROSENE * ANNUAL_L, 2),
+        }
+        for y, rate in schedule
+    ]
+
+
 # ── Main ──────────────────────────────────────────────────────────────────────
 
 def main() -> None:
@@ -590,6 +681,15 @@ def main() -> None:
         if seasonal:
             print(f"  Seasonal: {seasonal['signal']}  premium={seasonal.get('seasonal_premium',0):.4f} €/L")
 
+        print("  Computing gouging detector...")
+        gouging = compute_gouging_detector(margin_history)
+        if gouging:
+            print(f"  Gouging signal: {gouging['signal']}  recent_gap={gouging.get('recent_avg_gap',0):.4f} €/L")
+
+        print("  Computing carbon tax projection...")
+        carbon_proj = compute_carbon_projection()
+        print(f"  Carbon projection: {len(carbon_proj)} years through 2030")
+
         output = {
             "last_updated":    now_utc.isoformat(),
             "source":          "EU Weekly Oil Bulletin — European Commission",
@@ -601,6 +701,8 @@ def main() -> None:
             "rolling_pass_through": rolling_pt,
             "margin_stats":    margin_stats,
             "seasonal":        seasonal,
+            "gouging":         gouging,
+            "carbon_projection": carbon_proj,
         }
 
     except Exception as e:

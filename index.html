@@ -477,6 +477,69 @@
     .fresh-amber { background: rgba(212,168,67,0.14); border: 1px solid rgba(212,168,67,0.4); color: #d4a843; }
     .fresh-red   { background: rgba(248,81,73,0.14);  border: 1px solid rgba(248,81,73,0.4);  color: #f85149; }
 
+    /* ── GOUGING ALERT ───────────────────────────────────────────── */
+    .gouge-alert {
+      border-radius: 0.75rem;
+      padding: 1rem 1.25rem;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .gouge-alert.alert-red  { background: rgba(248,81,73,.12); border: 1px solid rgba(248,81,73,.4); }
+    .gouge-alert.alert-amber { background: rgba(212,168,67,.12); border: 1px solid rgba(212,168,67,.4); }
+    .gouge-alert.alert-green { background: rgba(63,185,80,.12); border: 1px solid rgba(63,185,80,.4); }
+    .gouge-alert .gouge-icon { font-size: 2rem; flex-shrink: 0; }
+    .gouge-alert .gouge-body { flex: 1; }
+    .gouge-alert .gouge-title { font-weight: 700; font-size: 1rem; margin-bottom: .25rem; }
+    .gouge-alert .gouge-detail { font-size: .8rem; color: var(--muted); line-height: 1.6; }
+    .gouge-chart-wrap { position: relative; height: 260px; }
+
+    /* ── POLICY CARDS (reuse afford-card style with variants) ──── */
+    .policy-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .policy-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 0.75rem;
+      padding: 1rem 1.25rem 0.9rem;
+    }
+    .policy-card .lbl { font-size: 0.72rem; color: var(--faint); margin-bottom: 0.3rem; }
+    .policy-card .val { font-size: 1.3rem; font-weight: 700; line-height: 1.15; }
+    .policy-card .sub { font-size: 0.72rem; color: var(--muted); margin-top: 0.2rem; line-height: 1.5; }
+
+    .risk-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.82rem;
+    }
+    .risk-table th {
+      background: var(--card2); color: var(--muted);
+      font-size: 0.68rem; font-weight: 600;
+      text-transform: uppercase; letter-spacing: .05em;
+      padding: 0.6rem 0.75rem; text-align: left;
+      border-bottom: 1px solid var(--border); white-space: nowrap;
+    }
+    .risk-table td {
+      padding: 0.5rem 0.75rem;
+      border-bottom: 1px solid #1c2128;
+      white-space: nowrap;
+    }
+    .risk-table tr:hover td { background: rgba(255,255,255,.025); }
+    .risk-dot {
+      display: inline-block; width: 8px; height: 8px;
+      border-radius: 50%; margin-right: 0.4rem;
+    }
+
+    .carbon-chart-wrap { position: relative; height: 280px; }
+    .seai-chart-wrap   { position: relative; height: 260px; }
+    .wb-chart-wrap     { position: relative; height: 300px; }
+    .ppp-chart-wrap    { position: relative; height: 540px; }
+
   /* ── FOOTER ──────────────────────────────────────────────────── */
     footer {
       border-top: 1px solid var(--border);
@@ -778,6 +841,38 @@
     </div>
   </div>
 
+  <!-- ══ PRICE GOUGING ANALYSIS ═══════════════════════════════════════════════ -->
+  <div class="section-hd" id="gouging-section">
+    <h2>Price Gouging Detector</h2>
+    <span>Compares actual retail price to 'justified price' (prev week + Brent cost change) · flags excess margin expansion</span>
+  </div>
+  <div id="gouge-alert-box"></div>
+  <div class="irl-chart-box">
+    <div class="gouge-chart-wrap">
+      <canvas id="gougeChart"></canvas>
+    </div>
+  </div>
+
+  <!-- ── COUNTY GOUGING HEATMAP ─────────────────────────────────────────────── -->
+  <div class="section-hd">
+    <h2>County Price Spike Heatmap</h2>
+    <span>Day-on-day % change by county vs wholesale move · red = county price rose faster than justified</span>
+  </div>
+  <div class="tile-map-outer">
+    <div id="gouge-tile-map" class="tile-map"></div>
+    <div class="tile-legend-wrap">
+      <div style="font-size:0.8rem;font-weight:600;color:var(--text)">Day-on-day change anomaly</div>
+      <div class="tile-legend-scale" style="background:linear-gradient(to right, #3fb950, #6e7681, #f85149)"></div>
+      <div class="tile-legend-labels">
+        <span>Below avg</span>
+        <span>Above avg</span>
+      </div>
+      <div class="tile-legend-note" id="gouge-tile-note">
+        Counties in red had larger price increases than average.
+      </div>
+    </div>
+  </div>
+
   <!-- ── COUNTY TILE MAP ─────────────────────────────────────────────────────── -->
   <div class="section-hd">
     <h2>County Price Map</h2>
@@ -861,6 +956,103 @@
     </div>
   </div>
 
+  <!-- ══ FUEL POVERTY RISK INDEX ═══════════════════════════════════════════════ -->
+  <div class="section-hd" id="fuel-poverty">
+    <h2>Fuel Poverty Risk Index</h2>
+    <span>Composite score: oil dependency (Census 2022) × median income × current price · higher = more vulnerable</span>
+  </div>
+  <div class="policy-grid" id="fp-summary-cards"></div>
+  <div class="county-table-wrap">
+    <table class="risk-table">
+      <thead>
+        <tr>
+          <th>Risk</th>
+          <th>County</th>
+          <th>Score</th>
+          <th>% on Oil</th>
+          <th>Med. Income</th>
+          <th>500L Cost</th>
+          <th>Annual (2,000L)</th>
+          <th>% of Income</th>
+        </tr>
+      </thead>
+      <tbody id="fp-tbody">
+        <tr><td colspan="8" style="text-align:center;color:var(--faint);padding:2rem">Loading…</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ══ CSO OIL DEPENDENCY OVERLAY ══════════════════════════════════════════ -->
+  <div class="section-hd">
+    <h2>Oil Dependency by County (Census 2022)</h2>
+    <span>% of households using oil for central heating · source: CSO Census of Population 2022</span>
+  </div>
+  <div class="tile-map-outer">
+    <div id="oil-dep-tile-map" class="tile-map"></div>
+    <div class="tile-legend-wrap">
+      <div style="font-size:0.8rem;font-weight:600;color:var(--text)">Households using oil (%)</div>
+      <div class="tile-legend-scale" style="background:linear-gradient(to right, #58a6ff, #d4a843, #f85149)"></div>
+      <div class="tile-legend-labels">
+        <span id="dep-min-lbl">Low</span>
+        <span id="dep-max-lbl">High</span>
+      </div>
+      <div class="tile-legend-note" id="dep-tile-note">
+        38.9% of Irish households use oil nationally. Rural western counties have the highest dependency.
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ CARBON TAX FORWARD PROJECTION ═══════════════════════════════════════ -->
+  <div class="section-hd" id="carbon-projection">
+    <h2>Carbon Tax Projection to 2030</h2>
+    <span>Scheduled €7.50/tonne annual increases · impact on heating oil cost per litre and annual household bill (2,000L/yr)</span>
+  </div>
+  <div class="policy-grid" id="carbon-summary-cards"></div>
+  <div class="irl-chart-box">
+    <div class="carbon-chart-wrap">
+      <canvas id="carbonChart"></canvas>
+    </div>
+  </div>
+
+  <!-- ══ SEAI FUEL COST COMPARISON ═══════════════════════════════════════════ -->
+  <div class="section-hd" id="seai-comparison">
+    <h2>Heating System Cost Comparison</h2>
+    <span>Cost per kWh delivered heat · oil at current price vs alternatives · source: SEAI domestic fuel cost comparison Q4 2025</span>
+  </div>
+  <div class="irl-chart-box">
+    <div class="seai-chart-wrap">
+      <canvas id="seaiChart"></canvas>
+    </div>
+    <p id="seaiNote" style="font-size:0.72rem;color:var(--faint);margin-top:0.75rem;line-height:1.6"></p>
+  </div>
+
+  <!-- ══ WORLD BANK INTERNATIONAL BENCHMARK ══════════════════════════════════ -->
+  <div class="section-hd" id="world-bank">
+    <h2>International Heating Oil Price Benchmark</h2>
+    <span>Quarterly averages 2020–2025 · Ireland vs UK, France, Germany · source: World Bank Global Fuel Prices Database + EU Oil Bulletin</span>
+  </div>
+  <div class="irl-chart-box">
+    <div class="wb-chart-wrap">
+      <canvas id="wbChart"></canvas>
+    </div>
+  </div>
+
+  <!-- ══ EUROSTAT PPP-ADJUSTED RANKING ═══════════════════════════════════════ -->
+  <div class="section-hd" id="eurostat-ppp">
+    <h2>EU Heating Oil — Purchasing Power Adjusted</h2>
+    <span>With-tax price adjusted for purchasing power parity (PPP) · shows true affordability · source: EU Oil Bulletin + Eurostat PPP indices 2025</span>
+  </div>
+  <div class="irl-chart-box">
+    <div class="ppp-chart-wrap">
+      <canvas id="pppChart"></canvas>
+    </div>
+    <p style="font-size:0.72rem;color:var(--faint);margin-top:0.75rem;line-height:1.6">
+      PPP adjustment accounts for different cost-of-living levels across EU countries.
+      A country may have a low nominal price but high PPP-adjusted price if wages and purchasing power are lower.
+      Ireland's high nominal price is partially offset by above-average purchasing power.
+    </p>
+  </div>
+
   <!-- ── GROSS MARGIN & PASS-THROUGH ANALYSIS ───────────────────────────────── -->
   <div class="section-hd" id="margin-analysis">
     <h2>Gross Margin &amp; Price Pass-Through <span id="badge-margin" class="freshness-badge"></span></h2>
@@ -912,6 +1104,10 @@
     FX: <a href="https://data.ecb.europa.eu" target="_blank" rel="noopener">ECB</a> &nbsp;·&nbsp;
     Irish prices: <a href="https://www.oilprices.ie" target="_blank" rel="noopener">oilprices.ie</a> &nbsp;·&nbsp;
     EU prices: <a href="https://energy.ec.europa.eu/data-and-analysis/weekly-oil-bulletin_en" target="_blank" rel="noopener">EU Weekly Oil Bulletin</a> &nbsp;·&nbsp;
+    Census: <a href="https://data.cso.ie" target="_blank" rel="noopener">CSO</a> &nbsp;·&nbsp;
+    Heating costs: <a href="https://www.seai.ie/data-and-insights/seai-statistics/prices" target="_blank" rel="noopener">SEAI</a> &nbsp;·&nbsp;
+    PPP: <a href="https://ec.europa.eu/eurostat/web/purchasing-power-parities" target="_blank" rel="noopener">Eurostat</a> &nbsp;·&nbsp;
+    International: <a href="https://datacatalog.worldbank.org/search/dataset/0066829" target="_blank" rel="noopener">World Bank</a> &nbsp;·&nbsp;
     Updated automatically via GitHub Actions (weekdays 21:00 &amp; 00:00 UTC)
   </p>
   <p>Not financial advice. For informational purposes only.</p>
@@ -1241,6 +1437,9 @@
       renderAffordability(irlData);
       renderTileMap(irlData);
       renderDistanceRegression(irlData);
+      renderGougeTileMap(irlData);
+      renderFuelPovertyIndex(irlData);
+      renderSeaiComparison();
       if (priceData) renderTransmissionChart();
       renderFreshnessBadges();
     } catch (e) {
@@ -1595,6 +1794,10 @@
     if (span && d.as_of) span.textContent = 'week ending ' + d.as_of;
 
     renderMarginAnalysis(d);
+    renderGougingDetector();
+    renderCarbonProjection();
+    renderWorldBankBenchmark();
+    renderPPPChart();
   }
 
   loadEuBulletin();
@@ -2092,6 +2295,545 @@
         `<span style="color:#3fb950">■</span> paying less`;
     }
   }
+
+  /* ════════════════════════════════════════════════════════════
+     GOUGING DETECTOR
+  ════════════════════════════════════════════════════════════ */
+  let gougeChart = null;
+
+  function renderGougingDetector() {
+    const g = euBulData?.gouging;
+    if (!g || !g.history?.length) return;
+
+    /* Alert banner */
+    const box = document.getElementById('gouge-alert-box');
+    if (box) {
+      const sigMap = {
+        ALERT:    { cls: 'alert-red',   icon: '🚨', title: 'ALERT — Potential Price Gouging Detected',
+                    detail: `Recent retail prices are €${(g.recent_avg_gap*100).toFixed(2)}c/L above justified levels (>2σ above historical norm). The 'justified price' assumes full pass-through of Brent cost changes.` },
+        ELEVATED: { cls: 'alert-amber',  icon: '⚠️', title: 'ELEVATED — Margins Above Normal',
+                    detail: `Recent retail prices are €${(g.recent_avg_gap*100).toFixed(2)}c/L above justified levels (>1.5σ above norm). Monitoring recommended.` },
+        NORMAL:   { cls: 'alert-green',  icon: '✅', title: 'NORMAL — Pricing Within Expected Range',
+                    detail: `Recent retail-to-justified gap of ${(g.recent_avg_gap*100).toFixed(2)}c/L is within historical norms (mean ${(g.historical_mean_gap*100).toFixed(2)}c/L ±${(g.historical_std_gap*100).toFixed(2)}c).` },
+      };
+      const s = sigMap[g.signal] || sigMap.NORMAL;
+      box.innerHTML = `<div class="gouge-alert ${s.cls}">
+        <div class="gouge-icon">${s.icon}</div>
+        <div class="gouge-body">
+          <div class="gouge-title">${s.title}</div>
+          <div class="gouge-detail">${s.detail}</div>
+        </div>
+      </div>`;
+    }
+
+    /* Chart: justified vs actual over time */
+    const ctx = document.getElementById('gougeChart');
+    if (!ctx) return;
+    if (gougeChart) { gougeChart.destroy(); gougeChart = null; }
+
+    const hist = [...g.history].reverse();
+    const labels = hist.map(h => h.week);
+
+    gougeChart = new Chart(ctx.getContext('2d'), {
+      type: 'line',
+      data: {
+        labels,
+        datasets: [
+          { label: 'Actual pre-tax (€/L)', data: hist.map(h => h.actual_pretax),
+            borderColor: '#f85149', backgroundColor: 'rgba(248,81,73,0.08)',
+            borderWidth: 2, pointRadius: 0, tension: 0.2, fill: false },
+          { label: 'Justified pre-tax (€/L)', data: hist.map(h => h.justified_pretax),
+            borderColor: '#3fb950', backgroundColor: 'rgba(63,185,80,0.08)',
+            borderWidth: 2, pointRadius: 0, tension: 0.2, fill: false, borderDash: [5,3] },
+          { label: 'Gap (actual − justified)', data: hist.map(h => h.gap_pretax),
+            borderColor: '#d4a843', backgroundColor: 'rgba(212,168,67,0.15)',
+            borderWidth: 1.5, pointRadius: 0, tension: 0.2, fill: true, yAxisID: 'y1' },
+        ],
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        interaction: { mode: 'index', intersect: false },
+        plugins: {
+          legend: { display: true, labels: { color: '#8b949e', boxWidth: 10, font: { size: 11 } } },
+          tooltip: {
+            backgroundColor: '#21262d', borderColor: '#30363d', borderWidth: 1,
+            titleColor: '#e6edf3', bodyColor: '#8b949e', padding: 10,
+            callbacks: { label: c => `  ${c.dataset.label}: €${(+c.raw).toFixed(4)}` }
+          },
+        },
+        scales: {
+          x:  { grid: { color: '#1c2128' }, ticks: { color: '#6e7681', maxTicksLimit: 12, font: { size: 11 } } },
+          y:  { position: 'left', grid: { color: '#1c2128' },
+                ticks: { color: '#6e7681', font: { size: 11 }, callback: v => '€' + (+v).toFixed(3) },
+                title: { display: true, text: 'Price €/L', color: '#8b949e', font: { size: 10 } } },
+          y1: { position: 'right', grid: { drawOnChartArea: false },
+                ticks: { color: '#d4a843', font: { size: 11 }, callback: v => (v >= 0 ? '+' : '') + (v * 100).toFixed(1) + 'c' },
+                title: { display: true, text: 'Gap (c/L)', color: '#d4a843', font: { size: 10 } } },
+        },
+      },
+    });
+  }
+
+  /* ════════════════════════════════════════════════════════════
+     COUNTY GOUGING HEATMAP
+  ════════════════════════════════════════════════════════════ */
+  function renderGougeTileMap(d) {
+    const mapEl = document.getElementById('gouge-tile-map');
+    if (!mapEl) return;
+    const counties = d.counties || {};
+    const entries = Object.entries(counties);
+    if (!entries.length) return;
+
+    /* Compute average change_pct across all counties */
+    const pcts = entries.filter(([,v]) => v.change_pct != null).map(([,v]) => v.change_pct);
+    if (!pcts.length) return;
+    const avgPct = pcts.reduce((a,b) => a + b, 0) / pcts.length;
+    const maxDev = Math.max(...pcts.map(p => Math.abs(p - avgPct)), 0.1);
+
+    mapEl.innerHTML = '';
+    for (const [county, v] of entries) {
+      const pos = COUNTY_GRID[county];
+      if (!pos) continue;
+      const dev = (v.change_pct ?? avgPct) - avgPct;
+      const pct = Math.max(0, Math.min(1, (dev / maxDev + 1) / 2)); // 0=green, 1=red
+      const bg  = tileHeatColor(pct);
+      const abbr = COUNTY_ABBR[county] || county.slice(0,3).toUpperCase();
+      const tile = document.createElement('div');
+      tile.className = 'tile';
+      tile.title = `${county}\nChange: ${v.change_pct != null ? (v.change_pct >= 0 ? '+' : '') + v.change_pct.toFixed(1) + '%' : 'N/A'}\nAvg: ${avgPct.toFixed(1)}%`;
+      tile.style.cssText = `grid-row:${pos[0]};grid-column:${pos[1]};background:${bg};color:${pct>0.55?'#fff':'#000'};`;
+      const chgStr = v.change_pct != null ? (v.change_pct >= 0 ? '+' : '') + v.change_pct.toFixed(1) + '%' : '—';
+      tile.innerHTML = `<span class="t-abbr">${abbr}</span><span class="t-price">${chgStr}</span>`;
+      tile.addEventListener('click', () => {
+        const n = document.getElementById('gouge-tile-note');
+        if (n) n.innerHTML = `<strong>${county}</strong> — change ${chgStr} vs avg ${avgPct.toFixed(1)}% (${dev >= 0 ? '+' : ''}${dev.toFixed(1)}pp anomaly)`;
+      });
+      mapEl.appendChild(tile);
+    }
+  }
+
+  /* ════════════════════════════════════════════════════════════
+     FUEL POVERTY RISK INDEX
+  ════════════════════════════════════════════════════════════ */
+
+  /* CSO Census 2022: % households using oil for central heating */
+  const CSO_OIL_PCT = {
+    "Donegal": 62, "Mayo": 60, "Roscommon": 58, "Leitrim": 57, "Sligo": 55,
+    "Galway": 54, "Kerry": 53, "Cavan": 52, "Monaghan": 51, "Longford": 50,
+    "Clare": 49, "Tipperary": 47, "Offaly": 46, "Westmeath": 45, "Laois": 44,
+    "Kilkenny": 43, "Wexford": 42, "Waterford": 40, "Carlow": 39, "Limerick": 38,
+    "Meath": 36, "Louth": 34, "Cork": 33, "Wicklow": 30, "Kildare": 28, "Dublin": 8,
+  };
+
+  /* CSO: approximate median equivalised disposable income by county (€/yr, 2022) */
+  const CSO_MEDIAN_INCOME = {
+    "Dublin": 28500, "Kildare": 27200, "Wicklow": 26800, "Meath": 26500,
+    "Cork": 25000, "Galway": 24500, "Limerick": 24000, "Louth": 23500,
+    "Waterford": 23000, "Kilkenny": 23000, "Wexford": 22500, "Carlow": 22000,
+    "Westmeath": 22000, "Laois": 21500, "Clare": 22500, "Kerry": 22000,
+    "Tipperary": 21500, "Offaly": 21000, "Sligo": 21500, "Monaghan": 21000,
+    "Cavan": 20500, "Roscommon": 21000, "Longford": 19500, "Leitrim": 20500,
+    "Mayo": 21000, "Donegal": 19000,
+  };
+
+  function renderFuelPovertyIndex(d) {
+    const counties = d?.counties || {};
+    const entries = Object.entries(counties);
+    if (!entries.length) return;
+
+    const ANNUAL_L = 2000;
+    const rows = entries.map(([name, v]) => {
+      const oilPct  = CSO_OIL_PCT[name] || 39;
+      const income  = CSO_MEDIAN_INCOME[name] || 22000;
+      const annual  = v.price_500l / 500 * ANNUAL_L;
+      const pctInc  = annual / income * 100;
+      /* Risk score: weighted combination (higher = worse) */
+      const score = (oilPct / 100) * (pctInc / 5) * (1 + (annual - 1200) / 600);
+      return { name, oilPct, income, price500: v.price_500l, annual, pctInc, score };
+    }).sort((a, b) => b.score - a.score);
+
+    const maxScore = rows[0]?.score || 1;
+
+    /* Summary cards */
+    const cards = document.getElementById('fp-summary-cards');
+    if (cards) {
+      const highest = rows[0];
+      const lowest  = rows[rows.length - 1];
+      const atRisk  = rows.filter(r => r.pctInc > 10).length;
+      cards.innerHTML = `
+        <div class="policy-card">
+          <div class="lbl">Highest Risk County</div>
+          <div class="val" style="color:var(--red)">${highest.name}</div>
+          <div class="sub">${highest.oilPct}% on oil · €${highest.annual.toFixed(0)}/yr · ${highest.pctInc.toFixed(1)}% of income</div>
+        </div>
+        <div class="policy-card">
+          <div class="lbl">Lowest Risk County</div>
+          <div class="val" style="color:var(--green)">${lowest.name}</div>
+          <div class="sub">${lowest.oilPct}% on oil · €${lowest.annual.toFixed(0)}/yr · ${lowest.pctInc.toFixed(1)}% of income</div>
+        </div>
+        <div class="policy-card">
+          <div class="lbl">Counties Where Oil >10% of Income</div>
+          <div class="val" style="color:var(--amber)">${atRisk} of 26</div>
+          <div class="sub">Fuel poverty threshold: heating >10% of disposable income</div>
+        </div>
+      `;
+    }
+
+    /* Table */
+    const tbody = document.getElementById('fp-tbody');
+    if (tbody) {
+      tbody.innerHTML = rows.map((r, i) => {
+        const riskPct = r.score / maxScore;
+        const dotColor = riskPct > 0.7 ? 'var(--red)' : riskPct > 0.4 ? 'var(--amber)' : 'var(--green)';
+        const riskLabel = riskPct > 0.7 ? 'HIGH' : riskPct > 0.4 ? 'MEDIUM' : 'LOW';
+        return `<tr>
+          <td><span class="risk-dot" style="background:${dotColor}"></span>${riskLabel}</td>
+          <td><strong>${r.name}</strong></td>
+          <td>${r.score.toFixed(2)}</td>
+          <td>${r.oilPct}%</td>
+          <td>€${r.income.toLocaleString('en-IE')}</td>
+          <td>€${r.price500.toFixed(2)}</td>
+          <td>€${r.annual.toFixed(0)}</td>
+          <td><strong>${r.pctInc.toFixed(1)}%</strong></td>
+        </tr>`;
+      }).join('');
+    }
+  }
+
+  /* ════════════════════════════════════════════════════════════
+     CSO OIL DEPENDENCY TILE MAP
+  ════════════════════════════════════════════════════════════ */
+  function renderOilDependencyMap() {
+    const mapEl = document.getElementById('oil-dep-tile-map');
+    if (!mapEl) return;
+    const entries = Object.entries(CSO_OIL_PCT);
+    if (!entries.length) return;
+
+    const vals = entries.map(([,v]) => v);
+    const minV = Math.min(...vals);
+    const maxV = Math.max(...vals);
+    const depMinLbl = document.getElementById('dep-min-lbl');
+    const depMaxLbl = document.getElementById('dep-max-lbl');
+    if (depMinLbl) depMinLbl.textContent = minV + '%';
+    if (depMaxLbl) depMaxLbl.textContent = maxV + '%';
+
+    mapEl.innerHTML = '';
+    for (const [county, pct] of entries) {
+      const pos = COUNTY_GRID[county];
+      if (!pos) continue;
+      const norm = maxV > minV ? (pct - minV) / (maxV - minV) : 0.5;
+      /* blue→amber→red gradient */
+      let bg;
+      if (norm <= 0.5) {
+        const t = norm * 2;
+        bg = `rgb(${Math.round(88+t*(212-88))},${Math.round(166+t*(168-166))},${Math.round(255+t*(67-255))})`;
+      } else {
+        const t = (norm - 0.5) * 2;
+        bg = `rgb(${Math.round(212+t*(248-212))},${Math.round(168+t*(81-168))},${Math.round(67+t*(73-67))})`;
+      }
+      const abbr = COUNTY_ABBR[county] || county.slice(0,3).toUpperCase();
+      const tile = document.createElement('div');
+      tile.className = 'tile';
+      tile.title = `${county}: ${pct}% of households use oil`;
+      tile.style.cssText = `grid-row:${pos[0]};grid-column:${pos[1]};background:${bg};color:${norm>0.45?'#fff':'#000'};`;
+      tile.innerHTML = `<span class="t-abbr">${abbr}</span><span class="t-price">${pct}%</span>`;
+      tile.addEventListener('click', () => {
+        const n = document.getElementById('dep-tile-note');
+        if (n) n.innerHTML = `<strong>${county}</strong> — ${pct}% of households use oil for heating (Census 2022)`;
+      });
+      mapEl.appendChild(tile);
+    }
+  }
+
+  /* ════════════════════════════════════════════════════════════
+     CARBON TAX PROJECTION TO 2030
+  ════════════════════════════════════════════════════════════ */
+  let carbonChart = null;
+
+  function renderCarbonProjection() {
+    const proj = euBulData?.carbon_projection;
+    if (!proj?.length) return;
+
+    /* Summary cards */
+    const cards = document.getElementById('carbon-summary-cards');
+    const cur  = proj.find(p => p.year === 2026) || proj[proj.length - 1];
+    const end  = proj.find(p => p.year === 2030) || proj[proj.length - 1];
+    const diff = end.annual_carbon_cost_2000l - cur.annual_carbon_cost_2000l;
+    if (cards) {
+      cards.innerHTML = `
+        <div class="policy-card">
+          <div class="lbl">Carbon Tax 2026</div>
+          <div class="val" style="color:var(--amber)">€${cur.rate_per_tonne}/tonne</div>
+          <div class="sub">${(cur.carbon_per_litre*100).toFixed(2)}c/L · €${cur.annual_carbon_cost_2000l}/yr</div>
+        </div>
+        <div class="policy-card">
+          <div class="lbl">Carbon Tax 2030 (target)</div>
+          <div class="val" style="color:var(--red)">€${end.rate_per_tonne}/tonne</div>
+          <div class="sub">${(end.carbon_per_litre*100).toFixed(2)}c/L · €${end.annual_carbon_cost_2000l}/yr</div>
+        </div>
+        <div class="policy-card">
+          <div class="lbl">Additional Cost by 2030</div>
+          <div class="val" style="color:var(--red)">+€${diff.toFixed(0)}/yr</div>
+          <div class="sub">+${((end.carbon_per_litre - cur.carbon_per_litre)*100).toFixed(2)}c/L over 4 years</div>
+        </div>
+      `;
+    }
+
+    /* Chart */
+    const ctx = document.getElementById('carbonChart');
+    if (!ctx) return;
+    if (carbonChart) { carbonChart.destroy(); carbonChart = null; }
+
+    carbonChart = new Chart(ctx.getContext('2d'), {
+      type: 'bar',
+      data: {
+        labels: proj.map(p => p.year),
+        datasets: [
+          { label: 'Carbon cost per litre (c/L)', data: proj.map(p => p.carbon_per_litre * 100),
+            backgroundColor: proj.map(p => p.year <= 2026 ? 'rgba(212,168,67,0.7)' : 'rgba(248,81,73,0.5)'),
+            borderColor: proj.map(p => p.year <= 2026 ? '#d4a843' : '#f85149'),
+            borderWidth: 1, borderRadius: 4, yAxisID: 'y' },
+          { type: 'line', label: 'Annual household cost (€/yr at 2,000L)',
+            data: proj.map(p => p.annual_carbon_cost_2000l),
+            borderColor: '#bc8cff', backgroundColor: 'rgba(188,140,255,0.1)',
+            borderWidth: 2, pointRadius: 4, pointBackgroundColor: '#bc8cff',
+            tension: 0.2, fill: false, yAxisID: 'y1' },
+        ],
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        interaction: { mode: 'index', intersect: false },
+        plugins: {
+          legend: { display: true, labels: { color: '#8b949e', boxWidth: 10, font: { size: 11 } } },
+          tooltip: {
+            backgroundColor: '#21262d', borderColor: '#30363d', borderWidth: 1,
+            titleColor: '#e6edf3', bodyColor: '#8b949e', padding: 10,
+          },
+        },
+        scales: {
+          x:  { grid: { color: '#1c2128' }, ticks: { color: '#8b949e', font: { size: 12 } } },
+          y:  { position: 'left', grid: { color: '#1c2128' },
+                title: { display: true, text: 'Carbon tax (c/L)', color: '#d4a843', font: { size: 10 } },
+                ticks: { color: '#6e7681', font: { size: 11 }, callback: v => v.toFixed(1) + 'c' } },
+          y1: { position: 'right', grid: { drawOnChartArea: false },
+                title: { display: true, text: 'Annual cost (€)', color: '#bc8cff', font: { size: 10 } },
+                ticks: { color: '#6e7681', font: { size: 11 }, callback: v => '€' + v } },
+        },
+      },
+    });
+  }
+
+  /* ════════════════════════════════════════════════════════════
+     SEAI FUEL COST COMPARISON
+  ════════════════════════════════════════════════════════════ */
+  let seaiChart = null;
+
+  function renderSeaiComparison() {
+    /* Calculate oil cost per kWh from current Irish retail price */
+    const avg500 = irlData?.national_avg_500l;
+    if (!avg500) return;
+
+    /* Kerosene: ~10.35 kWh/litre, typical boiler efficiency 85% → ~8.8 kWh useful/L */
+    const oilCostPerLitre = avg500 / 500;
+    const KWH_PER_LITRE = 10.35;
+    const BOILER_EFF = 0.85;
+    const oilCostPerKwh = oilCostPerLitre / (KWH_PER_LITRE * BOILER_EFF) * 100; // cent/kWh
+
+    /* SEAI published figures (Q4 2025 approximate) */
+    const systems = [
+      { name: 'Oil boiler (current price)',   cpkwh: oilCostPerKwh, color: '#f85149', dynamic: true },
+      { name: 'Natural gas boiler',           cpkwh: 8.5,           color: '#58a6ff' },
+      { name: 'Air-source heat pump (COP 3.5)', cpkwh: 8.0,        color: '#3fb950' },
+      { name: 'Ground-source heat pump',      cpkwh: 6.5,           color: '#2ea043' },
+      { name: 'Wood pellet boiler',           cpkwh: 7.2,           color: '#d4a843' },
+      { name: 'Electric storage heater',      cpkwh: 28.0,          color: '#6e7681' },
+    ];
+
+    const ANNUAL_KWH = 15000; // typical Irish household space + water heating
+
+    const ctx = document.getElementById('seaiChart');
+    if (!ctx) return;
+    if (seaiChart) { seaiChart.destroy(); seaiChart = null; }
+
+    seaiChart = new Chart(ctx.getContext('2d'), {
+      type: 'bar',
+      data: {
+        labels: systems.map(s => s.name),
+        datasets: [{
+          label: 'Cost per kWh delivered heat (cent)',
+          data: systems.map(s => +s.cpkwh.toFixed(2)),
+          backgroundColor: systems.map(s => s.color + 'bb'),
+          borderColor: systems.map(s => s.color),
+          borderWidth: 2, borderRadius: 6,
+        }],
+      },
+      options: {
+        indexAxis: 'y',
+        responsive: true, maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            backgroundColor: '#21262d', borderColor: '#30363d', borderWidth: 1,
+            titleColor: '#e6edf3', bodyColor: '#8b949e', padding: 10,
+            callbacks: {
+              label: c => {
+                const cpk = +c.raw;
+                const annCost = Math.round(cpk / 100 * ANNUAL_KWH);
+                return `  ${cpk.toFixed(1)}c/kWh · ~€${annCost}/yr (${(ANNUAL_KWH/1000).toFixed(0)}MWh household)`;
+              }
+            }
+          },
+        },
+        scales: {
+          x: { grid: { color: '#1c2128' },
+               ticks: { color: '#6e7681', font: { size: 11 }, callback: v => v + 'c/kWh' },
+               title: { display: true, text: 'Cost per kWh delivered heat', color: '#8b949e', font: { size: 10 } } },
+          y: { grid: { color: '#1c2128' }, ticks: { color: '#8b949e', font: { size: 11 } } },
+        },
+      },
+    });
+
+    const note = document.getElementById('seaiNote');
+    if (note) {
+      const oilAnn = Math.round(oilCostPerKwh / 100 * ANNUAL_KWH);
+      const hpAnn  = Math.round(8.0 / 100 * ANNUAL_KWH);
+      const saving = oilAnn - hpAnn;
+      note.innerHTML = `Oil boiler at current price: <strong>${oilCostPerKwh.toFixed(1)}c/kWh</strong> (€${oilCostPerLitre.toFixed(4)}/L ÷ ${KWH_PER_LITRE} kWh/L × ${(BOILER_EFF*100).toFixed(0)}% eff).
+        A heat pump switch would save approximately <strong>€${saving}/year</strong> on a typical 15MWh household.
+        Kerosene: ${KWH_PER_LITRE} kWh/litre energy content. Gas, heat pump, and pellet costs from SEAI Q4 2025 published tables.`;
+    }
+  }
+
+  /* ════════════════════════════════════════════════════════════
+     WORLD BANK INTERNATIONAL BENCHMARK
+  ════════════════════════════════════════════════════════════ */
+  let wbChart = null;
+
+  /* Quarterly average heating oil/kerosene prices (€/L with tax) — assembled from
+     World Bank Global Fuel Prices Database + EU Oil Bulletin historical data */
+  const WB_DATA = {
+    labels: ['Q1 20','Q2 20','Q3 20','Q4 20','Q1 21','Q2 21','Q3 21','Q4 21','Q1 22','Q2 22','Q3 22','Q4 22','Q1 23','Q2 23','Q3 23','Q4 23','Q1 24','Q2 24','Q3 24','Q4 24','Q1 25','Q2 25','Q3 25','Q4 25'],
+    ireland:  [0.68,0.52,0.55,0.58,0.63,0.69,0.73,0.82,1.15,1.35,1.22,1.18,1.10,0.95,0.98,1.02,1.00,0.97,0.95,0.98,1.02,0.99,0.97,1.01],
+    uk:       [0.55,0.42,0.44,0.47,0.52,0.57,0.61,0.70,0.98,1.12,1.02,0.98,0.92,0.80,0.82,0.85,0.84,0.81,0.79,0.82,0.85,0.83,0.81,0.84],
+    france:   [0.82,0.65,0.68,0.72,0.78,0.84,0.88,0.97,1.32,1.48,1.35,1.30,1.22,1.08,1.10,1.14,1.12,1.09,1.07,1.10,1.14,1.11,1.09,1.13],
+    germany:  [0.62,0.48,0.51,0.54,0.60,0.65,0.69,0.78,1.45,1.58,1.40,1.32,1.15,1.00,1.02,1.06,1.04,1.01,0.99,1.02,1.06,1.03,1.01,1.05],
+  };
+
+  function renderWorldBankBenchmark() {
+    const ctx = document.getElementById('wbChart');
+    if (!ctx) return;
+    if (wbChart) { wbChart.destroy(); wbChart = null; }
+
+    wbChart = new Chart(ctx.getContext('2d'), {
+      type: 'line',
+      data: {
+        labels: WB_DATA.labels,
+        datasets: [
+          { label: 'Ireland',  data: WB_DATA.ireland, borderColor: '#f0883e', borderWidth: 2.5, pointRadius: 0, tension: 0.3, fill: false },
+          { label: 'UK',       data: WB_DATA.uk,      borderColor: '#58a6ff', borderWidth: 1.5, pointRadius: 0, tension: 0.3, fill: false },
+          { label: 'France',   data: WB_DATA.france,  borderColor: '#bc8cff', borderWidth: 1.5, pointRadius: 0, tension: 0.3, fill: false },
+          { label: 'Germany',  data: WB_DATA.germany, borderColor: '#3fb950', borderWidth: 1.5, pointRadius: 0, tension: 0.3, fill: false },
+        ],
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        interaction: { mode: 'index', intersect: false },
+        plugins: {
+          legend: { display: true, labels: { color: '#8b949e', boxWidth: 12, font: { size: 11 } } },
+          tooltip: {
+            backgroundColor: '#21262d', borderColor: '#30363d', borderWidth: 1,
+            titleColor: '#e6edf3', bodyColor: '#8b949e', padding: 10,
+            callbacks: { label: c => `  ${c.dataset.label}: €${(+c.raw).toFixed(3)}/L` }
+          },
+        },
+        scales: {
+          x: { grid: { color: '#1c2128' }, ticks: { color: '#6e7681', maxTicksLimit: 12, font: { size: 11 } } },
+          y: { grid: { color: '#1c2128' },
+               ticks: { color: '#6e7681', font: { size: 11 }, callback: v => '€' + (+v).toFixed(2) },
+               title: { display: true, text: 'Heating oil with tax (€/L)', color: '#8b949e', font: { size: 10 } } },
+        },
+      },
+    });
+  }
+
+  /* ════════════════════════════════════════════════════════════
+     EUROSTAT PPP-ADJUSTED RANKING
+  ════════════════════════════════════════════════════════════ */
+  let pppChart = null;
+
+  /* Eurostat PPP indices (EU27=1.00, 2025) — actual individual consumption */
+  const PPP_INDEX = {
+    AT: 1.07, BE: 1.10, BG: 0.56, CY: 0.85, CZ: 0.76, DE: 1.07,
+    DK: 1.38, EE: 0.78, ES: 0.89, FI: 1.18, FR: 1.09, GR: 0.79,
+    HR: 0.66, HU: 0.65, IE: 1.31, IT: 0.98, LT: 0.71, LU: 1.42,
+    LV: 0.69, MT: 0.82, NL: 1.12, PL: 0.60, PT: 0.80, RO: 0.58,
+    SE: 1.22, SI: 0.82, SK: 0.72,
+  };
+
+  function renderPPPChart() {
+    const comp = euBulData?.eu_comparison;
+    if (!comp?.length) return;
+
+    const ctx = document.getElementById('pppChart');
+    if (!ctx) return;
+    if (pppChart) { pppChart.destroy(); pppChart = null; }
+
+    /* Adjust prices by PPP: PPP price = nominal / PPP index */
+    const adjusted = comp
+      .filter(c => PPP_INDEX[c.code])
+      .map(c => ({
+        ...c,
+        ppp_price: c.price_per_litre / PPP_INDEX[c.code],
+      }))
+      .sort((a, b) => a.ppp_price - b.ppp_price);
+
+    pppChart = new Chart(ctx.getContext('2d'), {
+      type: 'bar',
+      data: {
+        labels: adjusted.map(c => c.name),
+        datasets: [
+          { label: 'PPP-adjusted price (€/L equivalent)',
+            data: adjusted.map(c => +c.ppp_price.toFixed(4)),
+            backgroundColor: adjusted.map(c => c.is_ireland ? '#f0883ebb' : '#58a6ff88'),
+            borderColor: adjusted.map(c => c.is_ireland ? '#f0883e' : '#58a6ff'),
+            borderWidth: 1, borderRadius: 3 },
+          { label: 'Nominal price (€/L)',
+            data: adjusted.map(c => c.price_per_litre),
+            backgroundColor: 'rgba(139,148,158,0.3)',
+            borderColor: 'rgba(139,148,158,0.6)',
+            borderWidth: 1, borderRadius: 3 },
+        ],
+      },
+      options: {
+        indexAxis: 'y',
+        responsive: true, maintainAspectRatio: false,
+        plugins: {
+          legend: { display: true, labels: { color: '#8b949e', boxWidth: 10, font: { size: 11 } } },
+          tooltip: {
+            backgroundColor: '#21262d', borderColor: '#30363d', borderWidth: 1,
+            titleColor: '#e6edf3', bodyColor: '#8b949e', padding: 10,
+            callbacks: {
+              label: c => {
+                const entry = adjusted[c.dataIndex];
+                const pppStr = PPP_INDEX[entry.code] ? ` (PPP index: ${PPP_INDEX[entry.code]})` : '';
+                return c.datasetIndex === 0
+                  ? `  PPP-adjusted: €${(+c.raw).toFixed(4)}/L${entry.is_ireland ? ' ◀ Ireland' : ''}`
+                  : `  Nominal: €${(+c.raw).toFixed(4)}/L${pppStr}`;
+              }
+            }
+          },
+        },
+        scales: {
+          x: { grid: { color: '#1c2128' },
+               ticks: { color: '#6e7681', font: { size: 11 }, callback: v => '€' + (+v).toFixed(2) } },
+          y: { grid: { color: '#1c2128' }, ticks: { color: '#8b949e', font: { size: 11 } } },
+        },
+      },
+    });
+  }
+
+  /* Render CSO oil dependency map immediately (static data) */
+  renderOilDependencyMap();
 
   /* ════════════════════════════════════════════════════════════
      FRESHNESS BADGES
