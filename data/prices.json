@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-03-20T00:39:13.504200+00:00",
+  "last_updated": "2026-03-20T21:05:53.883032+00:00",
   "source": "EIA Open Data API v2 \u2014 https://www.eia.gov/opendata/",
   "errors": null,
   "commodities": {
@@ -2020,6 +2020,10 @@
     }
   },
   "eurusd": [
+    {
+      "date": "2026-03-20",
+      "rate": 1.1555
+    },
     {
       "date": "2026-03-19",
       "rate": 1.1489
@@ -4935,10 +4939,6 @@
     {
       "date": "2023-05-15",
       "rate": 1.0876
-    },
-    {
-      "date": "2023-05-12",
-      "rate": 1.0892
     }
   ],
   "brent_weekly": [
