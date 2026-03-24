@@ -461,6 +461,31 @@
     }
     .margin-note strong { color: var(--muted); }
 
+    /* ── BOND YIELD CARDS ──────────────────────────────────────── */
+    .bond-cards {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    @media (max-width: 1100px) { .bond-cards { grid-template-columns: repeat(2,1fr); } }
+    @media (max-width: 480px)  { .bond-cards { grid-template-columns: 1fr; } }
+    .bond-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 0.75rem;
+      padding: 1rem 1.25rem 0.9rem;
+    }
+    .bond-card .country-hd { display: flex; align-items: center; gap: 0.4rem; margin-bottom: 0.5rem; font-weight: 600; font-size: 0.82rem; }
+    .bond-card .yield-row  { display: flex; gap: 1.5rem; }
+    .bond-card .yield-item .tenor { font-size: 0.62rem; color: var(--faint); text-transform: uppercase; letter-spacing: 0.05em; }
+    .bond-card .yield-item .val   { font-size: 1.3rem; font-weight: 700; line-height: 1.15; }
+    .bond-card .yield-item .chng  { font-size: 0.75rem; margin-top: 0.1rem; }
+    .bond-card .spread-line { font-size: 0.7rem; color: var(--muted); margin-top: 0.4rem; padding-top: 0.4rem; border-top: 1px solid var(--border); }
+    .bond-card .freq-tag { font-size: 0.58rem; color: var(--faint); background: var(--card2); padding: 0.08rem 0.3rem; border-radius: 0.2rem; }
+    .tab-bond.on  { background: var(--blue); border-color: var(--blue); color: #000; font-weight: 600; }
+    .tab-bond:hover { border-color: var(--blue); color: var(--blue); }
+
     /* ── FRESHNESS BADGES ────────────────────────────────────────── */
     .freshness-badge {
       display: inline-flex;
@@ -726,6 +751,30 @@
     </div>
   </div>
 
+  <!-- ── SOVEREIGN BOND YIELDS ────────────────────────────────────────────────── -->
+  <div class="section-hd" id="bonds">
+    <h2>Sovereign Bond Yields <span id="badge-bonds" class="freshness-badge"></span></h2>
+    <span>Government bond yields · US (FRED), Germany (Bundesbank), Ireland &amp; UK (ECB/FRED)</span>
+  </div>
+
+  <div class="bond-cards">
+    <div class="bond-card" id="bc-US"></div>
+    <div class="bond-card" id="bc-DE"></div>
+    <div class="bond-card" id="bc-IE"></div>
+    <div class="bond-card" id="bc-GB"></div>
+  </div>
+
+  <div class="chart-box" style="margin-bottom:2rem">
+    <div class="tabs" id="bond-tabs">
+      <button class="tab tab-bond on" onclick="switchBondTab('10Y',this)">10-Year Yields</button>
+      <button class="tab tab-bond"    onclick="switchBondTab('2Y',this)">2-Year Yields</button>
+      <button class="tab tab-bond"    onclick="switchBondTab('spread',this)">Yield Spread (10Y-2Y)</button>
+    </div>
+    <div class="chart-wrap" style="position:relative;height:280px">
+      <canvas id="bondChart"></canvas>
+    </div>
+  </div>
+
   <!-- ── IRISH HOME HEATING OIL ──────────────────────────────────────────────── -->
   <div class="section-hd" id="ireland">
     <h2>🇮🇪 Irish Home Heating Oil <span id="badge-ireland" class="freshness-badge"></span></h2>
@@ -904,6 +953,7 @@
     FX: <a href="https://data.ecb.europa.eu" target="_blank" rel="noopener">ECB</a> &nbsp;·&nbsp;
     Irish prices: <a href="https://www.oilprices.ie" target="_blank" rel="noopener">oilprices.ie</a> &nbsp;·&nbsp;
     EU prices: <a href="https://energy.ec.europa.eu/data-and-analysis/weekly-oil-bulletin_en" target="_blank" rel="noopener">EU Weekly Oil Bulletin</a> &nbsp;·&nbsp;
+    Bonds: <a href="https://fred.stlouisfed.org" target="_blank" rel="noopener">FRED</a> · <a href="https://www.bundesbank.de" target="_blank" rel="noopener">Bundesbank</a> · <a href="https://data.ecb.europa.eu" target="_blank" rel="noopener">ECB</a> &nbsp;·&nbsp;
     Updated automatically via GitHub Actions (weekdays 21:00 &amp; 00:00 UTC)
   </p>
   <p>Not financial advice. For informational purposes only.</p>
@@ -1593,6 +1643,192 @@
   setInterval(loadEuBulletin, 3600000); // EU bulletin is weekly, refresh hourly
 
   /* ════════════════════════════════════════════════════════════
+     SOVEREIGN BOND YIELDS
+  ════════════════════════════════════════════════════════════ */
+  const BOND_META = {
+    US: { name: 'United States', flag: '\u{1F1FA}\u{1F1F8}', color: '#f0883e' },
+    DE: { name: 'Germany',       flag: '\u{1F1E9}\u{1F1EA}', color: '#58a6ff' },
+    IE: { name: 'Ireland',       flag: '\u{1F1EE}\u{1F1EA}', color: '#3fb950' },
+    GB: { name: 'United Kingdom', flag: '\u{1F1EC}\u{1F1E7}', color: '#bc8cff' },
+  };
+
+  let bondData = null;
+  let bondChart = null;
+  let activeBondTab = '10Y';
+
+  async function loadBonds() {
+    try {
+      const r = await fetch('./data/bonds.json?_=' + Date.now());
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      bondData = await r.json();
+      renderBondCards();
+      renderBondChart(activeBondTab);
+      renderFreshnessBadges();
+    } catch (e) {
+      console.warn('bonds.json failed:', e.message);
+    }
+  }
+
+  function renderBondCards() {
+    if (!bondData?.yields) return;
+    const y = bondData.yields;
+    const sp = bondData.spreads || {};
+
+    for (const [cc, meta] of Object.entries(BOND_META)) {
+      const el = document.getElementById('bc-' + cc);
+      if (!el) continue;
+
+      const prefix = cc === 'GB' ? 'UK' : cc;
+      const k10 = prefix + '10Y';
+      const k2  = prefix + '02Y';
+      const d10 = y[k10];
+      const d2  = y[k2];
+
+      let html = `<div class="country-hd">${meta.flag} ${meta.name}</div><div class="yield-row">`;
+
+      // 2Y column
+      if (d2?.history?.length) {
+        const cur = d2.history[0];
+        const prev = d2.history[1];
+        const chg = prev ? (cur.value - prev.value) : 0;
+        const cls = chg > 0.005 ? 'up' : chg < -0.005 ? 'down' : 'flat';
+        const arrow = chg > 0.005 ? '▲' : chg < -0.005 ? '▼' : '—';
+        html += `<div class="yield-item"><div class="tenor">2-Year</div>` +
+          `<div class="val">${cur.value.toFixed(2)}%</div>` +
+          `<div class="chng ${cls}">${arrow} ${Math.abs(chg).toFixed(2)}</div></div>`;
+      } else {
+        html += `<div class="yield-item"><div class="tenor">2-Year</div>` +
+          `<div class="val" style="color:var(--faint)">n/a</div></div>`;
+      }
+
+      // 10Y column
+      if (d10?.history?.length) {
+        const cur = d10.history[0];
+        const prev = d10.history[1];
+        const chg = prev ? (cur.value - prev.value) : 0;
+        const cls = chg > 0.005 ? 'up' : chg < -0.005 ? 'down' : 'flat';
+        const arrow = chg > 0.005 ? '▲' : chg < -0.005 ? '▼' : '—';
+        html += `<div class="yield-item"><div class="tenor">10-Year</div>` +
+          `<div class="val">${cur.value.toFixed(2)}%</div>` +
+          `<div class="chng ${cls}">${arrow} ${Math.abs(chg).toFixed(2)}</div></div>`;
+      } else {
+        html += `<div class="yield-item"><div class="tenor">10-Year</div>` +
+          `<div class="val" style="color:var(--faint)">n/a</div></div>`;
+      }
+
+      html += `</div>`;
+
+      // Spread line (10Y - 2Y)
+      const spread = sp[cc];
+      if (spread?.length) {
+        const sv = spread[0].value;
+        const inv = sv < 0;
+        html += `<div class="spread-line">10Y-2Y spread: <strong style="color:${inv ? 'var(--red)' : 'var(--green)'}">${sv > 0 ? '+' : ''}${sv.toFixed(2)}%</strong>${inv ? ' (inverted)' : ''}</div>`;
+      }
+
+      // Frequency tag
+      const freq10 = d10?.freq || 'daily';
+      const freq2  = d2?.freq || '';
+      const freqLabel = freq10 === 'monthly' ? 'monthly' : 'daily';
+      html += `<div style="margin-top:0.3rem"><span class="freq-tag">${freqLabel}</span></div>`;
+
+      el.innerHTML = html;
+    }
+  }
+
+  function renderBondChart(tab) {
+    activeBondTab = tab;
+    const ctx = document.getElementById('bondChart');
+    if (!ctx || !bondData?.yields) return;
+    if (bondChart) { bondChart.destroy(); bondChart = null; }
+
+    const datasets = [];
+    const allDates = new Set();
+
+    if (tab === 'spread') {
+      // Spread chart (10Y - 2Y)
+      const sp = bondData.spreads || {};
+      for (const [cc, meta] of Object.entries(BOND_META)) {
+        const data = sp[cc];
+        if (!data?.length) continue;
+        data.forEach(d => allDates.add(d.date));
+        const lookup = Object.fromEntries(data.map(d => [d.date, d.value]));
+        datasets.push({ cc, meta, lookup });
+      }
+    } else {
+      // 10Y or 2Y yields
+      const suffix = tab === '2Y' ? '02Y' : '10Y';
+      for (const [cc, meta] of Object.entries(BOND_META)) {
+        const prefix = cc === 'GB' ? 'UK' : cc;
+        const series = bondData.yields[prefix + suffix];
+        if (!series?.history?.length) continue;
+        series.history.forEach(d => allDates.add(d.date));
+        const lookup = Object.fromEntries(series.history.map(d => [d.date, d.value]));
+        datasets.push({ cc, meta, lookup });
+      }
+    }
+
+    const labels = [...allDates].sort();
+
+    bondChart = new Chart(ctx.getContext('2d'), {
+      type: 'line',
+      data: {
+        labels,
+        datasets: datasets.map(ds => ({
+          label: ds.meta.flag + ' ' + ds.meta.name,
+          data: labels.map(d => ds.lookup[d] ?? null),
+          borderColor: ds.meta.color,
+          backgroundColor: ds.meta.color + '18',
+          borderWidth: 2,
+          pointRadius: 0,
+          tension: 0.3,
+          spanGaps: true,
+        })),
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        interaction: { mode: 'index', intersect: false },
+        plugins: {
+          legend: { labels: { color: '#8b949e', boxWidth: 14, font: { size: 11 } } },
+          tooltip: {
+            backgroundColor: '#21262d', borderColor: '#30363d', borderWidth: 1,
+            titleColor: '#e6edf3', bodyColor: '#8b949e', padding: 10,
+            callbacks: {
+              label: c => '  ' + c.dataset.label + ': ' + (c.raw !== null ? c.raw.toFixed(3) + '%' : 'n/a'),
+            },
+          },
+        },
+        scales: {
+          x: { grid: { color: '#1c2128' }, ticks: { color: '#6e7681', font: { size: 10 }, maxTicksLimit: 12 } },
+          y: {
+            grid: { color: '#1c2128' },
+            ticks: { color: '#8b949e', font: { size: 11 }, callback: v => v.toFixed(1) + '%' },
+          },
+        },
+      },
+    });
+
+    // Add zero line for spread chart
+    if (tab === 'spread' && bondChart) {
+      bondChart.options.plugins.annotation = {
+        annotations: {
+          zeroLine: { type: 'line', yMin: 0, yMax: 0, borderColor: '#6e7681', borderWidth: 1, borderDash: [4, 4] },
+        },
+      };
+    }
+  }
+
+  function switchBondTab(tab, btn) {
+    document.querySelectorAll('.tab-bond').forEach(b => b.classList.remove('on'));
+    btn.classList.add('on');
+    renderBondChart(tab);
+  }
+
+  loadBonds();
+  setInterval(loadBonds, 3600000); // bond data is daily/monthly, refresh hourly
+
+  /* ════════════════════════════════════════════════════════════
      GROSS MARGIN & PASS-THROUGH ANALYSIS
   ════════════════════════════════════════════════════════════ */
   let marginChart     = null;
@@ -1956,6 +2192,9 @@
     const euDate   = euBulData?.as_of || euBulData?.last_updated;
     setBadge('badge-eu-comp',    euDate,   7, 14);
     setBadge('badge-margin',     euDate,   7, 14);
+    // Sovereign bond yields (US daily data date)
+    const bondDate = bondData?.yields?.US10Y?.history?.[0]?.date || bondData?.yields?.DE10Y?.history?.[0]?.date;
+    setBadge('badge-bonds',      bondDate, 3, 7);
   }
 </script>
 
