@@ -22,11 +22,7 @@ import requests
 
 # ── Config ────────────────────────────────────────────────────────────────────
 
-FRED_API_KEY = os.environ.get("FRED_API_KEY", "99bc741f2afe7c4764777470602bd2a3").strip()
-if not FRED_API_KEY:
-    print("ERROR: FRED_API_KEY environment variable is not set.", file=sys.stderr)
-    print("Register for a free key at https://fred.stlouisfed.org/docs/api/api_key.html", file=sys.stderr)
-    sys.exit(1)
+FRED_API_KEY = (os.environ.get("FRED_API_KEY") or "").strip() or "99bc741f2afe7c4764777470602bd2a3"
 
 SCRIPT_DIR  = os.path.dirname(os.path.abspath(__file__))
 OUTPUT_PATH = os.path.join(SCRIPT_DIR, "..", "data", "bonds.json")

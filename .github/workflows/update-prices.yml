@@ -37,6 +37,7 @@ jobs:
         run: python scripts/fetch_eu_bulletin.py
 
       - name: Fetch sovereign bond yields (FRED + Bundesbank + ECB)
+        continue-on-error: true
         env:
           FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
         run: python scripts/fetch_bonds.py
