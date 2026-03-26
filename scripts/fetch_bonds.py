@@ -170,6 +170,46 @@ def compute_spreads(yields_data: dict) -> dict:
     return spreads
 
 
+def _to_monthly(history: list) -> dict:
+    """Convert a daily history to monthly by taking the last value in each month.
+       Also handles data that is already monthly (YYYY-MM format)."""
+    monthly: dict[str, float] = {}
+    for h in history:
+        d = h["date"]
+        month = d[:7]  # works for both 'YYYY-MM-DD' and 'YYYY-MM'
+        # Keep the latest date per month (history is newest-first, so first seen wins)
+        if month not in monthly:
+            monthly[month] = h["value"]
+    return monthly
+
+
+def compute_cross_country_spreads(yields_data: dict) -> dict:
+    """Compute cross-country 10Y spreads: IE-DE (Irish risk premium) and UK-US.
+       Handles mixed daily/monthly frequencies by aggregating to monthly."""
+    pairs = {
+        "IE_DE": ("IE10Y", "DE10Y"),   # Irish risk premium over German Bunds
+        "GB_US": ("UK10Y", "US10Y"),   # UK premium over US Treasuries
+    }
+    result = {}
+    for label, (key_a, key_b) in pairs.items():
+        hist_a = yields_data.get(key_a, {}).get("history", [])
+        hist_b = yields_data.get(key_b, {}).get("history", [])
+        if not hist_a or not hist_b:
+            result[label] = None
+            continue
+        monthly_a = _to_monthly(hist_a)
+        monthly_b = _to_monthly(hist_b)
+        common = sorted(set(monthly_a) & set(monthly_b), reverse=True)
+        if common:
+            result[label] = [
+                {"date": d, "value": round(monthly_a[d] - monthly_b[d], 3)}
+                for d in common
+            ]
+        else:
+            result[label] = None
+    return result
+
+
 # ── Main ──────────────────────────────────────────────────────────────────────
 
 def main() -> None:
@@ -260,6 +300,9 @@ def main() -> None:
     # ── Compute yield spreads ────────────────────────────────────────────────
     spreads = compute_spreads(yields_data)
 
+    # ── Compute cross-country 10Y spreads ────────────────────────────────────
+    cross_spreads = compute_cross_country_spreads(yields_data)
+
     # ── Write output ─────────────────────────────────────────────────────────
     os.makedirs(os.path.dirname(OUTPUT_PATH), exist_ok=True)
 
@@ -269,6 +312,7 @@ def main() -> None:
         "errors": errors if errors else None,
         "yields": yields_data,
         "spreads": spreads,
+        "cross_spreads": cross_spreads,
     }
 
     with open(OUTPUT_PATH, "w") as f:

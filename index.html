@@ -754,8 +754,15 @@
   <!-- ── SOVEREIGN BOND YIELDS ────────────────────────────────────────────────── -->
   <div class="section-hd" id="bonds">
     <h2>Sovereign Bond Yields <span id="badge-bonds" class="freshness-badge"></span></h2>
-    <span>Government bond yields · US (FRED), Germany (Bundesbank), Ireland &amp; UK (ECB/FRED)</span>
+    <span>Government bond yields · macro-rate context for energy financing &amp; inflation expectations</span>
   </div>
+
+  <p class="fund-note">
+    Government bond yields reflect inflation expectations, central-bank policy, and sovereign risk.
+    Rising yields increase financing costs for energy infrastructure and can signal tightening financial conditions.
+    The <strong>Ireland–Germany 10Y spread</strong> is the key metric for Irish sovereign risk within the euro area.
+    <br><em>US &amp; Germany: daily · Ireland &amp; UK: monthly.</em>
+  </p>
 
   <div class="bond-cards">
     <div class="bond-card" id="bc-US"></div>
@@ -769,6 +776,7 @@
       <button class="tab tab-bond on" onclick="switchBondTab('10Y',this)">10-Year Yields</button>
       <button class="tab tab-bond"    onclick="switchBondTab('2Y',this)">2-Year Yields</button>
       <button class="tab tab-bond"    onclick="switchBondTab('spread',this)">Yield Spread (10Y-2Y)</button>
+      <button class="tab tab-bond"    onclick="switchBondTab('cross',this)">IE-DE &amp; UK-US Spread</button>
     </div>
     <div class="chart-wrap" style="position:relative;height:280px">
       <canvas id="bondChart"></canvas>
@@ -1669,10 +1677,40 @@
     }
   }
 
+  /* Cross-country spread labels for IE and GB cards */
+  const CROSS_LABEL = { IE: { key: 'IE_DE', label: 'vs Germany' }, GB: { key: 'GB_US', label: 'vs US' } };
+
+  function _yieldCol(series, color, tenor) {
+    if (!series?.history?.length) {
+      return `<div class="yield-item"><div class="tenor">${tenor}</div>` +
+        `<div class="val" style="color:var(--faint)">n/a</div></div>`;
+    }
+    const cur = series.history[0];
+    const prev = series.history[1];
+    const chg = prev ? (cur.value - prev.value) : 0;
+    const cls = chg > 0.005 ? 'up' : chg < -0.005 ? 'down' : 'flat';
+    const arrow = chg > 0.005 ? '▲' : chg < -0.005 ? '▼' : '—';
+    return `<div class="yield-item"><div class="tenor">${tenor}</div>` +
+      `<div class="val" style="color:${color}">${cur.value.toFixed(2)}%</div>` +
+      `<div class="chng ${cls}">${arrow} ${Math.abs(chg).toFixed(2)}</div></div>`;
+  }
+
+  function _fmtDate(dateStr) {
+    if (!dateStr) return '';
+    // "2026-03-24" → "24 Mar" or "2026-02" → "Feb 2026"
+    if (dateStr.length === 7) {
+      const d = new Date(dateStr + '-15');
+      return d.toLocaleDateString('en-GB', { month: 'short', year: 'numeric' });
+    }
+    const d = new Date(dateStr + 'T00:00:00');
+    return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
+  }
+
   function renderBondCards() {
     if (!bondData?.yields) return;
     const y = bondData.yields;
     const sp = bondData.spreads || {};
+    const csp = bondData.cross_spreads || {};
 
     for (const [cc, meta] of Object.entries(BOND_META)) {
       const el = document.getElementById('bc-' + cc);
@@ -1684,53 +1722,38 @@
       const d10 = y[k10];
       const d2  = y[k2];
 
-      let html = `<div class="country-hd">${meta.flag} ${meta.name}</div><div class="yield-row">`;
+      // Header with data date
+      const latestDate = d10?.history?.[0]?.date || d2?.history?.[0]?.date || '';
+      let html = `<div class="country-hd">${meta.flag} ${meta.name}` +
+        (latestDate ? ` <span class="freq-tag">${_fmtDate(latestDate)}</span>` : '') +
+        `</div><div class="yield-row">`;
 
-      // 2Y column
-      if (d2?.history?.length) {
-        const cur = d2.history[0];
-        const prev = d2.history[1];
-        const chg = prev ? (cur.value - prev.value) : 0;
-        const cls = chg > 0.005 ? 'up' : chg < -0.005 ? 'down' : 'flat';
-        const arrow = chg > 0.005 ? '▲' : chg < -0.005 ? '▼' : '—';
-        html += `<div class="yield-item"><div class="tenor">2-Year</div>` +
-          `<div class="val">${cur.value.toFixed(2)}%</div>` +
-          `<div class="chng ${cls}">${arrow} ${Math.abs(chg).toFixed(2)}</div></div>`;
+      // For IE and GB: show cross-country spread instead of empty 2Y
+      const cross = CROSS_LABEL[cc];
+      if (!d2?.history?.length && cross) {
+        const csv = csp[cross.key];
+        if (csv?.length) {
+          const sv = csv[0].value;
+          const bps = Math.round(sv * 100);
+          html += `<div class="yield-item"><div class="tenor">10Y ${cross.label}</div>` +
+            `<div class="val" style="color:${sv > 0 ? 'var(--amber)' : meta.color}">${sv > 0 ? '+' : ''}${bps}bp</div></div>`;
+        } else {
+          html += _yieldCol(null, meta.color, '2-Year');
+        }
       } else {
-        html += `<div class="yield-item"><div class="tenor">2-Year</div>` +
-          `<div class="val" style="color:var(--faint)">n/a</div></div>`;
+        html += _yieldCol(d2, meta.color, '2-Year');
       }
 
-      // 10Y column
-      if (d10?.history?.length) {
-        const cur = d10.history[0];
-        const prev = d10.history[1];
-        const chg = prev ? (cur.value - prev.value) : 0;
-        const cls = chg > 0.005 ? 'up' : chg < -0.005 ? 'down' : 'flat';
-        const arrow = chg > 0.005 ? '▲' : chg < -0.005 ? '▼' : '—';
-        html += `<div class="yield-item"><div class="tenor">10-Year</div>` +
-          `<div class="val">${cur.value.toFixed(2)}%</div>` +
-          `<div class="chng ${cls}">${arrow} ${Math.abs(chg).toFixed(2)}</div></div>`;
-      } else {
-        html += `<div class="yield-item"><div class="tenor">10-Year</div>` +
-          `<div class="val" style="color:var(--faint)">n/a</div></div>`;
-      }
-
+      html += _yieldCol(d10, meta.color, '10-Year');
       html += `</div>`;
 
-      // Spread line (10Y - 2Y)
+      // Spread line: 10Y-2Y if available, else cross-country context
       const spread = sp[cc];
       if (spread?.length) {
         const sv = spread[0].value;
         const inv = sv < 0;
         html += `<div class="spread-line">10Y-2Y spread: <strong style="color:${inv ? 'var(--red)' : 'var(--green)'}">${sv > 0 ? '+' : ''}${sv.toFixed(2)}%</strong>${inv ? ' (inverted)' : ''}</div>`;
       }
-
-      // Frequency tag
-      const freq10 = d10?.freq || 'daily';
-      const freq2  = d2?.freq || '';
-      const freqLabel = freq10 === 'monthly' ? 'monthly' : 'daily';
-      html += `<div style="margin-top:0.3rem"><span class="freq-tag">${freqLabel}</span></div>`;
 
       el.innerHTML = html;
     }
@@ -1744,16 +1767,32 @@
 
     const datasets = [];
     const allDates = new Set();
+    let yLabel = '%';
 
-    if (tab === 'spread') {
-      // Spread chart (10Y - 2Y)
+    if (tab === 'cross') {
+      // Cross-country 10Y spreads (IE-DE, UK-US)
+      const csp = bondData.cross_spreads || {};
+      const crossMeta = {
+        IE_DE: { label: '\u{1F1EE}\u{1F1EA} Ireland \u2013 \u{1F1E9}\u{1F1EA} Germany', color: '#3fb950' },
+        GB_US: { label: '\u{1F1EC}\u{1F1E7} UK \u2013 \u{1F1FA}\u{1F1F8} US', color: '#bc8cff' },
+      };
+      for (const [key, meta] of Object.entries(crossMeta)) {
+        const data = csp[key];
+        if (!data?.length) continue;
+        data.forEach(d => allDates.add(d.date));
+        const lookup = Object.fromEntries(data.map(d => [d.date, d.value]));
+        datasets.push({ meta, lookup });
+      }
+      yLabel = 'bp';
+    } else if (tab === 'spread') {
+      // Term spread chart (10Y - 2Y)
       const sp = bondData.spreads || {};
       for (const [cc, meta] of Object.entries(BOND_META)) {
         const data = sp[cc];
         if (!data?.length) continue;
         data.forEach(d => allDates.add(d.date));
         const lookup = Object.fromEntries(data.map(d => [d.date, d.value]));
-        datasets.push({ cc, meta, lookup });
+        datasets.push({ meta, lookup });
       }
     } else {
       // 10Y or 2Y yields
@@ -1764,23 +1803,27 @@
         if (!series?.history?.length) continue;
         series.history.forEach(d => allDates.add(d.date));
         const lookup = Object.fromEntries(series.history.map(d => [d.date, d.value]));
-        datasets.push({ cc, meta, lookup });
+        datasets.push({ meta, lookup });
       }
     }
 
     const labels = [...allDates].sort();
+    const isCross = tab === 'cross';
 
     bondChart = new Chart(ctx.getContext('2d'), {
       type: 'line',
       data: {
         labels,
         datasets: datasets.map(ds => ({
-          label: ds.meta.flag + ' ' + ds.meta.name,
-          data: labels.map(d => ds.lookup[d] ?? null),
+          label: ds.meta.label || (ds.meta.flag + ' ' + ds.meta.name),
+          data: labels.map(d => {
+            const v = ds.lookup[d] ?? null;
+            return isCross && v !== null ? Math.round(v * 100) : v;  // convert to bp for cross
+          }),
           borderColor: ds.meta.color,
           backgroundColor: ds.meta.color + '18',
           borderWidth: 2,
-          pointRadius: 0,
+          pointRadius: isCross ? 3 : 0,
           tension: 0.3,
           spanGaps: true,
         })),
@@ -1795,7 +1838,10 @@
             backgroundColor: '#21262d', borderColor: '#30363d', borderWidth: 1,
             titleColor: '#e6edf3', bodyColor: '#8b949e', padding: 10,
             callbacks: {
-              label: c => '  ' + c.dataset.label + ': ' + (c.raw !== null ? c.raw.toFixed(3) + '%' : 'n/a'),
+              label: c => {
+                if (c.raw === null) return '  ' + c.dataset.label + ': n/a';
+                return '  ' + c.dataset.label + ': ' + (isCross ? c.raw + ' bp' : c.raw.toFixed(3) + '%');
+              },
             },
           },
         },
@@ -1803,20 +1849,14 @@
           x: { grid: { color: '#1c2128' }, ticks: { color: '#6e7681', font: { size: 10 }, maxTicksLimit: 12 } },
           y: {
             grid: { color: '#1c2128' },
-            ticks: { color: '#8b949e', font: { size: 11 }, callback: v => v.toFixed(1) + '%' },
+            ticks: {
+              color: '#8b949e', font: { size: 11 },
+              callback: v => isCross ? v + ' bp' : v.toFixed(1) + '%',
+            },
           },
         },
       },
     });
-
-    // Add zero line for spread chart
-    if (tab === 'spread' && bondChart) {
-      bondChart.options.plugins.annotation = {
-        annotations: {
-          zeroLine: { type: 'line', yMin: 0, yMax: 0, borderColor: '#6e7681', borderWidth: 1, borderDash: [4, 4] },
-        },
-      };
-    }
   }
 
   function switchBondTab(tab, btn) {
