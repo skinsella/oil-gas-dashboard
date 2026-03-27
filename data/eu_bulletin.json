@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-03-27T00:43:42.029991+00:00",
+  "last_updated": "2026-03-27T21:09:00.173691+00:00",
   "source": "EU Weekly Oil Bulletin \u2014 European Commission",
   "as_of": "2026-03-23",
   "ireland_history": [
@@ -458,12 +458,6 @@
       "is_ireland": false
     },
     {
-      "code": "EE",
-      "name": "Estonia",
-      "price_per_litre": 1.308,
-      "is_ireland": false
-    },
-    {
       "code": "BE",
       "name": "Belgium",
       "price_per_litre": 1.3908,
@@ -497,6 +491,12 @@
       "code": "LT",
       "name": "Lithuania",
       "price_per_litre": 1.5018,
+      "is_ireland": false
+    },
+    {
+      "code": "EE",
+      "name": "Estonia",
+      "price_per_litre": 1.544,
       "is_ireland": false
     },
     {
