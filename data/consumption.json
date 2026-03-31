@@ -1,0 +1,2139 @@
+{
+  "last_updated": "2026-03-31T16:51:07.341558+00:00",
+  "source": "NORA \u2014 nora.ie",
+  "unit": "megalitres",
+  "categories": [
+    "gasoline",
+    "kerosene",
+    "gasoil",
+    "diesel",
+    "fuel_oil",
+    "total"
+  ],
+  "history": [
+    {
+      "date": "2008-01",
+      "total": 683.58,
+      "gasoline": 186.45,
+      "kerosene": 130.44,
+      "gasoil": 122.54,
+      "diesel": 237.49,
+      "fuel_oil": 6.67
+    },
+    {
+      "date": "2008-02",
+      "total": 741.81,
+      "gasoline": 189.04,
+      "kerosene": 149.23,
+      "gasoil": 136.5,
+      "diesel": 257.44,
+      "fuel_oil": 9.59
+    },
+    {
+      "date": "2008-03",
+      "total": 685.03,
+      "gasoline": 192.38,
+      "kerosene": 128.22,
+      "gasoil": 117.24,
+      "diesel": 238.19,
+      "fuel_oil": 9.0
+    },
+    {
+      "date": "2008-04",
+      "total": 765.79,
+      "gasoline": 209.69,
+      "kerosene": 111.62,
+      "gasoil": 151.89,
+      "diesel": 282.47,
+      "fuel_oil": 10.12
+    },
+    {
+      "date": "2008-05",
+      "total": 653.66,
+      "gasoline": 212.11,
+      "kerosene": 39.72,
+      "gasoil": 123.73,
+      "diesel": 266.37,
+      "fuel_oil": 11.74
+    },
+    {
+      "date": "2008-06",
+      "total": 587.23,
+      "gasoline": 191.54,
+      "kerosene": 31.87,
+      "gasoil": 115.04,
+      "diesel": 239.63,
+      "fuel_oil": 9.15
+    },
+    {
+      "date": "2008-07",
+      "total": 585.04,
+      "gasoline": 196.73,
+      "kerosene": 34.42,
+      "gasoil": 100.52,
+      "diesel": 243.0,
+      "fuel_oil": 10.38
+    },
+    {
+      "date": "2008-08",
+      "total": 577.1,
+      "gasoline": 193.65,
+      "kerosene": 41.13,
+      "gasoil": 94.12,
+      "diesel": 238.49,
+      "fuel_oil": 9.71
+    },
+    {
+      "date": "2008-09",
+      "total": 657.96,
+      "gasoline": 194.37,
+      "kerosene": 84.19,
+      "gasoil": 121.46,
+      "diesel": 249.29,
+      "fuel_oil": 8.65
+    },
+    {
+      "date": "2008-10",
+      "total": 724.99,
+      "gasoline": 199.67,
+      "kerosene": 145.26,
+      "gasoil": 113.96,
+      "diesel": 255.27,
+      "fuel_oil": 10.83
+    },
+    {
+      "date": "2008-11",
+      "total": 681.0,
+      "gasoline": 183.61,
+      "kerosene": 141.42,
+      "gasoil": 113.43,
+      "diesel": 232.72,
+      "fuel_oil": 9.81
+    },
+    {
+      "date": "2008-12",
+      "total": 740.28,
+      "gasoline": 186.38,
+      "kerosene": 211.29,
+      "gasoil": 113.53,
+      "diesel": 220.45,
+      "fuel_oil": 8.63
+    },
+    {
+      "date": "2009-01",
+      "total": 690.31,
+      "gasoline": 171.79,
+      "kerosene": 177.28,
+      "gasoil": 118.73,
+      "diesel": 214.04,
+      "fuel_oil": 8.47
+    },
+    {
+      "date": "2009-02",
+      "total": 620.92,
+      "gasoline": 161.89,
+      "kerosene": 143.93,
+      "gasoil": 104.73,
+      "diesel": 203.02,
+      "fuel_oil": 7.34
+    },
+    {
+      "date": "2009-03",
+      "total": 687.93,
+      "gasoline": 181.06,
+      "kerosene": 143.24,
+      "gasoil": 119.66,
+      "diesel": 234.74,
+      "fuel_oil": 9.24
+    },
+    {
+      "date": "2009-04",
+      "total": 622.75,
+      "gasoline": 185.66,
+      "kerosene": 100.22,
+      "gasoil": 99.24,
+      "diesel": 227.66,
+      "fuel_oil": 9.97
+    },
+    {
+      "date": "2009-05",
+      "total": 540.37,
+      "gasoline": 183.41,
+      "kerosene": 64.02,
+      "gasoil": 86.19,
+      "diesel": 196.74,
+      "fuel_oil": 10.0
+    },
+    {
+      "date": "2009-06",
+      "total": 544.65,
+      "gasoline": 178.39,
+      "kerosene": 26.0,
+      "gasoil": 108.04,
+      "diesel": 221.75,
+      "fuel_oil": 10.47
+    },
+    {
+      "date": "2009-07",
+      "total": 549.91,
+      "gasoline": 188.05,
+      "kerosene": 28.22,
+      "gasoil": 82.42,
+      "diesel": 241.38,
+      "fuel_oil": 9.84
+    },
+    {
+      "date": "2009-08",
+      "total": 518.48,
+      "gasoline": 174.49,
+      "kerosene": 43.32,
+      "gasoil": 82.1,
+      "diesel": 210.28,
+      "fuel_oil": 8.28
+    },
+    {
+      "date": "2009-09",
+      "total": 624.58,
+      "gasoline": 185.03,
+      "kerosene": 87.11,
+      "gasoil": 106.41,
+      "diesel": 236.96,
+      "fuel_oil": 9.06
+    },
+    {
+      "date": "2009-10",
+      "total": 618.98,
+      "gasoline": 179.6,
+      "kerosene": 110.27,
+      "gasoil": 94.69,
+      "diesel": 225.44,
+      "fuel_oil": 8.99
+    },
+    {
+      "date": "2009-11",
+      "total": 609.18,
+      "gasoline": 162.07,
+      "kerosene": 138.06,
+      "gasoil": 88.73,
+      "diesel": 212.12,
+      "fuel_oil": 8.2
+    },
+    {
+      "date": "2009-12",
+      "total": 722.89,
+      "gasoline": 174.27,
+      "kerosene": 212.98,
+      "gasoil": 110.4,
+      "diesel": 216.66,
+      "fuel_oil": 8.58
+    },
+    {
+      "date": "2010-01",
+      "total": 555.63,
+      "gasoline": 130.43,
+      "kerosene": 158.95,
+      "gasoil": 90.59,
+      "diesel": 167.86,
+      "fuel_oil": 7.81
+    },
+    {
+      "date": "2010-02",
+      "total": 635.31,
+      "gasoline": 154.1,
+      "kerosene": 166.73,
+      "gasoil": 105.71,
+      "diesel": 201.07,
+      "fuel_oil": 7.7
+    },
+    {
+      "date": "2010-03",
+      "total": 674.05,
+      "gasoline": 175.78,
+      "kerosene": 147.01,
+      "gasoil": 114.68,
+      "diesel": 227.18,
+      "fuel_oil": 9.4
+    },
+    {
+      "date": "2010-04",
+      "total": 682.69,
+      "gasoline": 171.84,
+      "kerosene": 140.59,
+      "gasoil": 139.51,
+      "diesel": 220.6,
+      "fuel_oil": 10.15
+    },
+    {
+      "date": "2010-05",
+      "total": 466.61,
+      "gasoline": 169.02,
+      "kerosene": 27.07,
+      "gasoil": 51.53,
+      "diesel": 210.5,
+      "fuel_oil": 8.49
+    },
+    {
+      "date": "2010-06",
+      "total": 506.26,
+      "gasoline": 172.28,
+      "kerosene": 15.39,
+      "gasoil": 87.87,
+      "diesel": 221.98,
+      "fuel_oil": 8.75
+    },
+    {
+      "date": "2010-07",
+      "total": 488.46,
+      "gasoline": 165.8,
+      "kerosene": 18.28,
+      "gasoil": 71.24,
+      "diesel": 206.05,
+      "fuel_oil": 9.03
+    },
+    {
+      "date": "2010-08",
+      "total": 530.89,
+      "gasoline": 165.44,
+      "kerosene": 36.13,
+      "gasoil": 94.88,
+      "diesel": 210.26,
+      "fuel_oil": 7.33
+    },
+    {
+      "date": "2010-09",
+      "total": 557.99,
+      "gasoline": 165.06,
+      "kerosene": 73.01,
+      "gasoil": 78.97,
+      "diesel": 216.39,
+      "fuel_oil": 8.3
+    },
+    {
+      "date": "2010-10",
+      "total": 597.14,
+      "gasoline": 162.7,
+      "kerosene": 109.06,
+      "gasoil": 88.74,
+      "diesel": 212.14,
+      "fuel_oil": 8.9
+    },
+    {
+      "date": "2010-11",
+      "total": 676.7,
+      "gasoline": 159.91,
+      "kerosene": 174.38,
+      "gasoil": 94.96,
+      "diesel": 221.38,
+      "fuel_oil": 8.35
+    },
+    {
+      "date": "2010-12",
+      "total": 652.9,
+      "gasoline": 127.05,
+      "kerosene": 235.5,
+      "gasoil": 96.89,
+      "diesel": 171.98,
+      "fuel_oil": 8.0
+    },
+    {
+      "date": "2011-01",
+      "total": 540.69,
+      "gasoline": 136.74,
+      "kerosene": 119.04,
+      "gasoil": 77.02,
+      "diesel": 188.68,
+      "fuel_oil": 7.47
+    },
+    {
+      "date": "2011-02",
+      "total": 578.24,
+      "gasoline": 143.11,
+      "kerosene": 125.1,
+      "gasoil": 92.0,
+      "diesel": 198.68,
+      "fuel_oil": 6.29
+    },
+    {
+      "date": "2011-03",
+      "total": 563.07,
+      "gasoline": 147.57,
+      "kerosene": 87.21,
+      "gasoil": 97.33,
+      "diesel": 211.99,
+      "fuel_oil": 6.9
+    },
+    {
+      "date": "2011-04",
+      "total": 497.4,
+      "gasoline": 154.74,
+      "kerosene": 37.9,
+      "gasoil": 82.44,
+      "diesel": 203.83,
+      "fuel_oil": 6.94
+    },
+    {
+      "date": "2011-05",
+      "total": 492.63,
+      "gasoline": 149.98,
+      "kerosene": 40.08,
+      "gasoil": 77.76,
+      "diesel": 205.2,
+      "fuel_oil": 6.89
+    },
+    {
+      "date": "2011-06",
+      "total": 500.12,
+      "gasoline": 150.04,
+      "kerosene": 32.65,
+      "gasoil": 93.95,
+      "diesel": 204.38,
+      "fuel_oil": 7.04
+    },
+    {
+      "date": "2011-07",
+      "total": 483.53,
+      "gasoline": 150.38,
+      "kerosene": 27.45,
+      "gasoil": 88.02,
+      "diesel": 199.04,
+      "fuel_oil": 6.72
+    },
+    {
+      "date": "2011-08",
+      "total": 533.0,
+      "gasoline": 155.28,
+      "kerosene": 41.84,
+      "gasoil": 104.18,
+      "diesel": 214.19,
+      "fuel_oil": 5.82
+    },
+    {
+      "date": "2011-09",
+      "total": 547.19,
+      "gasoline": 144.6,
+      "kerosene": 92.03,
+      "gasoil": 86.94,
+      "diesel": 202.6,
+      "fuel_oil": 7.34
+    },
+    {
+      "date": "2011-10",
+      "total": 560.57,
+      "gasoline": 144.04,
+      "kerosene": 112.54,
+      "gasoil": 80.85,
+      "diesel": 206.38,
+      "fuel_oil": 6.79
+    },
+    {
+      "date": "2011-11",
+      "total": 594.45,
+      "gasoline": 147.17,
+      "kerosene": 120.13,
+      "gasoil": 93.78,
+      "diesel": 215.49,
+      "fuel_oil": 5.63
+    },
+    {
+      "date": "2011-12",
+      "total": 602.71,
+      "gasoline": 147.07,
+      "kerosene": 153.53,
+      "gasoil": 79.9,
+      "diesel": 204.1,
+      "fuel_oil": 6.34
+    },
+    {
+      "date": "2012-01",
+      "total": 463.85,
+      "gasoline": 127.76,
+      "kerosene": 73.66,
+      "gasoil": 67.45,
+      "diesel": 180.44,
+      "fuel_oil": 5.49
+    },
+    {
+      "date": "2012-02",
+      "total": 513.88,
+      "gasoline": 131.78,
+      "kerosene": 96.57,
+      "gasoil": 81.89,
+      "diesel": 189.49,
+      "fuel_oil": 4.99
+    },
+    {
+      "date": "2012-03",
+      "total": 532.09,
+      "gasoline": 147.01,
+      "kerosene": 67.1,
+      "gasoil": 92.12,
+      "diesel": 207.02,
+      "fuel_oil": 6.54
+    },
+    {
+      "date": "2012-04",
+      "total": 533.92,
+      "gasoline": 134.07,
+      "kerosene": 90.12,
+      "gasoil": 96.43,
+      "diesel": 198.11,
+      "fuel_oil": 5.71
+    },
+    {
+      "date": "2012-05",
+      "total": 490.38,
+      "gasoline": 147.37,
+      "kerosene": 39.51,
+      "gasoil": 72.07,
+      "diesel": 212.94,
+      "fuel_oil": 6.36
+    },
+    {
+      "date": "2012-06",
+      "total": 465.19,
+      "gasoline": 135.76,
+      "kerosene": 25.46,
+      "gasoil": 81.9,
+      "diesel": 204.07,
+      "fuel_oil": 5.36
+    },
+    {
+      "date": "2012-07",
+      "total": 467.67,
+      "gasoline": 135.4,
+      "kerosene": 28.98,
+      "gasoil": 82.01,
+      "diesel": 204.04,
+      "fuel_oil": 5.2
+    },
+    {
+      "date": "2012-08",
+      "total": 504.97,
+      "gasoline": 141.32,
+      "kerosene": 43.97,
+      "gasoil": 90.56,
+      "diesel": 210.7,
+      "fuel_oil": 5.72
+    },
+    {
+      "date": "2012-09",
+      "total": 506.32,
+      "gasoline": 130.01,
+      "kerosene": 67.93,
+      "gasoil": 90.75,
+      "diesel": 202.62,
+      "fuel_oil": 4.67
+    },
+    {
+      "date": "2012-10",
+      "total": 560.85,
+      "gasoline": 137.43,
+      "kerosene": 105.73,
+      "gasoil": 82.76,
+      "diesel": 219.77,
+      "fuel_oil": 6.13
+    },
+    {
+      "date": "2012-11",
+      "total": 591.67,
+      "gasoline": 131.72,
+      "kerosene": 134.33,
+      "gasoil": 95.19,
+      "diesel": 217.59,
+      "fuel_oil": 4.91
+    },
+    {
+      "date": "2012-12",
+      "total": 541.47,
+      "gasoline": 124.9,
+      "kerosene": 134.81,
+      "gasoil": 73.33,
+      "diesel": 194.34,
+      "fuel_oil": 4.85
+    },
+    {
+      "date": "2013-01",
+      "total": 512.83,
+      "gasoline": 122.27,
+      "kerosene": 103.98,
+      "gasoil": 77.05,
+      "diesel": 196.23,
+      "fuel_oil": 4.1
+    },
+    {
+      "date": "2013-02",
+      "total": 497.92,
+      "gasoline": 115.69,
+      "kerosene": 100.42,
+      "gasoil": 77.48,
+      "diesel": 192.69,
+      "fuel_oil": 3.72
+    },
+    {
+      "date": "2013-03",
+      "total": 577.08,
+      "gasoline": 132.06,
+      "kerosene": 122.59,
+      "gasoil": 90.32,
+      "diesel": 216.98,
+      "fuel_oil": 5.09
+    },
+    {
+      "date": "2013-04",
+      "total": 531.14,
+      "gasoline": 127.67,
+      "kerosene": 76.84,
+      "gasoil": 96.67,
+      "diesel": 214.76,
+      "fuel_oil": 4.83
+    },
+    {
+      "date": "2013-05",
+      "total": 524.13,
+      "gasoline": 138.77,
+      "kerosene": 48.48,
+      "gasoil": 87.77,
+      "diesel": 229.05,
+      "fuel_oil": 7.45
+    },
+    {
+      "date": "2013-06",
+      "total": 448.54,
+      "gasoline": 121.62,
+      "kerosene": 18.53,
+      "gasoil": 88.76,
+      "diesel": 201.34,
+      "fuel_oil": 4.71
+    },
+    {
+      "date": "2013-07",
+      "total": 467.76,
+      "gasoline": 131.35,
+      "kerosene": 15.13,
+      "gasoil": 86.09,
+      "diesel": 214.76,
+      "fuel_oil": 4.67
+    },
+    {
+      "date": "2013-08",
+      "total": 492.57,
+      "gasoline": 130.6,
+      "kerosene": 33.22,
+      "gasoil": 89.19,
+      "diesel": 221.49,
+      "fuel_oil": 3.24
+    },
+    {
+      "date": "2013-09",
+      "total": 493.72,
+      "gasoline": 120.75,
+      "kerosene": 71.64,
+      "gasoil": 73.47,
+      "diesel": 208.64,
+      "fuel_oil": 4.55
+    },
+    {
+      "date": "2013-10",
+      "total": 544.29,
+      "gasoline": 129.71,
+      "kerosene": 97.08,
+      "gasoil": 70.92,
+      "diesel": 226.59,
+      "fuel_oil": 4.7
+    },
+    {
+      "date": "2013-11",
+      "total": 555.17,
+      "gasoline": 123.6,
+      "kerosene": 124.53,
+      "gasoil": 69.2,
+      "diesel": 220.29,
+      "fuel_oil": 4.45
+    },
+    {
+      "date": "2013-12",
+      "total": 525.42,
+      "gasoline": 123.41,
+      "kerosene": 117.14,
+      "gasoil": 62.23,
+      "diesel": 205.67,
+      "fuel_oil": 3.92
+    },
+    {
+      "date": "2014-01",
+      "total": 515.34,
+      "gasoline": 118.21,
+      "kerosene": 100.49,
+      "gasoil": 67.36,
+      "diesel": 213.51,
+      "fuel_oil": 4.48
+    },
+    {
+      "date": "2014-02",
+      "total": 493.08,
+      "gasoline": 108.34,
+      "kerosene": 106.4,
+      "gasoil": 61.08,
+      "diesel": 201.92,
+      "fuel_oil": 4.23
+    },
+    {
+      "date": "2014-03",
+      "total": 528.07,
+      "gasoline": 123.19,
+      "kerosene": 85.19,
+      "gasoil": 74.12,
+      "diesel": 225.57,
+      "fuel_oil": 5.43
+    },
+    {
+      "date": "2014-04",
+      "total": 499.04,
+      "gasoline": 124.07,
+      "kerosene": 50.13,
+      "gasoil": 78.99,
+      "diesel": 225.11,
+      "fuel_oil": 5.94
+    },
+    {
+      "date": "2014-05",
+      "total": 490.65,
+      "gasoline": 129.27,
+      "kerosene": 35.83,
+      "gasoil": 68.69,
+      "diesel": 233.44,
+      "fuel_oil": 6.18
+    },
+    {
+      "date": "2014-06",
+      "total": 455.67,
+      "gasoline": 114.87,
+      "kerosene": 19.17,
+      "gasoil": 88.36,
+      "diesel": 213.57,
+      "fuel_oil": 4.52
+    },
+    {
+      "date": "2014-07",
+      "total": 472.67,
+      "gasoline": 124.74,
+      "kerosene": 17.0,
+      "gasoil": 77.25,
+      "diesel": 236.49,
+      "fuel_oil": 4.66
+    },
+    {
+      "date": "2014-08",
+      "total": 472.55,
+      "gasoline": 118.28,
+      "kerosene": 39.79,
+      "gasoil": 71.36,
+      "diesel": 225.27,
+      "fuel_oil": 4.43
+    },
+    {
+      "date": "2014-09",
+      "total": 497.29,
+      "gasoline": 120.87,
+      "kerosene": 50.36,
+      "gasoil": 73.33,
+      "diesel": 234.81,
+      "fuel_oil": 4.14
+    },
+    {
+      "date": "2014-10",
+      "total": 561.27,
+      "gasoline": 122.65,
+      "kerosene": 111.37,
+      "gasoil": 66.25,
+      "diesel": 241.34,
+      "fuel_oil": 4.25
+    },
+    {
+      "date": "2014-11",
+      "total": 524.26,
+      "gasoline": 110.86,
+      "kerosene": 112.75,
+      "gasoil": 59.46,
+      "diesel": 224.67,
+      "fuel_oil": 3.54
+    },
+    {
+      "date": "2014-12",
+      "total": 587.19,
+      "gasoline": 121.7,
+      "kerosene": 151.85,
+      "gasoil": 64.83,
+      "diesel": 230.32,
+      "fuel_oil": 3.89
+    },
+    {
+      "date": "2015-01",
+      "total": 549.11,
+      "gasoline": 109.23,
+      "kerosene": 133.78,
+      "gasoil": 68.69,
+      "diesel": 222.41,
+      "fuel_oil": 3.3
+    },
+    {
+      "date": "2015-02",
+      "total": 546.34,
+      "gasoline": 105.77,
+      "kerosene": 124.88,
+      "gasoil": 78.35,
+      "diesel": 223.13,
+      "fuel_oil": 3.06
+    },
+    {
+      "date": "2015-03",
+      "total": 532.55,
+      "gasoline": 115.24,
+      "kerosene": 87.02,
+      "gasoil": 67.18,
+      "diesel": 243.66,
+      "fuel_oil": 5.68
+    },
+    {
+      "date": "2015-04",
+      "total": 508.19,
+      "gasoline": 119.19,
+      "kerosene": 54.73,
+      "gasoil": 67.27,
+      "diesel": 249.29,
+      "fuel_oil": 5.51
+    },
+    {
+      "date": "2015-05",
+      "total": 502.97,
+      "gasoline": 118.72,
+      "kerosene": 48.01,
+      "gasoil": 63.68,
+      "diesel": 250.28,
+      "fuel_oil": 5.91
+    },
+    {
+      "date": "2015-06",
+      "total": 487.68,
+      "gasoline": 113.25,
+      "kerosene": 28.01,
+      "gasoil": 82.31,
+      "diesel": 244.03,
+      "fuel_oil": 5.08
+    },
+    {
+      "date": "2015-07",
+      "total": 501.91,
+      "gasoline": 119.45,
+      "kerosene": 27.61,
+      "gasoil": 74.38,
+      "diesel": 257.77,
+      "fuel_oil": 4.64
+    },
+    {
+      "date": "2015-08",
+      "total": 513.8,
+      "gasoline": 112.14,
+      "kerosene": 58.87,
+      "gasoil": 73.8,
+      "diesel": 249.36,
+      "fuel_oil": 3.05
+    },
+    {
+      "date": "2015-09",
+      "total": 583.41,
+      "gasoline": 112.3,
+      "kerosene": 119.35,
+      "gasoil": 75.5,
+      "diesel": 254.91,
+      "fuel_oil": 3.88
+    },
+    {
+      "date": "2015-10",
+      "total": 579.06,
+      "gasoline": 115.36,
+      "kerosene": 110.25,
+      "gasoil": 70.81,
+      "diesel": 259.51,
+      "fuel_oil": 3.24
+    },
+    {
+      "date": "2015-11",
+      "total": 526.45,
+      "gasoline": 105.31,
+      "kerosene": 99.86,
+      "gasoil": 56.42,
+      "diesel": 244.27,
+      "fuel_oil": 2.89
+    },
+    {
+      "date": "2015-12",
+      "total": 572.82,
+      "gasoline": 116.36,
+      "kerosene": 127.14,
+      "gasoil": 57.81,
+      "diesel": 253.67,
+      "fuel_oil": 3.29
+    },
+    {
+      "date": "2016-01",
+      "total": 553.67,
+      "gasoline": 100.22,
+      "kerosene": 133.48,
+      "gasoil": 63.32,
+      "diesel": 242.11,
+      "fuel_oil": 2.96
+    },
+    {
+      "date": "2016-02",
+      "total": 591.99,
+      "gasoline": 103.98,
+      "kerosene": 144.95,
+      "gasoil": 72.94,
+      "diesel": 256.73,
+      "fuel_oil": 2.95
+    },
+    {
+      "date": "2016-03",
+      "total": 584.37,
+      "gasoline": 111.59,
+      "kerosene": 112.61,
+      "gasoil": 76.33,
+      "diesel": 266.44,
+      "fuel_oil": 4.66
+    },
+    {
+      "date": "2016-04",
+      "total": 565.01,
+      "gasoline": 111.69,
+      "kerosene": 85.96,
+      "gasoil": 74.31,
+      "diesel": 275.6,
+      "fuel_oil": 4.32
+    },
+    {
+      "date": "2016-05",
+      "total": 509.93,
+      "gasoline": 110.5,
+      "kerosene": 41.64,
+      "gasoil": 71.52,
+      "diesel": 268.68,
+      "fuel_oil": 4.19
+    },
+    {
+      "date": "2016-06",
+      "total": 500.71,
+      "gasoline": 107.66,
+      "kerosene": 24.11,
+      "gasoil": 81.4,
+      "diesel": 270.33,
+      "fuel_oil": 3.95
+    },
+    {
+      "date": "2016-07",
+      "total": 476.33,
+      "gasoline": 105.1,
+      "kerosene": 22.18,
+      "gasoil": 72.35,
+      "diesel": 256.66,
+      "fuel_oil": 4.17
+    },
+    {
+      "date": "2016-08",
+      "total": 516.53,
+      "gasoline": 106.87,
+      "kerosene": 40.11,
+      "gasoil": 79.54,
+      "diesel": 271.6,
+      "fuel_oil": 3.6
+    },
+    {
+      "date": "2016-09",
+      "total": 557.14,
+      "gasoline": 107.44,
+      "kerosene": 81.24,
+      "gasoil": 67.79,
+      "diesel": 278.12,
+      "fuel_oil": 3.57
+    },
+    {
+      "date": "2016-10",
+      "total": 557.45,
+      "gasoline": 100.72,
+      "kerosene": 104.31,
+      "gasoil": 71.41,
+      "diesel": 262.22,
+      "fuel_oil": 2.72
+    },
+    {
+      "date": "2016-11",
+      "total": 612.36,
+      "gasoline": 102.95,
+      "kerosene": 142.46,
+      "gasoil": 70.22,
+      "diesel": 277.05,
+      "fuel_oil": 4.08
+    },
+    {
+      "date": "2016-12",
+      "total": 591.64,
+      "gasoline": 104.01,
+      "kerosene": 139.62,
+      "gasoil": 65.45,
+      "diesel": 262.13,
+      "fuel_oil": 3.49
+    },
+    {
+      "date": "2017-01",
+      "total": 511.08,
+      "gasoline": 90.84,
+      "kerosene": 98.53,
+      "gasoil": 60.56,
+      "diesel": 243.19,
+      "fuel_oil": 3.24
+    },
+    {
+      "date": "2017-02",
+      "total": 529.45,
+      "gasoline": 88.44,
+      "kerosene": 111.64,
+      "gasoil": 62.69,
+      "diesel": 247.17,
+      "fuel_oil": 3.41
+    },
+    {
+      "date": "2017-03",
+      "total": 592.63,
+      "gasoline": 103.83,
+      "kerosene": 103.99,
+      "gasoil": 73.96,
+      "diesel": 286.35,
+      "fuel_oil": 5.28
+    },
+    {
+      "date": "2017-04",
+      "total": 511.87,
+      "gasoline": 97.35,
+      "kerosene": 62.35,
+      "gasoil": 69.66,
+      "diesel": 259.18,
+      "fuel_oil": 4.96
+    },
+    {
+      "date": "2017-05",
+      "total": 533.85,
+      "gasoline": 103.78,
+      "kerosene": 39.72,
+      "gasoil": 81.52,
+      "diesel": 283.46,
+      "fuel_oil": 4.34
+    },
+    {
+      "date": "2017-06",
+      "total": 517.22,
+      "gasoline": 98.33,
+      "kerosene": 30.62,
+      "gasoil": 84.65,
+      "diesel": 279.11,
+      "fuel_oil": 3.91
+    },
+    {
+      "date": "2017-07",
+      "total": 498.19,
+      "gasoline": 97.21,
+      "kerosene": 30.46,
+      "gasoil": 76.97,
+      "diesel": 269.22,
+      "fuel_oil": 3.85
+    },
+    {
+      "date": "2017-08",
+      "total": 528.38,
+      "gasoline": 98.13,
+      "kerosene": 53.52,
+      "gasoil": 74.65,
+      "diesel": 277.92,
+      "fuel_oil": 3.3
+    },
+    {
+      "date": "2017-09",
+      "total": 564.94,
+      "gasoline": 92.51,
+      "kerosene": 106.61,
+      "gasoil": 68.49,
+      "diesel": 273.15,
+      "fuel_oil": 3.88
+    },
+    {
+      "date": "2017-10",
+      "total": 559.92,
+      "gasoline": 94.81,
+      "kerosene": 99.84,
+      "gasoil": 67.08,
+      "diesel": 274.2,
+      "fuel_oil": 4.45
+    },
+    {
+      "date": "2017-11",
+      "total": 590.88,
+      "gasoline": 89.25,
+      "kerosene": 129.54,
+      "gasoil": 68.05,
+      "diesel": 282.29,
+      "fuel_oil": 2.71
+    },
+    {
+      "date": "2017-12",
+      "total": 589.59,
+      "gasoline": 91.86,
+      "kerosene": 150.05,
+      "gasoil": 61.79,
+      "diesel": 267.35,
+      "fuel_oil": 3.08
+    },
+    {
+      "date": "2018-01",
+      "total": 552.32,
+      "gasoline": 83.98,
+      "kerosene": 121.98,
+      "gasoil": 62.56,
+      "diesel": 263.27,
+      "fuel_oil": 3.38
+    },
+    {
+      "date": "2018-02",
+      "total": 591.4,
+      "gasoline": 81.86,
+      "kerosene": 156.56,
+      "gasoil": 71.67,
+      "diesel": 261.07,
+      "fuel_oil": 3.26
+    },
+    {
+      "date": "2018-03",
+      "total": 603.74,
+      "gasoline": 83.9,
+      "kerosene": 144.17,
+      "gasoil": 78.31,
+      "diesel": 273.8,
+      "fuel_oil": 5.69
+    },
+    {
+      "date": "2018-04",
+      "total": 528.22,
+      "gasoline": 87.16,
+      "kerosene": 72.71,
+      "gasoil": 71.43,
+      "diesel": 275.79,
+      "fuel_oil": 3.65
+    },
+    {
+      "date": "2018-05",
+      "total": 561.76,
+      "gasoline": 97.48,
+      "kerosene": 43.88,
+      "gasoil": 94.41,
+      "diesel": 301.65,
+      "fuel_oil": 2.51
+    },
+    {
+      "date": "2018-06",
+      "total": 500.11,
+      "gasoline": 90.73,
+      "kerosene": 15.76,
+      "gasoil": 89.74,
+      "diesel": 281.8,
+      "fuel_oil": 2.33
+    },
+    {
+      "date": "2018-07",
+      "total": 478.37,
+      "gasoline": 87.22,
+      "kerosene": 14.56,
+      "gasoil": 74.3,
+      "diesel": 280.68,
+      "fuel_oil": 2.4
+    },
+    {
+      "date": "2018-08",
+      "total": 531.73,
+      "gasoline": 90.41,
+      "kerosene": 49.36,
+      "gasoil": 76.6,
+      "diesel": 292.19,
+      "fuel_oil": 2.77
+    },
+    {
+      "date": "2018-09",
+      "total": 552.25,
+      "gasoline": 83.19,
+      "kerosene": 95.47,
+      "gasoil": 75.05,
+      "diesel": 277.26,
+      "fuel_oil": 2.93
+    },
+    {
+      "date": "2018-10",
+      "total": 621.99,
+      "gasoline": 89.17,
+      "kerosene": 129.81,
+      "gasoil": 80.88,
+      "diesel": 301.36,
+      "fuel_oil": 2.57
+    },
+    {
+      "date": "2018-11",
+      "total": 584.13,
+      "gasoline": 85.49,
+      "kerosene": 118.94,
+      "gasoil": 64.65,
+      "diesel": 296.64,
+      "fuel_oil": 2.52
+    },
+    {
+      "date": "2018-12",
+      "total": 574.99,
+      "gasoline": 84.29,
+      "kerosene": 143.2,
+      "gasoil": 57.48,
+      "diesel": 274.36,
+      "fuel_oil": 2.29
+    },
+    {
+      "date": "2019-01",
+      "total": 579.47,
+      "gasoline": 79.03,
+      "kerosene": 131.94,
+      "gasoil": 73.83,
+      "diesel": 275.59,
+      "fuel_oil": 2.52
+    },
+    {
+      "date": "2019-02",
+      "total": 527.1,
+      "gasoline": 74.17,
+      "kerosene": 100.76,
+      "gasoil": 68.11,
+      "diesel": 262.96,
+      "fuel_oil": 2.7
+    },
+    {
+      "date": "2019-03",
+      "total": 566.0,
+      "gasoline": 83.12,
+      "kerosene": 100.72,
+      "gasoil": 69.61,
+      "diesel": 287.77,
+      "fuel_oil": 4.34
+    },
+    {
+      "date": "2019-04",
+      "total": 558.84,
+      "gasoline": 86.05,
+      "kerosene": 80.0,
+      "gasoil": 77.69,
+      "diesel": 293.77,
+      "fuel_oil": 3.48
+    },
+    {
+      "date": "2019-05",
+      "total": 546.66,
+      "gasoline": 88.41,
+      "kerosene": 44.79,
+      "gasoil": 87.27,
+      "diesel": 301.25,
+      "fuel_oil": 3.15
+    },
+    {
+      "date": "2019-06",
+      "total": 509.68,
+      "gasoline": 82.53,
+      "kerosene": 39.87,
+      "gasoil": 86.85,
+      "diesel": 274.9,
+      "fuel_oil": 2.72
+    },
+    {
+      "date": "2019-07",
+      "total": 522.79,
+      "gasoline": 86.92,
+      "kerosene": 23.19,
+      "gasoil": 91.32,
+      "diesel": 292.46,
+      "fuel_oil": 4.17
+    },
+    {
+      "date": "2019-08",
+      "total": 519.43,
+      "gasoline": 85.33,
+      "kerosene": 46.63,
+      "gasoil": 76.61,
+      "diesel": 284.21,
+      "fuel_oil": 2.61
+    },
+    {
+      "date": "2019-09",
+      "total": 585.34,
+      "gasoline": 82.32,
+      "kerosene": 115.06,
+      "gasoil": 77.09,
+      "diesel": 284.09,
+      "fuel_oil": 2.64
+    },
+    {
+      "date": "2019-10",
+      "total": 603.26,
+      "gasoline": 83.1,
+      "kerosene": 124.68,
+      "gasoil": 69.99,
+      "diesel": 298.03,
+      "fuel_oil": 2.79
+    },
+    {
+      "date": "2019-11",
+      "total": 585.0,
+      "gasoline": 80.06,
+      "kerosene": 119.52,
+      "gasoil": 66.54,
+      "diesel": 292.35,
+      "fuel_oil": 3.04
+    },
+    {
+      "date": "2019-12",
+      "total": 585.06,
+      "gasoline": 78.92,
+      "kerosene": 151.02,
+      "gasoil": 59.06,
+      "diesel": 272.18,
+      "fuel_oil": 2.28
+    },
+    {
+      "date": "2020-01",
+      "total": 569.08,
+      "gasoline": 74.67,
+      "kerosene": 124.5,
+      "gasoil": 70.43,
+      "diesel": 274.43,
+      "fuel_oil": 2.17
+    },
+    {
+      "date": "2020-02",
+      "total": 575.61,
+      "gasoline": 73.14,
+      "kerosene": 138.16,
+      "gasoil": 65.82,
+      "diesel": 271.97,
+      "fuel_oil": 3.52
+    },
+    {
+      "date": "2020-03",
+      "total": 629.67,
+      "gasoline": 64.98,
+      "kerosene": 186.75,
+      "gasoil": 93.21,
+      "diesel": 258.58,
+      "fuel_oil": 4.5
+    },
+    {
+      "date": "2020-04",
+      "total": 396.68,
+      "gasoline": 23.83,
+      "kerosene": 144.09,
+      "gasoil": 87.61,
+      "diesel": 126.96,
+      "fuel_oil": 3.66
+    },
+    {
+      "date": "2020-05",
+      "total": 438.18,
+      "gasoline": 44.77,
+      "kerosene": 108.49,
+      "gasoil": 84.34,
+      "diesel": 182.51,
+      "fuel_oil": 3.13
+    },
+    {
+      "date": "2020-06",
+      "total": 427.59,
+      "gasoline": 55.08,
+      "kerosene": 42.3,
+      "gasoil": 79.21,
+      "diesel": 228.07,
+      "fuel_oil": 3.44
+    },
+    {
+      "date": "2020-07",
+      "total": 489.16,
+      "gasoline": 73.86,
+      "kerosene": 32.75,
+      "gasoil": 81.76,
+      "diesel": 274.24,
+      "fuel_oil": 3.14
+    },
+    {
+      "date": "2020-08",
+      "total": 461.83,
+      "gasoline": 72.35,
+      "kerosene": 30.04,
+      "gasoil": 73.64,
+      "diesel": 260.83,
+      "fuel_oil": 2.26
+    },
+    {
+      "date": "2020-09",
+      "total": 535.39,
+      "gasoline": 73.43,
+      "kerosene": 73.62,
+      "gasoil": 86.14,
+      "diesel": 276.44,
+      "fuel_oil": 2.11
+    },
+    {
+      "date": "2020-10",
+      "total": 539.43,
+      "gasoline": 58.79,
+      "kerosene": 120.76,
+      "gasoil": 78.57,
+      "diesel": 257.76,
+      "fuel_oil": 1.98
+    },
+    {
+      "date": "2020-11",
+      "total": 483.02,
+      "gasoline": 49.9,
+      "kerosene": 102.36,
+      "gasoil": 67.16,
+      "diesel": 243.37,
+      "fuel_oil": 2.44
+    },
+    {
+      "date": "2020-12",
+      "total": 586.84,
+      "gasoline": 68.51,
+      "kerosene": 163.25,
+      "gasoil": 67.04,
+      "diesel": 268.27,
+      "fuel_oil": 2.27
+    },
+    {
+      "date": "2021-01",
+      "total": 449.19,
+      "gasoline": 36.16,
+      "kerosene": 151.99,
+      "gasoil": 62.75,
+      "diesel": 180.79,
+      "fuel_oil": 2.29
+    },
+    {
+      "date": "2021-02",
+      "total": 463.51,
+      "gasoline": 40.08,
+      "kerosene": 142.58,
+      "gasoil": 65.47,
+      "diesel": 197.77,
+      "fuel_oil": 1.92
+    },
+    {
+      "date": "2021-03",
+      "total": 514.41,
+      "gasoline": 53.2,
+      "kerosene": 110.86,
+      "gasoil": 84.84,
+      "diesel": 240.79,
+      "fuel_oil": 3.64
+    },
+    {
+      "date": "2021-04",
+      "total": 533.62,
+      "gasoline": 62.15,
+      "kerosene": 101.67,
+      "gasoil": 94.19,
+      "diesel": 251.21,
+      "fuel_oil": 2.79
+    },
+    {
+      "date": "2021-05",
+      "total": 483.91,
+      "gasoline": 66.82,
+      "kerosene": 57.48,
+      "gasoil": 67.37,
+      "diesel": 269.6,
+      "fuel_oil": 1.94
+    },
+    {
+      "date": "2021-06",
+      "total": 510.7,
+      "gasoline": 75.38,
+      "kerosene": 28.56,
+      "gasoil": 100.51,
+      "diesel": 282.18,
+      "fuel_oil": 1.74
+    },
+    {
+      "date": "2021-07",
+      "total": 505.14,
+      "gasoline": 78.86,
+      "kerosene": 22.65,
+      "gasoil": 87.29,
+      "diesel": 291.14,
+      "fuel_oil": 2.03
+    },
+    {
+      "date": "2021-08",
+      "total": 494.55,
+      "gasoline": 74.62,
+      "kerosene": 40.54,
+      "gasoil": 80.05,
+      "diesel": 274.41,
+      "fuel_oil": 1.52
+    },
+    {
+      "date": "2021-09",
+      "total": 573.51,
+      "gasoline": 76.67,
+      "kerosene": 96.42,
+      "gasoil": 86.97,
+      "diesel": 286.17,
+      "fuel_oil": 1.7
+    },
+    {
+      "date": "2021-10",
+      "total": 579.48,
+      "gasoline": 72.74,
+      "kerosene": 121.48,
+      "gasoil": 77.77,
+      "diesel": 282.67,
+      "fuel_oil": 2.04
+    },
+    {
+      "date": "2021-11",
+      "total": 552.63,
+      "gasoline": 69.42,
+      "kerosene": 100.74,
+      "gasoil": 71.76,
+      "diesel": 288.71,
+      "fuel_oil": 1.9
+    },
+    {
+      "date": "2021-12",
+      "total": 568.71,
+      "gasoline": 70.78,
+      "kerosene": 142.65,
+      "gasoil": 60.49,
+      "diesel": 278.14,
+      "fuel_oil": 1.5
+    },
+    {
+      "date": "2022-01",
+      "total": 506.17,
+      "gasoline": 62.71,
+      "kerosene": 104.44,
+      "gasoil": 73.33,
+      "diesel": 244.95,
+      "fuel_oil": 1.48
+    },
+    {
+      "date": "2022-02",
+      "total": 558.53,
+      "gasoline": 62.32,
+      "kerosene": 132.67,
+      "gasoil": 77.29,
+      "diesel": 260.32,
+      "fuel_oil": 2.06
+    },
+    {
+      "date": "2022-03",
+      "total": 581.9,
+      "gasoline": 74.31,
+      "kerosene": 98.91,
+      "gasoil": 95.78,
+      "diesel": 282.06,
+      "fuel_oil": 3.18
+    },
+    {
+      "date": "2022-04",
+      "total": 534.27,
+      "gasoline": 74.75,
+      "kerosene": 54.36,
+      "gasoil": 83.28,
+      "diesel": 279.63,
+      "fuel_oil": 15.09
+    },
+    {
+      "date": "2022-05",
+      "total": 506.46,
+      "gasoline": 79.01,
+      "kerosene": 28.79,
+      "gasoil": 79.4,
+      "diesel": 287.73,
+      "fuel_oil": 4.44
+    },
+    {
+      "date": "2022-06",
+      "total": 487.93,
+      "gasoline": 74.55,
+      "kerosene": 28.08,
+      "gasoil": 82.78,
+      "diesel": 271.86,
+      "fuel_oil": 4.08
+    },
+    {
+      "date": "2022-07",
+      "total": 482.06,
+      "gasoline": 76.53,
+      "kerosene": 22.23,
+      "gasoil": 79.61,
+      "diesel": 272.15,
+      "fuel_oil": 5.91
+    },
+    {
+      "date": "2022-08",
+      "total": 518.86,
+      "gasoline": 77.71,
+      "kerosene": 41.18,
+      "gasoil": 91.35,
+      "diesel": 278.94,
+      "fuel_oil": 4.13
+    },
+    {
+      "date": "2022-09",
+      "total": 565.62,
+      "gasoline": 76.53,
+      "kerosene": 89.51,
+      "gasoil": 82.73,
+      "diesel": 278.76,
+      "fuel_oil": 6.68
+    },
+    {
+      "date": "2022-10",
+      "total": 542.34,
+      "gasoline": 75.12,
+      "kerosene": 86.26,
+      "gasoil": 66.57,
+      "diesel": 273.65,
+      "fuel_oil": 15.32
+    },
+    {
+      "date": "2022-11",
+      "total": 565.23,
+      "gasoline": 75.26,
+      "kerosene": 97.3,
+      "gasoil": 69.0,
+      "diesel": 284.17,
+      "fuel_oil": 13.29
+    },
+    {
+      "date": "2022-12",
+      "total": 602.23,
+      "gasoline": 75.9,
+      "kerosene": 149.55,
+      "gasoil": 78.75,
+      "diesel": 273.58,
+      "fuel_oil": 1.3
+    },
+    {
+      "date": "2023-01",
+      "total": 518.17,
+      "gasoline": 68.92,
+      "kerosene": 102.01,
+      "gasoil": 69.55,
+      "diesel": 252.26,
+      "fuel_oil": 1.44
+    },
+    {
+      "date": "2023-02",
+      "total": 557.03,
+      "gasoline": 71.48,
+      "kerosene": 104.02,
+      "gasoil": 78.57,
+      "diesel": 263.55,
+      "fuel_oil": 14.09
+    },
+    {
+      "date": "2023-03",
+      "total": 588.57,
+      "gasoline": 78.99,
+      "kerosene": 112.96,
+      "gasoil": 77.21,
+      "diesel": 286.91,
+      "fuel_oil": 2.68
+    },
+    {
+      "date": "2023-04",
+      "total": 523.85,
+      "gasoline": 77.29,
+      "kerosene": 72.31,
+      "gasoil": 73.39,
+      "diesel": 261.18,
+      "fuel_oil": 2.21
+    },
+    {
+      "date": "2023-05",
+      "total": 574.41,
+      "gasoline": 91.31,
+      "kerosene": 36.53,
+      "gasoil": 96.47,
+      "diesel": 310.24,
+      "fuel_oil": 1.74
+    },
+    {
+      "date": "2023-06",
+      "total": 471.06,
+      "gasoline": 76.57,
+      "kerosene": 20.56,
+      "gasoil": 78.6,
+      "diesel": 262.02,
+      "fuel_oil": 1.51
+    },
+    {
+      "date": "2023-07",
+      "total": 485.88,
+      "gasoline": 79.7,
+      "kerosene": 28.96,
+      "gasoil": 73.27,
+      "diesel": 270.82,
+      "fuel_oil": 1.09
+    },
+    {
+      "date": "2023-08",
+      "total": 561.38,
+      "gasoline": 90.82,
+      "kerosene": 47.81,
+      "gasoil": 88.87,
+      "diesel": 294.49,
+      "fuel_oil": 1.01
+    },
+    {
+      "date": "2023-09",
+      "total": 501.11,
+      "gasoline": 74.22,
+      "kerosene": 69.23,
+      "gasoil": 70.36,
+      "diesel": 247.86,
+      "fuel_oil": 0.96
+    },
+    {
+      "date": "2023-10",
+      "total": 548.0,
+      "gasoline": 78.38,
+      "kerosene": 92.71,
+      "gasoil": 66.09,
+      "diesel": 268.55,
+      "fuel_oil": 1.05
+    },
+    {
+      "date": "2023-11",
+      "total": 570.86,
+      "gasoline": 78.35,
+      "kerosene": 113.69,
+      "gasoil": 64.76,
+      "diesel": 280.34,
+      "fuel_oil": 1.15
+    },
+    {
+      "date": "2023-12",
+      "total": 565.5,
+      "gasoline": 76.54,
+      "kerosene": 129.27,
+      "gasoil": 60.21,
+      "diesel": 246.96,
+      "fuel_oil": 9.78
+    },
+    {
+      "date": "2024-01",
+      "total": 579.9,
+      "gasoline": 75.36,
+      "kerosene": 133.91,
+      "gasoil": 76.64,
+      "diesel": 257.98,
+      "fuel_oil": 1.09
+    },
+    {
+      "date": "2024-02",
+      "total": 544.19,
+      "gasoline": 72.02,
+      "kerosene": 96.32,
+      "gasoil": 65.7,
+      "diesel": 253.59,
+      "fuel_oil": 22.36
+    },
+    {
+      "date": "2024-03",
+      "total": 595.7,
+      "gasoline": 84.7,
+      "kerosene": 103.57,
+      "gasoil": 80.47,
+      "diesel": 286.06,
+      "fuel_oil": 0.45
+    },
+    {
+      "date": "2024-04",
+      "total": 527.46,
+      "gasoline": 77.02,
+      "kerosene": 76.22,
+      "gasoil": 81.72,
+      "diesel": 256.94,
+      "fuel_oil": 0.48
+    },
+    {
+      "date": "2024-05",
+      "total": 535.09,
+      "gasoline": 88.32,
+      "kerosene": 34.37,
+      "gasoil": 88.59,
+      "diesel": 287.0,
+      "fuel_oil": 0.44
+    },
+    {
+      "date": "2024-06",
+      "total": 487.22,
+      "gasoline": 79.46,
+      "kerosene": 29.36,
+      "gasoil": 84.77,
+      "diesel": 253.49,
+      "fuel_oil": 0.41
+    },
+    {
+      "date": "2024-07",
+      "total": 540.71,
+      "gasoline": 87.34,
+      "kerosene": 33.76,
+      "gasoil": 92.12,
+      "diesel": 278.64,
+      "fuel_oil": 0.44
+    },
+    {
+      "date": "2024-08",
+      "total": 510.5,
+      "gasoline": 80.53,
+      "kerosene": 53.71,
+      "gasoil": 83.47,
+      "diesel": 240.87,
+      "fuel_oil": 0.4
+    },
+    {
+      "date": "2024-09",
+      "total": 562.28,
+      "gasoline": 81.66,
+      "kerosene": 91.11,
+      "gasoil": 81.22,
+      "diesel": 264.14,
+      "fuel_oil": 0.41
+    },
+    {
+      "date": "2024-10",
+      "total": 605.38,
+      "gasoline": 83.83,
+      "kerosene": 120.63,
+      "gasoil": 81.95,
+      "diesel": 272.02,
+      "fuel_oil": 0.53
+    },
+    {
+      "date": "2024-11",
+      "total": 566.16,
+      "gasoline": 78.5,
+      "kerosene": 113.21,
+      "gasoil": 69.91,
+      "diesel": 265.21,
+      "fuel_oil": 0.42
+    },
+    {
+      "date": "2024-12",
+      "total": 564.83,
+      "gasoline": 81.65,
+      "kerosene": 123.37,
+      "gasoil": 67.23,
+      "diesel": 254.97,
+      "fuel_oil": 0.82
+    },
+    {
+      "date": "2025-01",
+      "total": 539.39,
+      "gasoline": 73.4,
+      "kerosene": 122.52,
+      "gasoil": 72.05,
+      "diesel": 236.07,
+      "fuel_oil": 0.03
+    },
+    {
+      "date": "2025-02",
+      "total": 536.64,
+      "gasoline": 73.23,
+      "kerosene": 110.93,
+      "gasoil": 72.2,
+      "diesel": 242.77,
+      "fuel_oil": 0.03
+    },
+    {
+      "date": "2025-03",
+      "total": 561.53,
+      "gasoline": 83.71,
+      "kerosene": 88.89,
+      "gasoil": 84.6,
+      "diesel": 267.22,
+      "fuel_oil": 0.01
+    },
+    {
+      "date": "2025-04",
+      "total": 544.04,
+      "gasoline": 85.1,
+      "kerosene": 67.9,
+      "gasoil": 87.7,
+      "diesel": 267.1,
+      "fuel_oil": 0.03
+    },
+    {
+      "date": "2025-05",
+      "total": 523.97,
+      "gasoline": 91.39,
+      "kerosene": 27.98,
+      "gasoil": 87.85,
+      "diesel": 275.12,
+      "fuel_oil": 0.0
+    },
+    {
+      "date": "2025-06",
+      "total": 514.89,
+      "gasoline": 83.1,
+      "kerosene": 51.17,
+      "gasoil": 88.53,
+      "diesel": 250.93,
+      "fuel_oil": 0.03
+    },
+    {
+      "date": "2025-07",
+      "total": 502.3,
+      "gasoline": 88.38,
+      "kerosene": 22.07,
+      "gasoil": 87.17,
+      "diesel": 251.11,
+      "fuel_oil": 0.0
+    },
+    {
+      "date": "2025-08",
+      "total": 486.84,
+      "gasoline": 88.81,
+      "kerosene": 28.01,
+      "gasoil": 78.56,
+      "diesel": 252.65,
+      "fuel_oil": 0.0
+    },
+    {
+      "date": "2025-09",
+      "total": 570.78,
+      "gasoline": 85.9,
+      "kerosene": 93.03,
+      "gasoil": 80.59,
+      "diesel": 251.28,
+      "fuel_oil": 0.0
+    },
+    {
+      "date": "2025-10",
+      "total": 591.35,
+      "gasoline": 89.18,
+      "kerosene": 100.68,
+      "gasoil": 84.35,
+      "diesel": 270.48,
+      "fuel_oil": 0.0
+    },
+    {
+      "date": "2025-11",
+      "total": 568.9,
+      "gasoline": 82.17,
+      "kerosene": 113.49,
+      "gasoil": 67.17,
+      "diesel": 244.42,
+      "fuel_oil": 0.0
+    },
+    {
+      "date": "2025-12",
+      "total": 598.96,
+      "gasoline": 89.78,
+      "kerosene": 137.65,
+      "gasoil": 65.03,
+      "diesel": 254.42,
+      "fuel_oil": 0.0
+    },
+    {
+      "date": "2026-01",
+      "total": 556.66,
+      "gasoline": 80.43,
+      "kerosene": 130.27,
+      "gasoil": 69.94,
+      "diesel": 229.07,
+      "fuel_oil": 0.0
+    },
+    {
+      "date": "2026-02",
+      "total": 530.07,
+      "gasoline": 76.87,
+      "kerosene": 113.33,
+      "gasoil": 70.73,
+      "diesel": 229.84,
+      "fuel_oil": 0.0
+    }
+  ],
+  "forecast": {
+    "method": "Holt-Winters additive seasonal",
+    "horizon": 12,
+    "rmse_ml": 35.78,
+    "params": {
+      "alpha": 0.2,
+      "beta": 0.05,
+      "gamma": 0.3
+    },
+    "points": [
+      {
+        "date": "2026-03",
+        "total": 586.38,
+        "lower": 540.58,
+        "upper": 632.18
+      },
+      {
+        "date": "2026-04",
+        "total": 537.05,
+        "lower": 472.28,
+        "upper": 601.83
+      },
+      {
+        "date": "2026-05",
+        "total": 533.69,
+        "lower": 454.36,
+        "upper": 613.03
+      },
+      {
+        "date": "2026-06",
+        "total": 500.75,
+        "lower": 409.14,
+        "upper": 592.35
+      },
+      {
+        "date": "2026-07",
+        "total": 511.07,
+        "lower": 408.65,
+        "upper": 613.49
+      },
+      {
+        "date": "2026-08",
+        "total": 516.88,
+        "lower": 404.68,
+        "upper": 629.07
+      },
+      {
+        "date": "2026-09",
+        "total": 562.81,
+        "lower": 441.62,
+        "upper": 683.99
+      },
+      {
+        "date": "2026-10",
+        "total": 585.06,
+        "lower": 455.51,
+        "upper": 714.62
+      },
+      {
+        "date": "2026-11",
+        "total": 570.72,
+        "lower": 433.31,
+        "upper": 708.14
+      },
+      {
+        "date": "2026-12",
+        "total": 589.92,
+        "lower": 445.08,
+        "upper": 734.77
+      },
+      {
+        "date": "2027-01",
+        "total": 549.44,
+        "lower": 397.52,
+        "upper": 701.35
+      },
+      {
+        "date": "2027-02",
+        "total": 546.74,
+        "lower": 388.07,
+        "upper": 705.41
+      }
+    ]
+  },
+  "annual_summary": [
+    {
+      "year": 2008,
+      "total": 8083.47
+    },
+    {
+      "year": 2009,
+      "total": 7350.95
+    },
+    {
+      "year": 2010,
+      "total": 7024.63
+    },
+    {
+      "year": 2011,
+      "total": 6493.6
+    },
+    {
+      "year": 2012,
+      "total": 6172.26
+    },
+    {
+      "year": 2013,
+      "total": 6170.57
+    },
+    {
+      "year": 2014,
+      "total": 6097.08
+    },
+    {
+      "year": 2015,
+      "total": 6404.29
+    },
+    {
+      "year": 2016,
+      "total": 6617.13
+    },
+    {
+      "year": 2017,
+      "total": 6528.0
+    },
+    {
+      "year": 2018,
+      "total": 6681.01
+    },
+    {
+      "year": 2019,
+      "total": 6688.63
+    },
+    {
+      "year": 2020,
+      "total": 6132.48
+    },
+    {
+      "year": 2021,
+      "total": 6229.36
+    },
+    {
+      "year": 2022,
+      "total": 6451.6
+    },
+    {
+      "year": 2023,
+      "total": 6465.82
+    },
+    {
+      "year": 2024,
+      "total": 6619.42
+    },
+    {
+      "year": 2025,
+      "total": 6539.59
+    },
+    {
+      "year": 2026,
+      "total": 1086.73
+    }
+  ]
+}

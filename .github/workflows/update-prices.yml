@@ -23,7 +23,7 @@ jobs:
           python-version: '3.12'
 
       - name: Install dependencies
-        run: pip install requests beautifulsoup4 lxml openpyxl
+        run: pip install requests beautifulsoup4 lxml openpyxl xlrd
 
       - name: Fetch global prices from EIA + ECB EUR/USD
         env:
@@ -42,11 +42,15 @@ jobs:
           FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
         run: python scripts/fetch_bonds.py
 
+      - name: Fetch NORA Irish oil consumption data
+        continue-on-error: true
+        run: python scripts/fetch_consumption.py
+
       - name: Commit and push if data changed
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add data/prices.json data/ireland_prices.json data/eu_bulletin.json data/bonds.json
+          git add data/prices.json data/ireland_prices.json data/eu_bulletin.json data/bonds.json data/consumption.json
           if git diff --staged --quiet; then
             echo "No data changes — skipping commit"
           else

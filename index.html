@@ -486,6 +486,27 @@
     .tab-bond.on  { background: var(--blue); border-color: var(--blue); color: #000; font-weight: 600; }
     .tab-bond:hover { border-color: var(--blue); color: var(--blue); }
 
+    /* ── NORA CONSUMPTION ───────────────────────────────────────── */
+    .cons-cards {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.75rem;
+      margin-bottom: 1.2rem;
+    }
+    @media (max-width: 900px)  { .cons-cards { grid-template-columns: repeat(2,1fr); } }
+    @media (max-width: 480px)  { .cons-cards { grid-template-columns: 1fr; } }
+    .cons-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 0.6rem;
+      padding: 0.8rem 1rem;
+    }
+    .cons-card .lbl  { font-size: 0.7rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; }
+    .cons-card .val  { font-size: 1.5rem; font-weight: 700; line-height: 1.2; margin: 0.15rem 0; }
+    .cons-card .sub  { font-size: 0.75rem; color: var(--muted); }
+    .tab-cons.on  { background: var(--green); border-color: var(--green); color: #000; font-weight: 600; }
+    .tab-cons:hover { border-color: var(--green); color: var(--green); }
+
     /* ── FRESHNESS BADGES ────────────────────────────────────────── */
     .freshness-badge {
       display: inline-flex;
@@ -783,6 +804,47 @@
     </div>
   </div>
 
+  <!-- ── NORA IRISH OIL CONSUMPTION ──────────────────────────────────────────── -->
+  <div class="section-hd" id="consumption">
+    <h2>Irish Oil Consumption (NORA) <span id="badge-consumption" class="freshness-badge"></span></h2>
+    <span>Monthly volumes subject to NORA Levy · 2008-present · megalitres · source: <a href="https://www.nora.ie/volumes-of-oil-consumption" target="_blank" rel="noopener">nora.ie</a></span>
+  </div>
+
+  <div class="cons-cards">
+    <div class="cons-card" id="cc-latest">
+      <div class="lbl">Latest Month</div>
+      <div class="val">—</div>
+      <div class="sub">—</div>
+    </div>
+    <div class="cons-card" id="cc-yoy">
+      <div class="lbl">Year-on-Year Change</div>
+      <div class="val">—</div>
+      <div class="sub">—</div>
+    </div>
+    <div class="cons-card" id="cc-annual">
+      <div class="lbl">Annual Run-Rate</div>
+      <div class="val">—</div>
+      <div class="sub">—</div>
+    </div>
+    <div class="cons-card" id="cc-forecast">
+      <div class="lbl">Next Month Forecast</div>
+      <div class="val">—</div>
+      <div class="sub">—</div>
+    </div>
+  </div>
+
+  <div class="chart-box">
+    <div class="chart-tabs">
+      <button class="tab tab-cons on" onclick="switchConsTab('total',this)">Total Consumption</button>
+      <button class="tab tab-cons" onclick="switchConsTab('product',this)">By Product</button>
+      <button class="tab tab-cons" onclick="switchConsTab('annual',this)">Annual Summary</button>
+      <button class="tab tab-cons" onclick="switchConsTab('forecast',this)">Forecast</button>
+    </div>
+    <div class="chart-wrap" style="position:relative;height:300px">
+      <canvas id="consChart"></canvas>
+    </div>
+  </div>
+
   <!-- ── IRISH HOME HEATING OIL ──────────────────────────────────────────────── -->
   <div class="section-hd" id="ireland">
     <h2>🇮🇪 Irish Home Heating Oil <span id="badge-ireland" class="freshness-badge"></span></h2>
@@ -962,6 +1024,7 @@
     Irish prices: <a href="https://www.oilprices.ie" target="_blank" rel="noopener">oilprices.ie</a> &nbsp;·&nbsp;
     EU prices: <a href="https://energy.ec.europa.eu/data-and-analysis/weekly-oil-bulletin_en" target="_blank" rel="noopener">EU Weekly Oil Bulletin</a> &nbsp;·&nbsp;
     Bonds: <a href="https://fred.stlouisfed.org" target="_blank" rel="noopener">FRED</a> · <a href="https://www.bundesbank.de" target="_blank" rel="noopener">Bundesbank</a> · <a href="https://data.ecb.europa.eu" target="_blank" rel="noopener">ECB</a> &nbsp;·&nbsp;
+    Consumption: <a href="https://www.nora.ie" target="_blank" rel="noopener">NORA</a> &nbsp;·&nbsp;
     Updated automatically via GitHub Actions (weekdays 21:00 &amp; 00:00 UTC)
   </p>
   <p>Not financial advice. For informational purposes only.</p>
@@ -1869,6 +1932,339 @@
   setInterval(loadBonds, 3600000); // bond data is daily/monthly, refresh hourly
 
   /* ════════════════════════════════════════════════════════════
+     NORA IRISH OIL CONSUMPTION
+  ════════════════════════════════════════════════════════════ */
+  let consData = null;
+  let consChart = null;
+  let activeConsTab = 'total';
+
+  const CONS_COLORS = {
+    gasoline: '#f0883e',
+    kerosene: '#58a6ff',
+    gasoil:   '#bc8cff',
+    diesel:   '#d4a843',
+    fuel_oil: '#e091a0',
+    total:    '#3fb950',
+  };
+  const CONS_LABELS = {
+    gasoline: 'Gasoline',
+    kerosene: 'Kerosene',
+    gasoil:   'Gas Oil',
+    diesel:   'Motor Diesel',
+    fuel_oil: 'Fuel Oil',
+    total:    'All Fuels',
+  };
+
+  async function loadConsumption() {
+    try {
+      const r = await fetch('data/consumption.json');
+      if (!r.ok) return;
+      consData = await r.json();
+      renderConsCards();
+      renderConsChart(activeConsTab);
+      renderFreshnessBadges();
+    } catch {}
+  }
+
+  function renderConsCards() {
+    const h = consData?.history;
+    const fc = consData?.forecast?.points;
+    if (!h?.length) return;
+
+    const last = h[h.length - 1];
+    const lastDate = last.date;
+    const lastLabel = _consMonthLabel(lastDate);
+
+    // Latest month
+    const c1 = document.getElementById('cc-latest');
+    if (c1) c1.innerHTML =
+      `<div class="lbl">Latest Month</div>` +
+      `<div class="val">${last.total.toFixed(0)} ML</div>` +
+      `<div class="sub">${lastLabel}</div>`;
+
+    // YoY change
+    const yoyDate = `${parseInt(lastDate.slice(0,4))-1}-${lastDate.slice(5,7)}`;
+    const yoyRec = h.find(r => r.date === yoyDate);
+    const c2 = document.getElementById('cc-yoy');
+    if (c2 && yoyRec) {
+      const pct = ((last.total - yoyRec.total) / yoyRec.total * 100);
+      const cls = pct > 0 ? 'up' : pct < 0 ? 'down' : 'flat';
+      c2.innerHTML =
+        `<div class="lbl">Year-on-Year Change</div>` +
+        `<div class="val"><span class="${cls}">${pct >= 0 ? '+' : ''}${pct.toFixed(1)}%</span></div>` +
+        `<div class="sub">${lastLabel} vs ${_consMonthLabel(yoyDate)}</div>`;
+    }
+
+    // Annual run-rate (last 12 months)
+    const last12 = h.slice(-12);
+    const annualRate = last12.reduce((s, r) => s + r.total, 0);
+    const c3 = document.getElementById('cc-annual');
+    if (c3) c3.innerHTML =
+      `<div class="lbl">Trailing 12-Month Total</div>` +
+      `<div class="val">${annualRate.toFixed(0)} ML</div>` +
+      `<div class="sub">${(annualRate / 1000).toFixed(2)} billion litres</div>`;
+
+    // Forecast next month
+    const c4 = document.getElementById('cc-forecast');
+    if (c4 && fc?.length) {
+      const f1 = fc[0];
+      c4.innerHTML =
+        `<div class="lbl">Next Month Forecast</div>` +
+        `<div class="val">${f1.total.toFixed(0)} ML</div>` +
+        `<div class="sub">${_consMonthLabel(f1.date)} · 80% CI: ${f1.lower.toFixed(0)}-${f1.upper.toFixed(0)}</div>`;
+    }
+  }
+
+  function _consMonthLabel(dateStr) {
+    const [y, m] = dateStr.split('-');
+    const names = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    return `${names[parseInt(m)-1]} ${y}`;
+  }
+
+  function renderConsChart(tab) {
+    activeConsTab = tab;
+    const ctx = document.getElementById('consChart');
+    if (!ctx || !consData?.history?.length) return;
+    if (consChart) { consChart.destroy(); consChart = null; }
+
+    if (tab === 'total')    return _consChartTotal(ctx);
+    if (tab === 'product')  return _consChartProduct(ctx);
+    if (tab === 'annual')   return _consChartAnnual(ctx);
+    if (tab === 'forecast') return _consChartForecast(ctx);
+  }
+
+  function _consChartTotal(ctx) {
+    const h = consData.history;
+    consChart = new Chart(ctx.getContext('2d'), {
+      type: 'line',
+      data: {
+        labels: h.map(r => r.date),
+        datasets: [{
+          label: 'All Fuels (ML)',
+          data: h.map(r => r.total),
+          borderColor: CONS_COLORS.total,
+          backgroundColor: CONS_COLORS.total + '18',
+          borderWidth: 1.5,
+          pointRadius: 0,
+          tension: 0.3,
+          fill: true,
+        }],
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            backgroundColor: '#21262d', borderColor: '#30363d', borderWidth: 1, padding: 10,
+            callbacks: { label: c => `${c.parsed.y.toFixed(1)} ML` },
+          },
+        },
+        scales: {
+          x: { ticks: { maxTicksAuto: true, maxRotation: 0, font: { size: 10 }, color: '#8b949e',
+                callback: function(v, i) { return i % 12 === 0 ? this.getLabelForValue(v) : ''; } },
+               grid: { color: '#1c2128' } },
+          y: { ticks: { color: '#8b949e', font: { size: 11 }, callback: v => v + ' ML' },
+               grid: { color: '#1c2128' } },
+        },
+      },
+    });
+  }
+
+  function _consChartProduct(ctx) {
+    const h = consData.history;
+    const cats = ['diesel', 'kerosene', 'gasoline', 'gasoil', 'fuel_oil'];
+    consChart = new Chart(ctx.getContext('2d'), {
+      type: 'line',
+      data: {
+        labels: h.map(r => r.date),
+        datasets: cats.map(cat => ({
+          label: CONS_LABELS[cat],
+          data: h.map(r => r[cat] ?? 0),
+          borderColor: CONS_COLORS[cat],
+          backgroundColor: CONS_COLORS[cat] + '30',
+          borderWidth: 1.5,
+          pointRadius: 0,
+          tension: 0.3,
+          fill: true,
+        })),
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: {
+          legend: { position: 'top', labels: { color: '#e6edf3', boxWidth: 12, font: { size: 11 } } },
+          tooltip: {
+            backgroundColor: '#21262d', borderColor: '#30363d', borderWidth: 1, padding: 10, mode: 'index',
+            callbacks: { label: c => `${c.dataset.label}: ${c.parsed.y.toFixed(1)} ML` },
+          },
+        },
+        scales: {
+          x: { stacked: true, ticks: { maxRotation: 0, font: { size: 10 }, color: '#8b949e',
+                callback: function(v, i) { return i % 12 === 0 ? this.getLabelForValue(v) : ''; } },
+               grid: { color: '#1c2128' } },
+          y: { stacked: true, ticks: { color: '#8b949e', font: { size: 11 }, callback: v => v + ' ML' },
+               grid: { color: '#1c2128' } },
+        },
+      },
+    });
+  }
+
+  function _consChartAnnual(ctx) {
+    const a = consData.annual_summary || [];
+    // Mark incomplete years (current year)
+    const currentYear = new Date().getFullYear();
+    consChart = new Chart(ctx.getContext('2d'), {
+      type: 'bar',
+      data: {
+        labels: a.map(r => String(r.year)),
+        datasets: [{
+          label: 'Annual Total (ML)',
+          data: a.map(r => r.total),
+          backgroundColor: a.map(r => r.year === currentYear ? CONS_COLORS.total + '60' : CONS_COLORS.total),
+          borderColor: CONS_COLORS.total,
+          borderWidth: 1,
+          borderRadius: 3,
+        }],
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            backgroundColor: '#21262d', borderColor: '#30363d', borderWidth: 1, padding: 10,
+            callbacks: {
+              label: c => {
+                const yr = a[c.dataIndex];
+                const suffix = yr.year === currentYear ? ' (partial)' : '';
+                return `${c.parsed.y.toFixed(0)} ML${suffix} (${(c.parsed.y/1000).toFixed(2)}B litres)`;
+              },
+            },
+          },
+        },
+        scales: {
+          x: { ticks: { color: '#8b949e', font: { size: 11 } }, grid: { display: false } },
+          y: { ticks: { color: '#8b949e', font: { size: 11 }, callback: v => (v/1000).toFixed(1) + 'B L' },
+               grid: { color: '#1c2128' } },
+        },
+      },
+    });
+  }
+
+  function _consChartForecast(ctx) {
+    const h = consData.history;
+    const fc = consData.forecast?.points;
+    if (!fc?.length) return;
+
+    // Show last 36 months of history + forecast
+    const recent = h.slice(-36);
+    const allDates = [...recent.map(r => r.date), ...fc.map(r => r.date)];
+    const histData = recent.map(r => r.total);
+    const fcData = new Array(recent.length).fill(null);
+    const lowerData = new Array(recent.length).fill(null);
+    const upperData = new Array(recent.length).fill(null);
+
+    // Connect forecast to last history point
+    fcData[recent.length - 1] = recent[recent.length - 1].total;
+    lowerData[recent.length - 1] = recent[recent.length - 1].total;
+    upperData[recent.length - 1] = recent[recent.length - 1].total;
+
+    for (const p of fc) {
+      histData.push(null);
+      fcData.push(p.total);
+      lowerData.push(p.lower);
+      upperData.push(p.upper);
+    }
+
+    consChart = new Chart(ctx.getContext('2d'), {
+      type: 'line',
+      data: {
+        labels: allDates,
+        datasets: [
+          {
+            label: 'Historical',
+            data: histData,
+            borderColor: CONS_COLORS.total,
+            backgroundColor: CONS_COLORS.total + '18',
+            borderWidth: 2,
+            pointRadius: 0,
+            tension: 0.3,
+            fill: true,
+          },
+          {
+            label: 'Upper 80% CI',
+            data: upperData,
+            borderColor: 'transparent',
+            backgroundColor: '#3fb95025',
+            borderWidth: 0,
+            pointRadius: 0,
+            tension: 0.3,
+            fill: '+1',
+          },
+          {
+            label: 'Forecast',
+            data: fcData,
+            borderColor: '#3fb950',
+            borderDash: [6, 3],
+            borderWidth: 2,
+            pointRadius: 3,
+            pointBackgroundColor: '#3fb950',
+            tension: 0.3,
+            fill: false,
+          },
+          {
+            label: 'Lower 80% CI',
+            data: lowerData,
+            borderColor: 'transparent',
+            backgroundColor: 'transparent',
+            borderWidth: 0,
+            pointRadius: 0,
+            tension: 0.3,
+            fill: false,
+          },
+        ],
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: {
+          legend: { position: 'top', labels: { color: '#e6edf3', boxWidth: 12, font: { size: 11 },
+            filter: item => item.text !== 'Upper 80% CI' && item.text !== 'Lower 80% CI' } },
+          tooltip: {
+            backgroundColor: '#21262d', borderColor: '#30363d', borderWidth: 1, padding: 10,
+            mode: 'index',
+            filter: item => item.dataset.label !== 'Upper 80% CI' && item.dataset.label !== 'Lower 80% CI',
+            callbacks: {
+              label: c => {
+                if (c.dataset.label === 'Forecast') {
+                  const i = c.dataIndex - recent.length;
+                  if (i >= 0 && i < fc.length) {
+                    return `Forecast: ${c.parsed.y.toFixed(0)} ML [${fc[i].lower.toFixed(0)}-${fc[i].upper.toFixed(0)}]`;
+                  }
+                }
+                return c.parsed.y !== null ? `${c.dataset.label}: ${c.parsed.y.toFixed(0)} ML` : null;
+              },
+            },
+          },
+        },
+        scales: {
+          x: { ticks: { maxRotation: 0, font: { size: 10 }, color: '#8b949e',
+                callback: function(v, i) { return i % 6 === 0 ? this.getLabelForValue(v) : ''; } },
+               grid: { color: '#1c2128' } },
+          y: { ticks: { color: '#8b949e', font: { size: 11 }, callback: v => v + ' ML' },
+               grid: { color: '#1c2128' } },
+        },
+      },
+    });
+  }
+
+  function switchConsTab(tab, btn) {
+    document.querySelectorAll('.tab-cons').forEach(b => b.classList.remove('on'));
+    btn.classList.add('on');
+    renderConsChart(tab);
+  }
+
+  loadConsumption();
+  setInterval(loadConsumption, 3600000);
+
+  /* ════════════════════════════════════════════════════════════
      GROSS MARGIN & PASS-THROUGH ANALYSIS
   ════════════════════════════════════════════════════════════ */
   let marginChart     = null;
@@ -2235,6 +2631,9 @@
     // Sovereign bond yields (US daily data date)
     const bondDate = bondData?.yields?.US10Y?.history?.[0]?.date || bondData?.yields?.DE10Y?.history?.[0]?.date;
     setBadge('badge-bonds',      bondDate, 3, 7);
+    // NORA consumption (monthly data, last history date)
+    const consDate = consData?.history?.[consData.history.length - 1]?.date;
+    setBadge('badge-consumption', consDate, 35, 65);
   }
 </script>
 

@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-03-31T00:43:42.778449+00:00",
+  "last_updated": "2026-03-31T16:50:56.232419+00:00",
   "source": "EU Weekly Oil Bulletin \u2014 European Commission",
   "as_of": "2026-03-23",
   "ireland_history": [
@@ -567,17 +567,6 @@
     }
   ],
   "margin_history": [
-    {
-      "week": "2026-03-23",
-      "pretax_eur_l": 1.081,
-      "withtax_eur_l": 1.4757,
-      "brent_eur_l": 0.6042,
-      "gross_margin": 0.4768,
-      "tax_eur_l": 0.3947,
-      "carbon_eur_l": 0.1613,
-      "vat_eur_l": 0.1755,
-      "other_mot_eur_l": 0.0579
-    },
     {
       "week": "2026-03-16",
       "pretax_eur_l": 1.0483,
@@ -1714,11 +1703,11 @@
   ],
   "pass_through": {
     "signal": "SYMMETRIC",
-    "asymmetry": -0.022,
-    "pt_when_rising": 0.477,
+    "asymmetry": -0.02,
+    "pt_when_rising": 0.479,
     "pt_when_falling": 0.499,
-    "weeks_used": 89,
-    "n_rising_weeks": 43,
+    "weeks_used": 88,
+    "n_rising_weeks": 42,
     "n_falling_weeks": 46,
     "interpretation": "When Brent rises, retail moves 0.48\u00d7 as much. When Brent falls, retail moves 0.50\u00d7 as much."
   }
