@@ -1,91 +1,91 @@
 {
-  "last_updated": "2026-04-01T21:13:23.402321+00:00",
+  "last_updated": "2026-04-02T00:41:44.462374+00:00",
   "source": "oilprices.ie",
   "national_avg_500l": 868.19,
   "counties": {
     "Donegal": {
       "price_500l": 845.46,
       "price_per_litre": 1.6909,
-      "prev_500l": 841.55,
-      "change": 3.91,
-      "change_pct": 0.46
+      "prev_500l": 845.46,
+      "change": 0.0,
+      "change_pct": 0.0
     },
     "Leitrim": {
       "price_500l": 853.0,
       "price_per_litre": 1.706,
-      "prev_500l": 844.7,
-      "change": 8.3,
-      "change_pct": 0.98
+      "prev_500l": 853.0,
+      "change": 0.0,
+      "change_pct": 0.0
     },
     "Sligo": {
       "price_500l": 854.55,
       "price_per_litre": 1.7091,
-      "prev_500l": 847.0,
-      "change": 7.55,
-      "change_pct": 0.89
+      "prev_500l": 854.55,
+      "change": 0.0,
+      "change_pct": 0.0
     },
     "Limerick": {
       "price_500l": 861.25,
       "price_per_litre": 1.7225,
-      "prev_500l": 851.24,
-      "change": 10.01,
-      "change_pct": 1.18
+      "prev_500l": 861.25,
+      "change": 0.0,
+      "change_pct": 0.0
     },
     "Longford": {
       "price_500l": 863.44,
       "price_per_litre": 1.7269,
-      "prev_500l": 858.55,
-      "change": 4.89,
-      "change_pct": 0.57
+      "prev_500l": 863.44,
+      "change": 0.0,
+      "change_pct": 0.0
     },
     "Tipperary": {
       "price_500l": 864.37,
       "price_per_litre": 1.7287,
-      "prev_500l": 852.88,
-      "change": 11.49,
-      "change_pct": 1.35
+      "prev_500l": 864.37,
+      "change": 0.0,
+      "change_pct": 0.0
     },
     "Kilkenny": {
       "price_500l": 865.43,
       "price_per_litre": 1.7309,
-      "prev_500l": 851.76,
-      "change": 13.67,
-      "change_pct": 1.6
+      "prev_500l": 865.43,
+      "change": 0.0,
+      "change_pct": 0.0
     },
     "Waterford": {
       "price_500l": 865.82,
       "price_per_litre": 1.7316,
-      "prev_500l": 855.57,
-      "change": 10.25,
-      "change_pct": 1.2
+      "prev_500l": 865.82,
+      "change": 0.0,
+      "change_pct": 0.0
     },
     "Cork": {
       "price_500l": 866.07,
       "price_per_litre": 1.7321,
-      "prev_500l": 850.62,
-      "change": 15.45,
-      "change_pct": 1.82
+      "prev_500l": 866.07,
+      "change": 0.0,
+      "change_pct": 0.0
     },
     "Kildare": {
       "price_500l": 868.33,
       "price_per_litre": 1.7367,
-      "prev_500l": 873.67,
-      "change": -5.34,
-      "change_pct": -0.61
+      "prev_500l": 868.33,
+      "change": 0.0,
+      "change_pct": 0.0
     },
     "Roscommon": {
       "price_500l": 868.42,
       "price_per_litre": 1.7368,
-      "prev_500l": 870.5,
-      "change": -2.08,
-      "change_pct": -0.24
+      "prev_500l": 868.42,
+      "change": 0.0,
+      "change_pct": 0.0
     },
     "Carlow": {
       "price_500l": 868.66,
       "price_per_litre": 1.7373,
-      "prev_500l": 865.66,
-      "change": 3.0,
-      "change_pct": 0.35
+      "prev_500l": 868.66,
+      "change": 0.0,
+      "change_pct": 0.0
     },
     "Kerry": {
       "price_500l": 869.0,
@@ -97,96 +97,100 @@
     "Wexford": {
       "price_500l": 869.54,
       "price_per_litre": 1.7391,
-      "prev_500l": 865.09,
-      "change": 4.45,
-      "change_pct": 0.51
+      "prev_500l": 869.54,
+      "change": 0.0,
+      "change_pct": 0.0
     },
     "Offaly": {
       "price_500l": 870.11,
       "price_per_litre": 1.7402,
-      "prev_500l": 875.89,
-      "change": -5.78,
-      "change_pct": -0.66
+      "prev_500l": 870.11,
+      "change": 0.0,
+      "change_pct": 0.0
     },
     "Galway": {
       "price_500l": 870.18,
       "price_per_litre": 1.7404,
-      "prev_500l": 866.2,
-      "change": 3.98,
-      "change_pct": 0.46
+      "prev_500l": 870.18,
+      "change": 0.0,
+      "change_pct": 0.0
     },
     "Westmeath": {
       "price_500l": 870.41,
       "price_per_litre": 1.7408,
-      "prev_500l": 872.42,
-      "change": -2.01,
-      "change_pct": -0.23
+      "prev_500l": 870.41,
+      "change": 0.0,
+      "change_pct": 0.0
     },
     "Clare": {
       "price_500l": 871.4,
       "price_per_litre": 1.7428,
-      "prev_500l": 863.6,
-      "change": 7.8,
-      "change_pct": 0.9
+      "prev_500l": 871.4,
+      "change": 0.0,
+      "change_pct": 0.0
     },
     "Wicklow": {
       "price_500l": 872.47,
       "price_per_litre": 1.7449,
-      "prev_500l": 875.06,
-      "change": -2.59,
-      "change_pct": -0.3
+      "prev_500l": 872.47,
+      "change": 0.0,
+      "change_pct": 0.0
     },
     "Laois": {
       "price_500l": 872.52,
       "price_per_litre": 1.745,
-      "prev_500l": 879.65,
-      "change": -7.13,
-      "change_pct": -0.81
+      "prev_500l": 872.52,
+      "change": 0.0,
+      "change_pct": 0.0
     },
     "Louth": {
       "price_500l": 872.77,
       "price_per_litre": 1.7455,
-      "prev_500l": 877.07,
-      "change": -4.3,
-      "change_pct": -0.49
+      "prev_500l": 872.77,
+      "change": 0.0,
+      "change_pct": 0.0
     },
     "Meath": {
       "price_500l": 873.27,
       "price_per_litre": 1.7465,
-      "prev_500l": 878.27,
-      "change": -5.0,
-      "change_pct": -0.57
+      "prev_500l": 873.27,
+      "change": 0.0,
+      "change_pct": 0.0
     },
     "Dublin": {
       "price_500l": 873.7,
       "price_per_litre": 1.7474,
-      "prev_500l": 880.31,
-      "change": -6.61,
-      "change_pct": -0.75
+      "prev_500l": 873.7,
+      "change": 0.0,
+      "change_pct": 0.0
     },
     "Mayo": {
       "price_500l": 877.87,
       "price_per_litre": 1.7557,
-      "prev_500l": 871.62,
-      "change": 6.25,
-      "change_pct": 0.72
+      "prev_500l": 877.87,
+      "change": 0.0,
+      "change_pct": 0.0
     },
     "Monaghan": {
       "price_500l": 881.97,
       "price_per_litre": 1.7639,
-      "prev_500l": 885.85,
-      "change": -3.88,
-      "change_pct": -0.44
+      "prev_500l": 881.97,
+      "change": 0.0,
+      "change_pct": 0.0
     },
     "Cavan": {
       "price_500l": 882.8,
       "price_per_litre": 1.7656,
-      "prev_500l": 880.68,
-      "change": 2.12,
-      "change_pct": 0.24
+      "prev_500l": 882.8,
+      "change": 0.0,
+      "change_pct": 0.0
     }
   },
   "history": [
+    {
+      "date": "2026-04-02",
+      "national_avg": 868.19
+    },
     {
       "date": "2026-04-01",
       "national_avg": 868.19
