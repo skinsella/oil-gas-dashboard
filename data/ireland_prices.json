@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-04-28T21:21:53.581622+00:00",
+  "last_updated": "2026-04-29T00:55:26.483576+00:00",
   "source": "oilprices.ie",
   "national_avg_500l": 786.03,
   "counties": {
@@ -41,23 +41,23 @@
     "Leitrim": {
       "price_500l": 783.32,
       "price_per_litre": 1.5666,
-      "prev_500l": 784.99,
-      "change": -1.67,
-      "change_pct": -0.21
+      "prev_500l": 783.32,
+      "change": 0.0,
+      "change_pct": 0.0
     },
     "Donegal": {
       "price_500l": 783.5,
       "price_per_litre": 1.567,
-      "prev_500l": 785.0,
-      "change": -1.5,
-      "change_pct": -0.19
+      "prev_500l": 783.5,
+      "change": 0.0,
+      "change_pct": 0.0
     },
     "Sligo": {
       "price_500l": 783.99,
       "price_per_litre": 1.568,
-      "prev_500l": 785.86,
-      "change": -1.87,
-      "change_pct": -0.24
+      "prev_500l": 783.99,
+      "change": 0.0,
+      "change_pct": 0.0
     },
     "Limerick": {
       "price_500l": 784.0,
@@ -132,9 +132,9 @@
     "Meath": {
       "price_500l": 788.57,
       "price_per_litre": 1.5771,
-      "prev_500l": 789.52,
-      "change": -0.95,
-      "change_pct": -0.12
+      "prev_500l": 788.57,
+      "change": 0.0,
+      "change_pct": 0.0
     },
     "Kerry": {
       "price_500l": 789.0,
@@ -167,26 +167,30 @@
     "Kildare": {
       "price_500l": 790.78,
       "price_per_litre": 1.5816,
-      "prev_500l": 789.67,
-      "change": 1.11,
-      "change_pct": 0.14
+      "prev_500l": 790.78,
+      "change": 0.0,
+      "change_pct": 0.0
     },
     "Wicklow": {
       "price_500l": 792.12,
       "price_per_litre": 1.5842,
-      "prev_500l": 790.94,
-      "change": 1.18,
-      "change_pct": 0.15
+      "prev_500l": 792.12,
+      "change": 0.0,
+      "change_pct": 0.0
     },
     "Dublin": {
       "price_500l": 792.5,
       "price_per_litre": 1.585,
-      "prev_500l": 791.45,
-      "change": 1.05,
-      "change_pct": 0.13
+      "prev_500l": 792.5,
+      "change": 0.0,
+      "change_pct": 0.0
     }
   },
   "history": [
+    {
+      "date": "2026-04-29",
+      "national_avg": 786.03
+    },
     {
       "date": "2026-04-28",
       "national_avg": 786.03
