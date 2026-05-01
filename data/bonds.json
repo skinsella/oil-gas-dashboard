@@ -1,7 +1,9 @@
 {
-  "last_updated": "2026-05-01T00:59:17.207812+00:00",
+  "last_updated": "2026-05-01T21:15:06.192123+00:00",
   "source": "FRED, Bundesbank, ECB",
-  "errors": null,
+  "errors": [
+    "UK10Y (FRED) fetch failed: 500 Server Error: Internal Server Error for url: https://api.stlouisfed.org/fred/series/observations?series_id=IRLTLT01GBM156N&api_key=99bc741f2afe7c4764777470602bd2a3&file_type=json&sort_order=desc&observation_start=2026-01-01"
+  ],
   "yields": {
     "US10Y": {
       "name": "US 10-Year Treasury",
@@ -10,6 +12,10 @@
       "unit": "%",
       "freq": "daily",
       "history": [
+        {
+          "date": "2026-04-30",
+          "value": 4.4
+        },
         {
           "date": "2026-04-29",
           "value": 4.42
@@ -347,6 +353,10 @@
       "unit": "%",
       "freq": "daily",
       "history": [
+        {
+          "date": "2026-04-30",
+          "value": 3.88
+        },
         {
           "date": "2026-04-29",
           "value": 3.92
@@ -1488,6 +1498,10 @@
   },
   "spreads": {
     "US": [
+      {
+        "date": "2026-04-30",
+        "value": 0.52
+      },
       {
         "date": "2026-04-29",
         "value": 0.5
