@@ -1,9 +1,7 @@
 {
-  "last_updated": "2026-05-01T21:15:06.192123+00:00",
+  "last_updated": "2026-05-02T00:52:48.569675+00:00",
   "source": "FRED, Bundesbank, ECB",
-  "errors": [
-    "UK10Y (FRED) fetch failed: 500 Server Error: Internal Server Error for url: https://api.stlouisfed.org/fred/series/observations?series_id=IRLTLT01GBM156N&api_key=99bc741f2afe7c4764777470602bd2a3&file_type=json&sort_order=desc&observation_start=2026-01-01"
-  ],
+  "errors": null,
   "yields": {
     "US10Y": {
       "name": "US 10-Year Treasury",
