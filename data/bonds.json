@@ -1,9 +1,7 @@
 {
-  "last_updated": "2026-05-06T00:50:39.919988+00:00",
+  "last_updated": "2026-05-06T21:22:17.708075+00:00",
   "source": "FRED, Bundesbank, ECB",
-  "errors": [
-    "US02Y (FRED) fetch failed: 500 Server Error: Internal Server Error for url: https://api.stlouisfed.org/fred/series/observations?series_id=DGS2&api_key=99bc741f2afe7c4764777470602bd2a3&file_type=json&sort_order=desc&observation_start=2026-01-06"
-  ],
+  "errors": null,
   "yields": {
     "US10Y": {
       "name": "US 10-Year Treasury",
@@ -12,6 +10,10 @@
       "unit": "%",
       "freq": "daily",
       "history": [
+        {
+          "date": "2026-05-05",
+          "value": 4.43
+        },
         {
           "date": "2026-05-04",
           "value": 4.45
@@ -354,6 +356,10 @@
       "freq": "daily",
       "history": [
         {
+          "date": "2026-05-05",
+          "value": 3.93
+        },
+        {
           "date": "2026-05-04",
           "value": 3.95
         },
@@ -684,10 +690,6 @@
         {
           "date": "2026-01-06",
           "value": 3.47
-        },
-        {
-          "date": "2026-01-05",
-          "value": 3.46
         }
       ]
     },
@@ -719,6 +721,10 @@
       "unit": "%",
       "freq": "daily",
       "history": [
+        {
+          "date": "2026-05-06",
+          "value": 3.04
+        },
         {
           "date": "2026-05-05",
           "value": 3.11
@@ -1046,10 +1052,6 @@
         {
           "date": "2026-01-07",
           "value": 2.84
-        },
-        {
-          "date": "2026-01-06",
-          "value": 2.9
         }
       ]
     },
@@ -1060,6 +1062,10 @@
       "unit": "%",
       "freq": "daily",
       "history": [
+        {
+          "date": "2026-05-06",
+          "value": 2.57
+        },
         {
           "date": "2026-05-05",
           "value": 2.67
@@ -1387,10 +1393,6 @@
         {
           "date": "2026-01-07",
           "value": 2.08
-        },
-        {
-          "date": "2026-01-06",
-          "value": 2.1
         }
       ]
     },
@@ -1502,6 +1504,10 @@
   },
   "spreads": {
     "US": [
+      {
+        "date": "2026-05-05",
+        "value": 0.5
+      },
       {
         "date": "2026-05-04",
         "value": 0.5
@@ -1837,6 +1843,10 @@
     ],
     "DE": [
       {
+        "date": "2026-05-06",
+        "value": 0.47
+      },
+      {
         "date": "2026-05-05",
         "value": 0.44
       },
@@ -2163,10 +2173,6 @@
       {
         "date": "2026-01-07",
         "value": 0.76
-      },
-      {
-        "date": "2026-01-06",
-        "value": 0.8
       }
     ],
     "GB": null,

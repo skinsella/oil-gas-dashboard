@@ -1,8 +1,12 @@
 {
-  "last_updated": "2026-05-06T00:50:36.206204+00:00",
+  "last_updated": "2026-05-06T21:22:13.665980+00:00",
   "source": "EU Weekly Oil Bulletin \u2014 European Commission",
-  "as_of": "2026-04-27",
+  "as_of": "2026-05-04",
   "ireland_history": [
+    {
+      "week": "2026-05-04",
+      "price_per_litre": 1.423
+    },
     {
       "week": "2026-04-27",
       "price_per_litre": 1.3476
@@ -414,10 +418,6 @@
     {
       "week": "2024-05-13",
       "price_per_litre": 1.0205
-    },
-    {
-      "week": "2024-05-06",
-      "price_per_litre": 1.0312
     }
   ],
   "eu_comparison": [
@@ -430,85 +430,73 @@
     {
       "code": "ES",
       "name": "Spain",
-      "price_per_litre": 1.2237,
+      "price_per_litre": 1.2582,
       "is_ireland": false
     },
     {
       "code": "BE",
       "name": "Belgium",
-      "price_per_litre": 1.2527,
+      "price_per_litre": 1.3347,
       "is_ireland": false
     },
     {
       "code": "DE",
       "name": "Germany",
-      "price_per_litre": 1.2704,
+      "price_per_litre": 1.341,
       "is_ireland": false
     },
     {
       "code": "LU",
       "name": "Luxembourg",
-      "price_per_litre": 1.316,
-      "is_ireland": false
-    },
-    {
-      "code": "IE",
-      "name": "Ireland",
-      "price_per_litre": 1.3476,
-      "is_ireland": true
-    },
-    {
-      "code": "CY",
-      "name": "Cyprus",
-      "price_per_litre": 1.3846,
-      "is_ireland": false
-    },
-    {
-      "code": "LT",
-      "name": "Lithuania",
-      "price_per_litre": 1.3973,
-      "is_ireland": false
-    },
-    {
-      "code": "RO",
-      "name": "Romania",
-      "price_per_litre": 1.4139,
-      "is_ireland": false
-    },
-    {
-      "code": "EE",
-      "name": "Estonia",
-      "price_per_litre": 1.415,
+      "price_per_litre": 1.362,
       "is_ireland": false
     },
     {
       "code": "CZ",
       "name": "Czech Rep.",
-      "price_per_litre": 1.4299,
+      "price_per_litre": 1.376,
+      "is_ireland": false
+    },
+    {
+      "code": "CY",
+      "name": "Cyprus",
+      "price_per_litre": 1.3844,
+      "is_ireland": false
+    },
+    {
+      "code": "RO",
+      "name": "Romania",
+      "price_per_litre": 1.3964,
       "is_ireland": false
     },
     {
       "code": "HR",
       "name": "Croatia",
-      "price_per_litre": 1.435,
+      "price_per_litre": 1.4,
       "is_ireland": false
+    },
+    {
+      "code": "IE",
+      "name": "Ireland",
+      "price_per_litre": 1.423,
+      "is_ireland": true
     },
     {
       "code": "SI",
       "name": "Slovenia",
-      "price_per_litre": 1.4705,
+      "price_per_litre": 1.4293,
+      "is_ireland": false
+    },
+    {
+      "code": "EE",
+      "name": "Estonia",
+      "price_per_litre": 1.462,
       "is_ireland": false
     },
     {
       "code": "PL",
       "name": "Poland",
-      "price_per_litre": 1.5237,
-      "is_ireland": false
-    },
-    {
-      "code": "SE",
-      "name": "Sweden",
-      "price_per_litre": 1.5962,
+      "price_per_litre": 1.5806,
       "is_ireland": false
     },
     {
@@ -520,53 +508,70 @@
     {
       "code": "AT",
       "name": "Austria",
-      "price_per_litre": 1.6315,
+      "price_per_litre": 1.6539,
       "is_ireland": false
     },
     {
-      "code": "FR",
-      "name": "France",
-      "price_per_litre": 1.6972,
+      "code": "SE",
+      "name": "Sweden",
+      "price_per_litre": 1.6887,
       "is_ireland": false
     },
     {
       "code": "HU",
       "name": "Hungary",
-      "price_per_litre": 1.7051,
+      "price_per_litre": 1.7273,
       "is_ireland": false
     },
     {
-      "code": "GR",
-      "name": "Greece",
-      "price_per_litre": 1.742,
-      "is_ireland": false
-    },
-    {
-      "code": "FI",
-      "name": "Finland",
-      "price_per_litre": 1.8396,
+      "code": "FR",
+      "name": "France",
+      "price_per_litre": 1.7628,
       "is_ireland": false
     },
     {
       "code": "IT",
       "name": "Italy",
-      "price_per_litre": 1.8647,
+      "price_per_litre": 1.9086,
+      "is_ireland": false
+    },
+    {
+      "code": "FI",
+      "name": "Finland",
+      "price_per_litre": 1.9728,
+      "is_ireland": false
+    },
+    {
+      "code": "LT",
+      "name": "Lithuania",
+      "price_per_litre": 1.9917,
       "is_ireland": false
     },
     {
       "code": "PT",
       "name": "Portugal",
-      "price_per_litre": 1.964,
+      "price_per_litre": 2.038,
       "is_ireland": false
     },
     {
       "code": "DK",
       "name": "Denmark",
-      "price_per_litre": 2.2552,
+      "price_per_litre": 2.3623,
       "is_ireland": false
     }
   ],
   "margin_history": [
+    {
+      "week": "2026-05-04",
+      "pretax_eur_l": 1.0407,
+      "withtax_eur_l": 1.423,
+      "brent_eur_l": 0.6431,
+      "gross_margin": 0.3976,
+      "tax_eur_l": 0.3823,
+      "carbon_eur_l": 0.1804,
+      "vat_eur_l": 0.1693,
+      "other_mot_eur_l": 0.0326
+    },
     {
       "week": "2026-04-27",
       "pretax_eur_l": 0.9743,
@@ -1699,27 +1704,16 @@
       "carbon_eur_l": 0.1423,
       "vat_eur_l": 0.1214,
       "other_mot_eur_l": 0.062
-    },
-    {
-      "week": "2024-05-06",
-      "pretax_eur_l": 0.7246,
-      "withtax_eur_l": 1.0312,
-      "brent_eur_l": 0.5004,
-      "gross_margin": 0.2242,
-      "tax_eur_l": 0.3066,
-      "carbon_eur_l": 0.1423,
-      "vat_eur_l": 0.1227,
-      "other_mot_eur_l": 0.0416
     }
   ],
   "pass_through": {
     "signal": "SYMMETRIC",
-    "asymmetry": 0.038,
-    "pt_when_rising": 0.638,
-    "pt_when_falling": 0.599,
+    "asymmetry": 0.076,
+    "pt_when_rising": 0.65,
+    "pt_when_falling": 0.574,
     "weeks_used": 89,
-    "n_rising_weeks": 43,
-    "n_falling_weeks": 46,
-    "interpretation": "When Brent rises, retail moves 0.64\u00d7 as much. When Brent falls, retail moves 0.60\u00d7 as much."
+    "n_rising_weeks": 44,
+    "n_falling_weeks": 45,
+    "interpretation": "When Brent rises, retail moves 0.65\u00d7 as much. When Brent falls, retail moves 0.57\u00d7 as much."
   }
 }
