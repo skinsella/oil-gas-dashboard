@@ -1,7 +1,9 @@
 {
-  "last_updated": "2026-05-05T21:19:22.367982+00:00",
+  "last_updated": "2026-05-06T00:50:39.919988+00:00",
   "source": "FRED, Bundesbank, ECB",
-  "errors": null,
+  "errors": [
+    "US02Y (FRED) fetch failed: 500 Server Error: Internal Server Error for url: https://api.stlouisfed.org/fred/series/observations?series_id=DGS2&api_key=99bc741f2afe7c4764777470602bd2a3&file_type=json&sort_order=desc&observation_start=2026-01-06"
+  ],
   "yields": {
     "US10Y": {
       "name": "US 10-Year Treasury",
@@ -341,10 +343,6 @@
         {
           "date": "2026-01-06",
           "value": 4.18
-        },
-        {
-          "date": "2026-01-05",
-          "value": 4.17
         }
       ]
     },
@@ -1834,10 +1832,6 @@
       },
       {
         "date": "2026-01-06",
-        "value": 0.71
-      },
-      {
-        "date": "2026-01-05",
         "value": 0.71
       }
     ],
