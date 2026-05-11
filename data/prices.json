@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-05-09T00:54:33.430040+00:00",
+  "last_updated": "2026-05-11T21:26:38.221207+00:00",
   "source": "EIA Open Data API v2 \u2014 https://www.eia.gov/opendata/",
   "errors": null,
   "commodities": {
@@ -2020,6 +2020,10 @@
     }
   },
   "eurusd": [
+    {
+      "date": "2026-05-11",
+      "rate": 1.1765
+    },
     {
       "date": "2026-05-08",
       "rate": 1.1761
@@ -4934,10 +4938,6 @@
     },
     {
       "date": "2023-06-29",
-      "rate": 1.0938
-    },
-    {
-      "date": "2023-06-28",
       "rate": 1.0938
     }
   ],
