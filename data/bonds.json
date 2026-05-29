@@ -1,11 +1,7 @@
 {
-  "last_updated": "2026-05-29T01:05:50.076213+00:00",
+  "last_updated": "2026-05-29T21:32:13.680968+00:00",
   "source": "FRED, Bundesbank, ECB",
-  "errors": [
-    "US10Y (FRED) fetch failed: 504 Server Error: Gateway Time-out for url: https://api.stlouisfed.org/fred/series/observations?series_id=DGS10&api_key=99bc741f2afe7c4764777470602bd2a3&file_type=json&sort_order=desc&observation_start=2026-01-29",
-    "US02Y (FRED) fetch failed: 504 Server Error: Gateway Time-out for url: https://api.stlouisfed.org/fred/series/observations?series_id=DGS2&api_key=99bc741f2afe7c4764777470602bd2a3&file_type=json&sort_order=desc&observation_start=2026-01-29",
-    "UK10Y (FRED) fetch failed: HTTPSConnectionPool(host='api.stlouisfed.org', port=443): Read timed out. (read timeout=30)"
-  ],
+  "errors": null,
   "yields": {
     "US10Y": {
       "name": "US 10-Year Treasury",
@@ -14,6 +10,10 @@
       "unit": "%",
       "freq": "daily",
       "history": [
+        {
+          "date": "2026-05-28",
+          "value": 4.45
+        },
         {
           "date": "2026-05-27",
           "value": 4.48
@@ -345,10 +345,6 @@
         {
           "date": "2026-01-29",
           "value": 4.24
-        },
-        {
-          "date": "2026-01-28",
-          "value": 4.26
         }
       ]
     },
@@ -359,6 +355,10 @@
       "unit": "%",
       "freq": "daily",
       "history": [
+        {
+          "date": "2026-05-28",
+          "value": 3.99
+        },
         {
           "date": "2026-05-27",
           "value": 4.0
@@ -690,10 +690,6 @@
         {
           "date": "2026-01-29",
           "value": 3.53
-        },
-        {
-          "date": "2026-01-28",
-          "value": 3.56
         }
       ]
     },
@@ -729,6 +725,10 @@
       "unit": "%",
       "freq": "daily",
       "history": [
+        {
+          "date": "2026-05-29",
+          "value": 3.0
+        },
         {
           "date": "2026-05-28",
           "value": 3.04
@@ -1056,10 +1056,6 @@
         {
           "date": "2026-01-30",
           "value": 2.87
-        },
-        {
-          "date": "2026-01-29",
-          "value": 2.87
         }
       ]
     },
@@ -1070,6 +1066,10 @@
       "unit": "%",
       "freq": "daily",
       "history": [
+        {
+          "date": "2026-05-29",
+          "value": 2.53
+        },
         {
           "date": "2026-05-28",
           "value": 2.59
@@ -1397,10 +1397,6 @@
         {
           "date": "2026-01-30",
           "value": 2.07
-        },
-        {
-          "date": "2026-01-29",
-          "value": 2.07
         }
       ]
     },
@@ -1512,6 +1508,10 @@
   },
   "spreads": {
     "US": [
+      {
+        "date": "2026-05-28",
+        "value": 0.46
+      },
       {
         "date": "2026-05-27",
         "value": 0.48
@@ -1843,13 +1843,13 @@
       {
         "date": "2026-01-29",
         "value": 0.71
-      },
-      {
-        "date": "2026-01-28",
-        "value": 0.7
       }
     ],
     "DE": [
+      {
+        "date": "2026-05-29",
+        "value": 0.47
+      },
       {
         "date": "2026-05-28",
         "value": 0.45
@@ -2176,10 +2176,6 @@
       },
       {
         "date": "2026-01-30",
-        "value": 0.8
-      },
-      {
-        "date": "2026-01-29",
         "value": 0.8
       }
     ],
