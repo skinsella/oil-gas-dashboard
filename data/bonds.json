@@ -1,7 +1,9 @@
 {
-  "last_updated": "2026-06-01T22:00:18.382311+00:00",
+  "last_updated": "2026-06-02T01:08:49.934390+00:00",
   "source": "FRED, Bundesbank, ECB",
-  "errors": null,
+  "errors": [
+    "UK10Y (FRED) fetch failed: 429 Client Error: Too Many Requests for url: https://api.stlouisfed.org/fred/series/observations?series_id=IRLTLT01GBM156N&api_key=99bc741f2afe7c4764777470602bd2a3&file_type=json&sort_order=desc&observation_start=2026-02-02"
+  ],
   "yields": {
     "US10Y": {
       "name": "US 10-Year Treasury",
