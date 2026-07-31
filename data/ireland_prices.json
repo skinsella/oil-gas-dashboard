@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-07-30T21:57:37.145244+00:00",
+  "last_updated": "2026-07-31T03:20:44.636053+00:00",
   "source": "oilprices.ie",
   "national_avg_500l": 709.22,
   "counties": {
@@ -13,9 +13,9 @@
     "Leitrim": {
       "price_500l": 705.01,
       "price_per_litre": 1.41,
-      "prev_500l": 705.11,
-      "change": -0.1,
-      "change_pct": -0.01
+      "prev_500l": 705.01,
+      "change": 0.0,
+      "change_pct": 0.0
     },
     "Sligo": {
       "price_500l": 705.23,
@@ -27,16 +27,16 @@
     "Monaghan": {
       "price_500l": 705.57,
       "price_per_litre": 1.4111,
-      "prev_500l": 705.96,
-      "change": -0.39,
-      "change_pct": -0.06
+      "prev_500l": 705.57,
+      "change": 0.0,
+      "change_pct": 0.0
     },
     "Wexford": {
       "price_500l": 706.7,
       "price_per_litre": 1.4134,
-      "prev_500l": 707.0,
-      "change": -0.3,
-      "change_pct": -0.04
+      "prev_500l": 706.7,
+      "change": 0.0,
+      "change_pct": 0.0
     },
     "Cork": {
       "price_500l": 706.85,
@@ -48,58 +48,58 @@
     "Louth": {
       "price_500l": 707.4,
       "price_per_litre": 1.4148,
-      "prev_500l": 707.76,
-      "change": -0.36,
-      "change_pct": -0.05
+      "prev_500l": 707.4,
+      "change": 0.0,
+      "change_pct": 0.0
     },
     "Carlow": {
       "price_500l": 707.67,
       "price_per_litre": 1.4153,
-      "prev_500l": 708.0,
-      "change": -0.33,
-      "change_pct": -0.05
+      "prev_500l": 707.67,
+      "change": 0.0,
+      "change_pct": 0.0
     },
     "Kildare": {
       "price_500l": 709.23,
       "price_per_litre": 1.4185,
-      "prev_500l": 709.47,
-      "change": -0.24,
-      "change_pct": -0.03
+      "prev_500l": 709.23,
+      "change": 0.0,
+      "change_pct": 0.0
     },
     "Donegal": {
       "price_500l": 709.42,
       "price_per_litre": 1.4188,
-      "prev_500l": 707.5,
-      "change": 1.92,
-      "change_pct": 0.27
+      "prev_500l": 709.42,
+      "change": 0.0,
+      "change_pct": 0.0
     },
     "Kilkenny": {
       "price_500l": 709.56,
       "price_per_litre": 1.4191,
-      "prev_500l": 708.06,
-      "change": 1.5,
-      "change_pct": 0.21
+      "prev_500l": 709.56,
+      "change": 0.0,
+      "change_pct": 0.0
     },
     "Laois": {
       "price_500l": 709.63,
       "price_per_litre": 1.4193,
-      "prev_500l": 709.92,
-      "change": -0.29,
-      "change_pct": -0.04
+      "prev_500l": 709.63,
+      "change": 0.0,
+      "change_pct": 0.0
     },
     "Tipperary": {
       "price_500l": 709.64,
       "price_per_litre": 1.4193,
-      "prev_500l": 709.49,
-      "change": 0.15,
-      "change_pct": 0.02
+      "prev_500l": 709.64,
+      "change": 0.0,
+      "change_pct": 0.0
     },
     "Wicklow": {
       "price_500l": 709.88,
       "price_per_litre": 1.4198,
-      "prev_500l": 710.09,
-      "change": -0.21,
-      "change_pct": -0.03
+      "prev_500l": 709.88,
+      "change": 0.0,
+      "change_pct": 0.0
     },
     "Kerry": {
       "price_500l": 710.06,
@@ -111,30 +111,30 @@
     "Meath": {
       "price_500l": 710.12,
       "price_per_litre": 1.4202,
-      "prev_500l": 710.16,
-      "change": -0.04,
-      "change_pct": -0.01
+      "prev_500l": 710.12,
+      "change": 0.0,
+      "change_pct": 0.0
     },
     "Dublin": {
       "price_500l": 710.23,
       "price_per_litre": 1.4205,
-      "prev_500l": 710.28,
-      "change": -0.05,
-      "change_pct": -0.01
+      "prev_500l": 710.23,
+      "change": 0.0,
+      "change_pct": 0.0
     },
     "Offaly": {
       "price_500l": 710.67,
       "price_per_litre": 1.4213,
-      "prev_500l": 711.12,
-      "change": -0.45,
-      "change_pct": -0.06
+      "prev_500l": 710.67,
+      "change": 0.0,
+      "change_pct": 0.0
     },
     "Longford": {
       "price_500l": 710.79,
       "price_per_litre": 1.4216,
-      "prev_500l": 710.9,
-      "change": -0.11,
-      "change_pct": -0.02
+      "prev_500l": 710.79,
+      "change": 0.0,
+      "change_pct": 0.0
     },
     "Galway": {
       "price_500l": 710.82,
@@ -146,9 +146,9 @@
     "Mayo": {
       "price_500l": 710.88,
       "price_per_litre": 1.4218,
-      "prev_500l": 712.39,
-      "change": -1.51,
-      "change_pct": -0.21
+      "prev_500l": 710.88,
+      "change": 0.0,
+      "change_pct": 0.0
     },
     "Westmeath": {
       "price_500l": 710.92,
@@ -160,23 +160,23 @@
     "Roscommon": {
       "price_500l": 711.46,
       "price_per_litre": 1.4229,
-      "prev_500l": 711.51,
-      "change": -0.05,
-      "change_pct": -0.01
+      "prev_500l": 711.46,
+      "change": 0.0,
+      "change_pct": 0.0
     },
     "Limerick": {
       "price_500l": 712.26,
       "price_per_litre": 1.4245,
-      "prev_500l": 712.77,
-      "change": -0.51,
-      "change_pct": -0.07
+      "prev_500l": 712.26,
+      "change": 0.0,
+      "change_pct": 0.0
     },
     "Cavan": {
       "price_500l": 712.47,
       "price_per_litre": 1.4249,
-      "prev_500l": 712.92,
-      "change": -0.45,
-      "change_pct": -0.06
+      "prev_500l": 712.47,
+      "change": 0.0,
+      "change_pct": 0.0
     },
     "Clare": {
       "price_500l": 713.22,
@@ -187,6 +187,10 @@
     }
   },
   "history": [
+    {
+      "date": "2026-07-31",
+      "national_avg": 709.22
+    },
     {
       "date": "2026-07-30",
       "national_avg": 709.22
@@ -421,10 +425,6 @@
     },
     {
       "date": "2026-05-23",
-      "national_avg": 718.59
-    },
-    {
-      "date": "2026-05-22",
       "national_avg": 718.59
     }
   ]
